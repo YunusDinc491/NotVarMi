@@ -31,7 +31,9 @@ public static class CourseEndpoints
             var name = input.Name?.Trim();
             if (string.IsNullOrWhiteSpace(name) || name.Length > 100) return Results.BadRequest(new { message = "Ders adı 1 ile 100 karakter arasında olmalı." });
             if (await db.Courses.AnyAsync(c => c.Name == name)) return Results.Conflict(new { message = "Bu adda bir ders zaten var; geri dönüşüm kutusunu da kontrol et." });
+            await using var transaction = await db.Database.BeginTransactionAsync();
             var course = new Course { Name = name }; db.Courses.Add(course); await db.SaveChangesAsync();
+            db.Notebooks.Add(NotebookExamples.ForCourse(course)); await db.SaveChangesAsync(); await transaction.CommitAsync();
             return Results.Created($"/api/courses/{course.Id}", new { course.Id, course.Name });
         }).RequireAuthorization("AdminOnly");
         courses.MapPut("/{id:int}", async (int id, CourseInput input, NotesDbContext db) =>

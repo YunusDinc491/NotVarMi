@@ -40,6 +40,9 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<NotesDbContext>();
     DatabaseBootstrap.Initialize(db);
+    var missing = db.Courses.Where(c => !db.Notebooks.Any(n => n.CourseId == c.Id)).ToList();
+    db.Notebooks.AddRange(missing.Select(NotebookExamples.ForCourse));
+    db.SaveChanges();
 }
 // A same-origin custom header blocks browser cross-site form submissions on state-changing requests.
 app.Use(async (context, next) =>
@@ -77,6 +80,7 @@ app.MapPost("/api/auth/logout", async (HttpContext context) =>
 }).RequireAuthorization();
 app.MapGet("/api/auth/me", (ClaimsPrincipal user) => Results.Ok(new { username = user.Identity?.Name, role = user.FindFirstValue(ClaimTypes.Role) })).RequireAuthorization();
 app.MapCourseEndpoints();
+app.MapNotebookEndpoints();
 app.MapGet("/api/health", () => Results.Ok(new { status = "ok" }));
 app.Run();
 record LoginRequest(string? Username, string? Password);
