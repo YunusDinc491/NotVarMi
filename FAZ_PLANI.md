@@ -70,3 +70,5 @@ Render'a alternatifler araştırıldı: Koyeb ücretsiz Docker web servisi, Azur
 ## Her fazda çalışma biçimi
 
 Önceki çalışmayı ve Git durumunu kontrol et; planı gerektiğinde alınan kararlarla güncelle. Yapılanları, doğrulamaları, sorunları ve sonraki adımları ILERLEME.md'ye işle. Kullanıcıya anlaşılır, kısa ilerleme raporları ver. Güvenlik dışında gereksiz test altyapısı kurma; temel işleyişi ve güvenlik sınırlarını doğrula. Kullanıcının dosyalarını, uzaktaki değişiklikleri ve gerçek verilerini koru.
+
+Her çalışma veya faz sonunda sıradaki adımları açıkça belirt: asistanın yapacakları ve kullanıcı tarafından gerçekten yapılması zorunlu olanlar. Kullanıcıya gereksiz görev verme; gerekli bir iş yoksa bunu söyle. Uygun bir önizleme varsa sun, henüz anlamlı bir önizleme yoksa hazır olduğunda sun. Karar gerektiren soruları açılır soru aracıyla toplu sor; daha iyi bir fikir veya istenenlere ilişkin düzeltme önerisi varsa gerekçesini ve öneriyi kullanıcıya sun. Onay gerektirmeyen rutin tercihleri kullanıcıya yüklemeden uygula.

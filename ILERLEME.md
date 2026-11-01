@@ -50,3 +50,8 @@
 - Geliştirme veritabanı, hesap özetleri ve anahtarlar Git dışında. Üretimde henüz güvenli kalıcı veritabanı, nesne depolama, kalıcı oturum anahtarları ve Cloudflare üzerinden API yönlendirmesi bulunmadığından uygulama geliştirme dışı ortamda bilinçli olarak başlamaz. Faz 4'te bu koruma üretim altyapısı hazırlandıktan ve doğrulandıktan sonra kaldırılmalı.
 - Sonraki faz: ders kartları ve detayları, ders/dosya yönetimi, yönetici geri dönüşüm kutusu; kalıcı depolama için yayın seçimini netleştir. Başlangıç parolaları yerel ayarda hazır olduğundan kullanıcının bu faz sonunda yapması zorunlu bir işlem yok.
 - Yerel Git deposu kuruldu; gizli hesap ayarları, anahtarlar, yerel veritabanı ve derleme çıktıları dışlandı. Faz 1 kaynakları `82ec0a0` commit'iyle GitHub `main` dalına gönderildi.
+
+## Çalışma biçimi tercihi
+
+- Kullanıcı her aşama sonunda sonraki adımları, asistanın yapacaklarını ve kendisinin yapması zorunlu olanları ayrı görmek istiyor. Zorunlu olmayan işleri kullanıcıya yükleme; gerekli işlem yoksa açıkça söyle.
+- Anlamlı ve kullanılabilir bir önizleme varsa paylaş, yoksa hazır olduğunda sun. Karar gerektiren soruları açılır soru aracıyla toplu sor. Kullanıcının isteğini iyileştirebilecek fikir veya düzeltmeleri gerekçeleriyle sun ve gerektiğinde tercihini sor.
