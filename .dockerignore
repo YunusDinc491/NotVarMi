@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/.keys/
+**/.uploads/
+**/appsettings.Local.json
+**/*.local.db*
+.git/

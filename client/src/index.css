@@ -1,2 +1,3 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap');
 :root{font-family:'DM Sans',sans-serif;color:#253431;background:#f8f7f2;font-synthesis:none}*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer}
+.backup-link{text-decoration:none;white-space:nowrap}

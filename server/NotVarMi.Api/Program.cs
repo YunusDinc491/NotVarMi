@@ -8,23 +8,35 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using NotVarMi.Api.Data;
 using NotVarMi.Api.Features;
+using NotVarMi.Api.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
-if (builder.Environment.IsDevelopment())
-    builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, ".keys")));
 builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true).AddEnvironmentVariables();
-if (!builder.Environment.IsDevelopment())
-    throw new InvalidOperationException("Üretim için kalıcı veritabanı ve güvenli oturum yapılandırması henüz hazır değil.");
-builder.Services.AddDbContext<NotesDbContext>(options => options.UseSqlite(
-    builder.Configuration.GetConnectionString("Notes") ?? $"Data Source={Path.Combine(builder.Environment.ContentRootPath, "notvarmi.local.db")}"));
-builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 101L * 1024 * 1024);
-builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options => options.MultipartBodyLengthLimit = 101L * 1024 * 1024);
+if (builder.Environment.IsDevelopment())
+{
+    builder.Services.AddDataProtection().PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(builder.Environment.ContentRootPath, ".keys")));
+    builder.Services.AddSingleton<IFileStore, LocalFileStore>();
+    builder.Services.AddDbContext<NotesDbContext>(options => options.UseSqlite(
+        builder.Configuration.GetConnectionString("Notes") ?? $"Data Source={Path.Combine(builder.Environment.ContentRootPath, "notvarmi.local.db")}"));
+}
+else
+{
+    var connection = builder.Configuration.GetConnectionString("Notes");
+    if (string.IsNullOrWhiteSpace(connection) || string.IsNullOrWhiteSpace(builder.Configuration["Accounts:Admin:PasswordHash"]) || string.IsNullOrWhiteSpace(builder.Configuration["Accounts:Viewer:PasswordHash"]))
+        throw new InvalidOperationException("Üretim veritabanı ve hesap parola özetleri yapılandırılmalıdır.");
+    var secureConnection = ProductionConnection.Normalize(connection);
+    builder.Services.AddDbContext<NotesDbContext>(options => options.UseNpgsql(secureConnection));
+    builder.Services.AddDataProtection().SetApplicationName("NotVarMi").PersistKeysToDbContext<NotesDbContext>();
+    builder.Services.AddSingleton<IFileStore, R2FileStore>();
+}
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 96L * 1024 * 1024);
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options => options.MultipartBodyLengthLimit = 96L * 1024 * 1024);
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.Cookie.Name = "notvarmi.session";
     options.Cookie.HttpOnly = true;
     options.Cookie.SameSite = SameSiteMode.Strict;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+    options.Cookie.SecurePolicy = builder.Environment.IsDevelopment() ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.Always;
     options.Events.OnRedirectToLogin = context => { context.Response.StatusCode = 401; return Task.CompletedTask; };
     options.Events.OnRedirectToAccessDenied = context => { context.Response.StatusCode = 403; return Task.CompletedTask; };
 });
@@ -36,10 +48,25 @@ builder.Services.AddRateLimiter(options => { options.RejectionStatusCode = 429; 
     limiter.QueueLimit = 0;
 }); });
 var app = builder.Build();
+if (args.Length == 2 && args[0] == "--restore-backup")
+{
+    using var restoreScope = app.Services.CreateScope();
+    var restoreDb = restoreScope.ServiceProvider.GetRequiredService<NotesDbContext>();
+    var restoreStore = restoreScope.ServiceProvider.GetRequiredService<IFileStore>();
+    await BackupRestore.RunAsync(Path.GetFullPath(args[1]), restoreDb, restoreStore);
+    Console.WriteLine("Yedek boş hedefe geri yüklendi.");
+    return;
+}
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<NotesDbContext>();
-    DatabaseBootstrap.Initialize(db);
+    if (app.Environment.IsDevelopment()) DatabaseBootstrap.Initialize(db);
+    else
+    {
+        var created = db.Database.EnsureCreated();
+        if (created) { db.Courses.AddRange(new Course { Name = "Heat Transfer" }, new Course { Name = "Fluid Mechanics" }); db.SaveChanges(); }
+        _ = scope.ServiceProvider.GetRequiredService<IFileStore>();
+    }
     var missing = db.Courses.Where(c => !db.Notebooks.Any(n => n.CourseId == c.Id)).ToList();
     db.Notebooks.AddRange(missing.Select(NotebookExamples.ForCourse));
     db.SaveChanges();
@@ -47,6 +74,7 @@ using (var scope = app.Services.CreateScope())
 // A same-origin custom header blocks browser cross-site form submissions on state-changing requests.
 app.Use(async (context, next) =>
 {
+    if (context.Request.Path.StartsWithSegments("/api")) context.Response.Headers.CacheControl = "no-store";
     if (context.Request.Path.StartsWithSegments("/api") && !HttpMethods.IsGet(context.Request.Method)
         && !HttpMethods.IsHead(context.Request.Method) && !HttpMethods.IsOptions(context.Request.Method)
         && context.Request.Headers["X-NotVarMi-Request"] != "1")
@@ -81,6 +109,7 @@ app.MapPost("/api/auth/logout", async (HttpContext context) =>
 app.MapGet("/api/auth/me", (ClaimsPrincipal user) => Results.Ok(new { username = user.Identity?.Name, role = user.FindFirstValue(ClaimTypes.Role) })).RequireAuthorization();
 app.MapCourseEndpoints();
 app.MapNotebookEndpoints();
+app.MapBackupEndpoints();
 app.MapGet("/api/health", () => Results.Ok(new { status = "ok" }));
 app.Run();
 record LoginRequest(string? Username, string? Password);

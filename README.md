@@ -14,7 +14,7 @@ Kullanıcı adları `yunusdinc` ve `misafir`dir. Parola özetleri `server/NotVar
 
 ## Dersler ve dosyalar
 
-Yönetici ders ekleyebilir, adını değiştirebilir ve çöpe taşıyabilir; ders sayfasında dosya yükleyebilir ve metin notu ekleyip düzenleyebilir. PDF, PNG, JPEG, WebP, TXT ve yaygın Office belgeleri desteklenir; dosya başına sınır 100 MB'tır. PDF, resim ve metinler görüntülenebilir; dosyalar indirilebilir. Misafir görüntüleme ve indirme yapabilir, yönetim işlemleri yapamaz. Geri dönüşüm kutusu yalnızca yöneticiye gösterilir; öğeler geri getirilebilir veya onay sonrası kalıcı silinebilir. Bir ders çöpteyken dosyaları onunla korunur; daha önce ayrı silinmiş dosyalar ders geri geldiğinde yine çöpte kalır.
+Yönetici ders ekleyebilir, adını değiştirebilir ve çöpe taşıyabilir; ders sayfasında dosya yükleyebilir ve metin notu ekleyip düzenleyebilir. PDF, PNG, JPEG, WebP, TXT ve yaygın Office belgeleri desteklenir; dosya başına sınır 95 MB'tır. PDF, resim ve metinler görüntülenebilir; dosyalar indirilebilir. Misafir görüntüleme ve indirme yapabilir, yönetim işlemleri yapamaz. Geri dönüşüm kutusu yalnızca yöneticiye gösterilir; öğeler geri getirilebilir veya onay sonrası kalıcı silinebilir. Bir ders çöpteyken dosyaları onunla korunur; daha önce ayrı silinmiş dosyalar ders geri geldiğinde yine çöpte kalır.
 
 ## Defterler
 
@@ -22,4 +22,4 @@ Her dersin bir defteri vardır. Yönetici ders sayfasında **Defteri aç → İ�
 
 İçerik güvenlik amacıyla `allow-scripts` yetkili, farklı kökenli sandbox iframe'de çalışır; ana uygulamaya, oturuma ve API'ye erişemez. Harici ağ bağlantıları, çevrimiçi kütüphaneler ve URL ile yüklenen resimler kapalıdır; kendi içindeki JavaScript, CSS, SVG ve `data:` resimleri kullanılabilir. Kaydedilmemiş değişikliklerde kapatmadan önce uyarı gösterilir; başka bir yerde güncellenmiş içerik eski sürümle ezilmez. Defter verileri SQLite veritabanındadır; `.uploads` ile birlikte yedeklenmelidir.
 
-Üretime geçmeden önce kalıcı bir veritabanı ve özel dosya depolaması, güvenli HTTPS/aynı kökenli API erişimi, oturum anahtarları, gerçek ortam sırları ve yedekleme kurulmalıdır. API yanlışlıkla geçici üretim depolamasıyla açılmamak için şu anda geliştirme dışı ortamda başlamaz.
+Üretim yapılandırması ve açık kalan işler [yayın hazırlığı](YAYIN_HAZIRLIGI.md) dosyasındadır. Gerçek bulut hizmetleri ve canlı ortam henüz doğrulanmadı; yerel veriler üretime otomatik aktarılmaz.

@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 
 namespace NotVarMi.Api.Data;
 
-public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options) : DbContext(options)
+public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options) : DbContext(options), IDataProtectionKeyContext
 {
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<CourseFile> Files => Set<CourseFile>();
     public DbSet<Notebook> Notebooks => Set<Notebook>();
+    public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

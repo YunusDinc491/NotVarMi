@@ -1,6 +1,6 @@
 # NotVarMı — Proje ve Faz Planı
 
-Son güncelleme: 2 Kasım 2026. Durum: Faz 3 yerel kapsamda tamamlandı; üretim altyapısı Faz 4 kapsamındadır.
+Son güncelleme: 2 Kasım 2026. Durum: Faz 4 devam ediyor; gerçek hesap bağlantıları, kurtarma/taşıma ve canlı doğrulama henüz tamamlanmadı.
 
 ## Amaç ve kapsam
 
