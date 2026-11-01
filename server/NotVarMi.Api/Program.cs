@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using NotVarMi.Api.Data;
+using NotVarMi.Api.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 if (builder.Environment.IsDevelopment())
@@ -16,6 +17,8 @@ if (!builder.Environment.IsDevelopment())
     throw new InvalidOperationException("Üretim için kalıcı veritabanı ve güvenli oturum yapılandırması henüz hazır değil.");
 builder.Services.AddDbContext<NotesDbContext>(options => options.UseSqlite(
     builder.Configuration.GetConnectionString("Notes") ?? $"Data Source={Path.Combine(builder.Environment.ContentRootPath, "notvarmi.local.db")}"));
+builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 101L * 1024 * 1024);
+builder.Services.Configure<Microsoft.AspNetCore.Http.Features.FormOptions>(options => options.MultipartBodyLengthLimit = 101L * 1024 * 1024);
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
     options.Cookie.Name = "notvarmi.session";
@@ -36,12 +39,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<NotesDbContext>();
-    var created = db.Database.EnsureCreated();
-    if (created)
-    {
-        db.Courses.AddRange(new Course { Name = "Heat Transfer" }, new Course { Name = "Fluid Mechanics" });
-        db.SaveChanges();
-    }
+    DatabaseBootstrap.Initialize(db);
 }
 // A same-origin custom header blocks browser cross-site form submissions on state-changing requests.
 app.Use(async (context, next) =>
@@ -78,19 +76,7 @@ app.MapPost("/api/auth/logout", async (HttpContext context) =>
     return Results.NoContent();
 }).RequireAuthorization();
 app.MapGet("/api/auth/me", (ClaimsPrincipal user) => Results.Ok(new { username = user.Identity?.Name, role = user.FindFirstValue(ClaimTypes.Role) })).RequireAuthorization();
-app.MapGet("/api/courses", async (NotesDbContext db) => Results.Ok(await db.Courses.OrderBy(c => c.Name).Select(c => new { c.Id, c.Name }).ToListAsync())).RequireAuthorization();
-app.MapPost("/api/courses", async (CourseInput input, NotesDbContext db) =>
-{
-    var name = input.Name?.Trim();
-    if (string.IsNullOrWhiteSpace(name) || name.Length > 100)
-        return Results.ValidationProblem(new Dictionary<string, string[]> { ["name"] = ["Ders adı 1 ile 100 karakter arasında olmalı."] });
-    if (await db.Courses.AnyAsync(c => c.Name == name)) return Results.Conflict(new { message = "Bu ders zaten var." });
-    var course = new Course { Name = name };
-    db.Courses.Add(course);
-    await db.SaveChangesAsync();
-    return Results.Created($"/api/courses/{course.Id}", new { course.Id, course.Name });
-}).RequireAuthorization("AdminOnly");
+app.MapCourseEndpoints();
 app.MapGet("/api/health", () => Results.Ok(new { status = "ok" }));
 app.Run();
 record LoginRequest(string? Username, string? Password);
-record CourseInput(string? Name);

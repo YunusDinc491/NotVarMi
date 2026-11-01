@@ -485,3 +485,4 @@ client/node_modules/
 client/dist/
 .keys/
 *.local.db*
+server/NotVarMi.Api/.uploads/

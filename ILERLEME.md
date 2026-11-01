@@ -55,3 +55,14 @@
 
 - Kullanıcı her aşama sonunda sonraki adımları, asistanın yapacaklarını ve kendisinin yapması zorunlu olanları ayrı görmek istiyor. Zorunlu olmayan işleri kullanıcıya yükleme; gerekli işlem yoksa açıkça söyle.
 - Anlamlı ve kullanılabilir bir önizleme varsa paylaş, yoksa hazır olduğunda sun. Karar gerektiren soruları açılır soru aracıyla toplu sor. Kullanıcının isteğini iyileştirebilecek fikir veya düzeltmeleri gerekçeleriyle sun ve gerektiğinde tercihini sor.
+- Her fazdan sonra bir sonraki fazın ne olduğunu söyle ve devam edilmesini isteyip istemediğini açılır soru ile sor.
+
+## 2 Kasım 2026 — Faz 2 yerel olarak tamamlandı
+
+- Dersler ana sayfası ve ders detayları yapıldı. Yönetici ders oluşturabilir, yeniden adlandırabilir ve çöpe taşıyabilir. Ders adları çöpteki derslerle de çakışamaz; ders geri getirilirken ad çakışması oluşmaz.
+- Derslerde PDF, PNG, JPEG, WebP, TXT ve yaygın Office dosyaları yüklenebilir; dosya başına sınır 100 MB. PDF, resim ve metin dosyaları görüntülenebilir; tüm desteklenen dosyalar indirilebilir. Yönetici ayrıca metin notu oluşturup düzenleyebilir. Misafir yalnızca erişilebilir dosyaları görüntüler ve indirir. Defter alanı Faz 3'e kadar devre dışı.
+- Yöneticiye özel geri dönüşüm kutusuna dersler ve dosyalar taşınabilir, geri getirilebilir veya onayla kalıcı silinebilir. Ders çöpteyken dosyaları dersle korunur; önceden ayrı silinmiş dosyalar ders geri geldiğinde çöpte kalır. Kalıcı silme önce veritabanından kaldırır; fiziksel silme hatasında artık dosyalar kalabilir, ileride güvenli bakım/yetim dosya temizleme gerektirir. Düzenlenen metinde yeni dosya önce yazılır, veritabanı güncellendikten sonra eski kopya silinir.
+- Geliştirmede dosyalar `.uploads` içinde, kayıtlar yerel SQLite'ta saklanır ve Git dışıdır. Faz 1 şeması atomik SQLite işlemiyle yükseltilir; geçici eski veritabanında veri korunması doğrulandı. Gelecek değişiklikler için sürümlü geçiş sistemi geliştirilmelidir. Üretim için kalıcı servisler ve yedekleme Faz 4'e kalır; Render geçici diski ile yayın yapılmamalıdır.
+- `dotnet build` ve `npm run build` başarıyla tamamlandı. Geçici dosya ve veritabanıyla misafir yükleme engeli (403), misafir dosya okuması, yönetici metin düzenleme, çöpteki dosyaya erişim engeli (404), ders/dosya geri getirme, kalıcı silme ve dosyaların temizlenmesi doğrulandı; test verileri silindi. Giriş, ders kartları ve ders sayfası tarayıcıda görsel olarak kontrol edildi.
+- Yerel önizleme `http://127.0.0.1:5173/` adresinde API ve React geliştirme sunucuları açık olduğu sürece kullanılabilir; kalıcı veya herkese açık bir yayın değildir. Sunucular durursa README'deki yerel başlatma adımları kullanılır.
+- Sıradaki Faz 3: ekranı kaplayan animasyonlu defter, örnek içerikler, HTML/CSS/JavaScript düzenleme ve çalıştırılabilir içeriğin uygulamadan güvenli izolasyonu. Bu faz sonunda kullanıcı için zorunlu işlem yok.
