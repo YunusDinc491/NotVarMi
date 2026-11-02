@@ -12,6 +12,7 @@ public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options) : D
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        if (Database.IsNpgsql()) modelBuilder.HasDefaultSchema("notvarmi");
         modelBuilder.Entity<Course>().Property(c => c.Name).HasMaxLength(100).IsRequired();
         modelBuilder.Entity<Course>().HasIndex(c => c.Name).IsUnique();
         modelBuilder.Entity<CourseFile>().HasOne<Course>().WithMany().HasForeignKey(f => f.CourseId).OnDelete(DeleteBehavior.Cascade);

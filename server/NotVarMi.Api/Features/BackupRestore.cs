@@ -39,7 +39,8 @@ public static partial class BackupRestore
             var entries = archive.Entries.Where(e => e.FullName == $"dosyalar/{file.StorageName}").ToList();
             if (entries.Count != 1 || entries[0].Length != file.Size) throw new InvalidDataException("Yedekte bir dosya eksik veya boyutu uyuşmuyor.");
         }
-        await db.Database.EnsureCreatedAsync(cancellation);
+        if (db.Database.IsNpgsql()) PostgresBootstrap.Initialize(db, seedExamples: false);
+        else await db.Database.EnsureCreatedAsync(cancellation);
         await using var transaction = await db.Database.BeginTransactionAsync(cancellation);
         if (await db.Courses.AnyAsync(cancellation) || await db.Files.AnyAsync(cancellation) || await db.Notebooks.AnyAsync(cancellation))
             throw new InvalidOperationException("Hedef veritabanı boş değil; hiçbir veri değiştirilmedi.");

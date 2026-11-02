@@ -6,7 +6,7 @@ Durum: hazırlık aşamasında; Neon, R2 ve Render ile gerçek yayın henüz do�
 
 - `notvarmi.bid`: Cloudflare Worker, React derlemesi ve `/api/*` isteklerinin Render'a HTTPS üzerinden yönlendirilmesi.
 - Render ücretsiz Docker web servisi: ASP.NET Core API; boşta uyur ve yerel dosyaları kalıcı değildir.
-- Ayrı Neon PostgreSQL veritabanı: dersler, defterler, dosya bilgileri ve oturum koruma anahtarları. Üretim bağlantısı sunucu sertifikasını doğrulayacak şekilde TLS kullanır.
+- Ayrı Neon PostgreSQL veritabanı: dersler, defterler, dosya bilgileri ve oturum koruma anahtarları. Uygulama tabloları `notvarmi` şemasındadır; başka şemalardaki tablolar değiştirilmez. Üretim bağlantısı sunucu sertifikasını doğrulayacak şekilde TLS kullanır.
 - Özel Cloudflare R2 bucket: yüklenen dosyalar. Bucket herkese açık yapılmaz; dosyalara API yetkilendirmesiyle erişilir.
 
 Neon ücretsiz kota, R2 etkinleştirme koşulları ve Render bant genişliği sınırları kurulumda tekrar kontrol edilmeli. R2 abonelik etkinleştirmesi ve başka servislerin üyelik koşulları kullanıcı tarafından tamamlanır; şifreler, bağlantı adresleri, API anahtarları ve hesap özetleri sohbete veya Git'e yazılmaz.
@@ -15,7 +15,7 @@ Neon ücretsiz kota, R2 etkinleştirme koşulları ve Render bant genişliği s�
 
 - `Dockerfile`, `.dockerignore`, `render.yaml`: API imajı ve Render ayarlarının şablonu. Yerel hesap dosyası, veritabanı ve yüklemeler imajdan dışlanır.
 - `client/worker.js`, `client/wrangler.jsonc`: React dosyalarını sunan ve API isteklerini aynı kökenden Render'a aktaran Worker. Worker değişkeni `API_ORIGIN`, `https://<servis>.onrender.com` biçiminde olmalıdır; gerçek değer Worker ayarlarına girilir.
-- Üretim, SQLite yerine PostgreSQL; yerel klasör yerine R2 kullanır. İlk açılışta ayrılmış boş veritabanında tablolar ve örnek dersler oluşturulur. Başka uygulamalarla paylaşılan veya daha önce kullanılmış veritabanında otomatik şema güncellemesi/taşıması garanti edilmez.
+- Üretim, SQLite yerine PostgreSQL; yerel klasör yerine R2 kullanır. İlk açılışta `notvarmi` şeması ve tabloları yoksa oluşturulur; diğer şemalardaki tablolar bu işlemi engellemez veya değiştirilmez. Uygulama tabloları kısmen mevcutsa sistem verileri korumak için otomatik değiştirmeden durur. Önceden kullanılmış veritabanında otomatik şema güncellemesi/taşıması garanti edilmez.
 
 Render ortam değişkenleri `render.yaml` içinde listelenmiştir: `ConnectionStrings__Notes`, `Accounts__Admin__PasswordHash`, `Accounts__Viewer__PasswordHash`, `R2__Endpoint`, `R2__Bucket`, `R2__AccessKeyId`, `R2__SecretAccessKey`. PostgreSQL için Neon'un bağlantı URI'si veya Npgsql bağlantı dizgesi kullanılabilir. Hesap özetleri bu bilgisayardaki Git dışı `server/NotVarMi.Api/appsettings.Local.json` dosyasındadır; bunlar kullanıcı tarafından veya izinli, gizli bir yapılandırma yoluyla doğrudan Render'a aktarılmalı, Git'e eklenmemelidir. R2 anahtarları yalnızca ilgili bucket için nesne okuma/yazma yetkisiyle oluşturulmalıdır.
 

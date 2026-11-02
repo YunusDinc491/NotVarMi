@@ -63,8 +63,7 @@ using (var scope = app.Services.CreateScope())
     if (app.Environment.IsDevelopment()) DatabaseBootstrap.Initialize(db);
     else
     {
-        var created = db.Database.EnsureCreated();
-        if (created) { db.Courses.AddRange(new Course { Name = "Heat Transfer" }, new Course { Name = "Fluid Mechanics" }); db.SaveChanges(); }
+        PostgresBootstrap.Initialize(db, seedExamples: true);
         _ = scope.ServiceProvider.GetRequiredService<IFileStore>();
     }
     var missing = db.Courses.Where(c => !db.Notebooks.Any(n => n.CourseId == c.Id)).ToList();
