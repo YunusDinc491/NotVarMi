@@ -1,10 +1,10 @@
 # NotVarMı
 
-Kişisel ders notları için React ve ASP.NET Core uygulaması. Projenin kapsamı ve kalan işler için [faz planına](FAZ_PLANI.md), son durum için [ilerleme kaydına](ILERLEME.md) bakın.
+Kişisel ders notları için React ve ASP.NET Core uygulaması. Site [notvarmi.bid](https://notvarmi.bid/) adresinde yayındadır. Yeni bir oturumda önce [devir notunu](DEVIR_NOTU.md), ardından [faz planını](FAZ_PLANI.md) ve [ilerleme kaydını](ILERLEME.md) okuyun.
 
 ## Yerelde çalıştırma
 
-Gereksinimler: .NET 10 SDK, güncel Node.js ve PowerShell 7. `NotVarMi.sln` Visual Studio'da açılabilir. Bu faz yerel geliştirme içindir; üretim yapılandırması henüz tamamlanmamıştır.
+Gereksinimler: .NET 10 SDK, güncel Node.js ve PowerShell 7. `NotVarMi.sln` Visual Studio'da açılabilir. Yerel geliştirme SQLite ve yerel dosyaları kullanır; canlı site ayrı bulut verilerini kullanır.
 
 1. İlk kez başka bir bilgisayarda kuruyorsanız proje kökünde `pwsh -File scripts/setup-accounts.ps1` komutunu çalıştırın ve iki hesap için şifreleri gizli istemlere girin. Script mevcut hesap dosyasının üzerine yazmaz. Bu bilgisayarda hesap ayarları zaten oluşturulmuştur.
 2. Bir terminalde proje kökünde `dotnet run --project server/NotVarMi.Api --launch-profile http` çalıştırın. API `http://localhost:5101` adresinde açılır.
@@ -20,6 +20,6 @@ Yönetici ders ekleyebilir, adını değiştirebilir ve çöpe taşıyabilir; de
 
 Her dersin bir defteri vardır. Yönetici ders sayfasında **Defteri aç → İçeriği düzenle** ile HTML, CSS ve JavaScript alanlarını düzenler; önizleme anlık güncellenir ve Kaydet ile içerik saklanır. Başlangıç derslerinde örnek anlatımlar bulunur. Misafir defteri okuyabilir ve etkileşimleri kullanabilir, düzenleyemez. Bir ders çöpe taşınırsa defteri de saklanır ve ders geri getirildiğinde geri gelir. Defterde indirme seçeneği yoktur.
 
-İçerik güvenlik amacıyla `allow-scripts` yetkili, farklı kökenli sandbox iframe'de çalışır; ana uygulamaya, oturuma ve API'ye erişemez. Harici ağ bağlantıları, çevrimiçi kütüphaneler ve URL ile yüklenen resimler kapalıdır; kendi içindeki JavaScript, CSS, SVG ve `data:` resimleri kullanılabilir. Kaydedilmemiş değişikliklerde kapatmadan önce uyarı gösterilir; başka bir yerde güncellenmiş içerik eski sürümle ezilmez. Defter verileri SQLite veritabanındadır; `.uploads` ile birlikte yedeklenmelidir.
+İçerik güvenlik amacıyla `allow-scripts` yetkili, farklı kökenli sandbox iframe'de çalışır; ana uygulamaya, oturuma ve API'ye erişemez. Harici ağ bağlantıları, çevrimiçi kütüphaneler ve URL ile yüklenen resimler kapalıdır; kendi içindeki JavaScript, CSS, SVG ve `data:` resimleri kullanılabilir. Kaydedilmemiş değişikliklerde kapatmadan önce uyarı gösterilir; başka bir yerde güncellenmiş içerik eski sürümle ezilmez. Yerelde defter verileri SQLite veritabanındadır; `.uploads` ile birlikte yedeklenmelidir. Canlı defter verileri Neon'dadır.
 
-Üretim yapılandırması ve açık kalan işler [yayın hazırlığı](YAYIN_HAZIRLIGI.md) dosyasındadır. Gerçek bulut hizmetleri ve canlı ortam henüz doğrulanmadı; yerel veriler üretime otomatik aktarılmaz.
+Üretim yapılandırması ve açık kalan işler [yayın hazırlığı](YAYIN_HAZIRLIGI.md) dosyasındadır. Canlı ortamın temel akışları doğrulandı. Yerel veriler üretime veya başka bilgisayarlara otomatik aktarılmaz.

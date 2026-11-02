@@ -1,5 +1,7 @@
 # NotVarMı — İlerleme Kaydı
 
+Güncel özet için önce `DEVIR_NOTU.md` dosyasına bak. Aşağıdaki kayıt kronolojiktir; eski bölümlerdeki tamamlanmamış durumlar sonraki bölümlerle değişmiş olabilir.
+
 ## Oturuma yeniden başlarken
 
 Önce FAZ_PLANI.md ve bu dosyayı oku; çalışma ağacını, Git durumunu ve en son kararları kontrol et. Uygulanmış bir işi varsayma; tamamlanmamış maddelerden devam et. Gizli bilgileri belgelere veya depoya yazma.
