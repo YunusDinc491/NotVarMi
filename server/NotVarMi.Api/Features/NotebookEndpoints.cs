@@ -46,8 +46,16 @@ public static class NotebookEndpoints
         }).RequireAuthorization("AdminOnly");
         courseBooks.MapDelete("/{notebookId:int}", async (int courseId, int notebookId, NotesDbContext db) =>
         {
+            if (notebookId == 0)
+            {
+                var legacy = await db.Notebooks.FirstOrDefaultAsync(n => n.CourseId == courseId && db.Courses.Any(c => c.Id == courseId && !c.IsDeleted));
+                if (legacy is null) return Results.NotFound();
+                db.Notebooks.Remove(legacy); await db.SaveChangesAsync(); return Results.NoContent();
+            }
             var notebook = await db.CourseNotebooks.FirstOrDefaultAsync(n => n.Id == notebookId && n.CourseId == courseId);
             if (notebook is null) return Results.NotFound();
+            if (!await db.NotebookSeedSuppressions.AnyAsync(n => n.CourseId == courseId && n.Name == notebook.Name))
+                db.NotebookSeedSuppressions.Add(new NotebookSeedSuppression { CourseId = courseId, Name = notebook.Name });
             db.CourseNotebooks.Remove(notebook); await db.SaveChangesAsync(); return Results.NoContent();
         }).RequireAuthorization("AdminOnly");
 

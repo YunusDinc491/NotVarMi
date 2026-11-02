@@ -31,12 +31,13 @@ function splitHtmlFile(text) {
   return { html: doc.body.innerHTML.trim(), css, javascript }
 }
 
-export default function Notebook({ course, initialNotebook, admin, request, onClose }) {
+export default function Notebook({ course, initialNotebook, admin, request, onClose, onDirtyChange, onSelectBook }) {
   const [saved, setSaved] = useState(null), [draft, setDraft] = useState(null)
   const [books, setBooks] = useState([]), [activeBook, setActiveBook] = useState(null)
   const [editing, setEditing] = useState(false), [tab, setTab] = useState('html'), [error, setError] = useState(''), [notice, setNotice] = useState(''), [busy, setBusy] = useState(false)
   const fileInput = useRef(null), frame = useRef(null)
   const dirty = saved && draft && !same(saved, draft)
+  useEffect(() => { onDirtyChange(Boolean(dirty)) }, [dirty, onDirtyChange])
   const srcDoc = useMemo(() => draft ? frameDocument(draft, window.location.origin) : '', [draft])
   const notebookPath = book => book?.id === 0 ? `/courses/${course.id}/notebook/` : `/courses/${course.id}/notebooks/${book.id}`
 
@@ -45,7 +46,7 @@ export default function Notebook({ course, initialNotebook, admin, request, onCl
     request(`/courses/${course.id}/notebooks/`).then(list => {
       if (!active) return
       setBooks(list)
-      const first = list.find(book => book.id === initialNotebook?.id) ?? list[0]
+      const first = list.find(book => book.id === initialNotebook?.id)
       if (!first) { setSaved(null); setDraft(null); return }
       setActiveBook(first)
       return request(notebookPath(first)).then(data => { if (active) { setSaved(data); setDraft(data) } })
@@ -55,15 +56,7 @@ export default function Notebook({ course, initialNotebook, admin, request, onCl
 
   async function openBook(book) {
     if (dirty && !window.confirm('Kaydedilmemiş değişiklikler var. Başka deftere geçilsin mi?')) return
-    setActiveBook(book); setDraft(null); setSaved(null); setError(''); setNotice(''); setEditing(false)
-    try { const data = await request(notebookPath(book)); setSaved(data); setDraft(data) }
-    catch (e) { setError(e.message) }
-  }
-  async function addBook() {
-    const name = window.prompt('Defter adı (ör. Ünite 5 Ders Notu):')?.trim()
-    if (!name) return
-    try { const book = await request(`/courses/${course.id}/notebooks/`, { method: 'POST', body: JSON.stringify({ name }) }); setBooks(list => [...list, book]); await openBook(book) }
-    catch (e) { setError(e.message) }
+    onSelectBook(book)
   }
   useEffect(() => {
     function preventLoss(event) { if (dirty) { event.preventDefault(); event.returnValue = '' } }
@@ -129,7 +122,7 @@ export default function Notebook({ course, initialNotebook, admin, request, onCl
       <div className="nb-topbar-actions">
         {admin && draft && (editing
           ? <><span className="nb-save-state">{dirty ? 'Kaydedilmedi' : 'Değişiklik yok'}</span><button className="nb-quiet" disabled={busy} onClick={cancelEdit}>Vazgeç</button><button className="nb-primary" disabled={busy || !dirty} onClick={save}>{busy ? 'Kaydediliyor…' : 'Kaydet'}</button></>
-          : <><button className="nb-quiet" onClick={addBook}>＋ Yeni defter</button><button className="nb-quiet" onClick={() => setEditing(true)}>✎ Düzenle</button></>)}
+          : <button className="nb-quiet" onClick={() => setEditing(true)}>✎ Düzenle</button>)}
         <button className="nb-icon nb-fullscreen" onClick={toggleFullscreen} aria-label="Tam ekran" title="Tam ekran">⛶</button>
         <button className="nb-icon nb-close" onClick={close} aria-label="Defteri kapat" title="Kapat">×</button>
       </div>

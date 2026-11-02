@@ -24,16 +24,16 @@ public static class CourseEndpoints
             var course = await db.Courses.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
             if (course is null) return Results.NotFound();
             var files = await db.Files.Where(f => f.CourseId == id && !f.IsDeleted).OrderByDescending(f => f.CreatedAt).ToListAsync();
-            return Results.Ok(new { course.Id, course.Name, Files = files.Select(Describe) });
+            return Results.Ok(new { course.Id, course.Name, course.Instructor, Files = files.Select(Describe) });
         });
         courses.MapPost("/", async (CourseInput input, NotesDbContext db) =>
         {
             var name = input.Name?.Trim();
             if (string.IsNullOrWhiteSpace(name) || name.Length > 100) return Results.BadRequest(new { message = "Ders adı 1 ile 100 karakter arasında olmalı." });
-            if (await db.Courses.AnyAsync(c => c.Name == name)) return Results.Conflict(new { message = "Bu adda bir ders zaten var; geri dönüşüm kutusunu da kontrol et." });
+            if (await db.Courses.AnyAsync(c => c.Name == name)) return Results.Conflict(new { message = "Bu adda bir ders zaten var." });
             await using var transaction = await db.Database.BeginTransactionAsync();
             var course = new Course { Name = name }; db.Courses.Add(course); await db.SaveChangesAsync();
-            db.Notebooks.Add(NotebookExamples.ForCourse(course)); await db.SaveChangesAsync(); await transaction.CommitAsync();
+            await transaction.CommitAsync();
             return Results.Created($"/api/courses/{course.Id}", new { course.Id, course.Name });
         }).RequireAuthorization("AdminOnly");
         courses.MapPut("/{id:int}", async (int id, CourseInput input, NotesDbContext db) =>
@@ -45,10 +45,22 @@ public static class CourseEndpoints
             if (await db.Courses.AnyAsync(c => c.Id != id && c.Name == name)) return Results.Conflict(new { message = "Bu adda bir ders zaten var." });
             course.Name = name; await db.SaveChangesAsync(); return Results.NoContent();
         }).RequireAuthorization("AdminOnly");
-        courses.MapDelete("/{id:int}", async (int id, NotesDbContext db) =>
+        courses.MapPut("/{id:int}/instructor", async (int id, InstructorInput input, NotesDbContext db) =>
         {
             var course = await db.Courses.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
-            if (course is null) return Results.NotFound(); course.IsDeleted = true; await db.SaveChangesAsync(); return Results.NoContent();
+            if (course is null) return Results.NotFound();
+            var instructor = input.Instructor?.Trim() ?? "";
+            if (instructor.Length > 100 || instructor.Any(char.IsControl)) return Results.BadRequest(new { message = "Hoca adı en fazla 100 karakter olmalı." });
+            course.Instructor = instructor; await db.SaveChangesAsync(); return Results.NoContent();
+        }).RequireAuthorization("AdminOnly");
+        courses.MapDelete("/{id:int}", async (int id, NotesDbContext db, IFileStore store) =>
+        {
+            var course = await db.Courses.FirstOrDefaultAsync(c => c.Id == id && !c.IsDeleted);
+            if (course is null) return Results.NotFound();
+            var paths = await db.Files.Where(f => f.CourseId == id).Select(f => f.StorageName).ToListAsync();
+            db.Courses.Remove(course); await db.SaveChangesAsync();
+            foreach (var path in paths) { try { await store.DeleteAsync(path, CancellationToken.None); } catch (Exception) { /* The record is gone; a storage orphan may need cleanup. */ } }
+            return Results.NoContent();
         }).RequireAuthorization("AdminOnly");
         courses.MapPost("/{id:int}/files", async (int id, IFormFile file, NotesDbContext db, IFileStore store, CancellationToken cancellation) =>
         {
@@ -77,12 +89,16 @@ public static class CourseEndpoints
             context.Response.Headers.XContentTypeOptions = "nosniff";
             context.Response.Headers.ContentSecurityPolicy = "sandbox; default-src 'none'";
             var inline = preview == true && (file.ContentType == "application/pdf" || file.ContentType == "text/plain" || file.ContentType.StartsWith("image/"));
-            return Results.Stream(stream, inline ? file.ContentType : "application/octet-stream", inline ? null : file.Name);
+            var contentType = inline && file.ContentType == "text/plain" ? "text/plain; charset=utf-8" : inline ? file.ContentType : "application/octet-stream";
+            return Results.Stream(stream, contentType, inline ? null : file.Name);
         });
-        filesApi.MapDelete("/{id:int}", async (int id, NotesDbContext db) =>
+        filesApi.MapDelete("/{id:int}", async (int id, NotesDbContext db, IFileStore store) =>
         {
             var file = await db.Files.FirstOrDefaultAsync(f => f.Id == id && !f.IsDeleted && db.Courses.Any(c => c.Id == f.CourseId && !c.IsDeleted));
-            if (file is null) return Results.NotFound(); file.IsDeleted = true; await db.SaveChangesAsync(); return Results.NoContent();
+            if (file is null) return Results.NotFound();
+            db.Files.Remove(file); await db.SaveChangesAsync();
+            try { await store.DeleteAsync(file.StorageName, CancellationToken.None); } catch (Exception) { /* The record is gone; a storage orphan may need cleanup. */ }
+            return Results.NoContent();
         }).RequireAuthorization("AdminOnly");
         filesApi.MapPut("/{id:int}/text", async (int id, TextInput input, NotesDbContext db, IFileStore store, CancellationToken cancellation) =>
         {
@@ -124,5 +140,6 @@ public static class CourseEndpoints
         });
     }
     private record CourseInput(string? Name);
+    private record InstructorInput(string? Instructor);
     private record TextInput(string? Text);
 }

@@ -66,9 +66,6 @@ using (var scope = app.Services.CreateScope())
         PostgresBootstrap.Initialize(db, seedExamples: true);
         _ = scope.ServiceProvider.GetRequiredService<IFileStore>();
     }
-    var missing = db.Courses.Where(c => !db.Notebooks.Any(n => n.CourseId == c.Id)).ToList();
-    db.Notebooks.AddRange(missing.Select(NotebookExamples.ForCourse));
-    db.SaveChanges();
     NotebookSeed.Apply(db, app.Environment.ContentRootPath);
 }
 // A same-origin custom header blocks browser cross-site form submissions on state-changing requests.

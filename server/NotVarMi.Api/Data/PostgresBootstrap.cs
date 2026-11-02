@@ -46,6 +46,8 @@ public static class PostgresBootstrap
                 """);
             db.Database.ExecuteSqlRaw("CREATE INDEX \"IX_CourseNotebooks_CourseId\" ON notvarmi.\"CourseNotebooks\" (\"CourseId\")");
         }
+        db.Database.ExecuteSqlRaw("ALTER TABLE notvarmi.\"Courses\" ADD COLUMN IF NOT EXISTS \"Instructor\" character varying(100) NOT NULL DEFAULT ''");
+        db.Database.ExecuteSqlRaw("CREATE TABLE IF NOT EXISTS notvarmi.\"NotebookSeedSuppressions\" (\"CourseId\" integer NOT NULL REFERENCES notvarmi.\"Courses\" (\"Id\") ON DELETE CASCADE, \"Name\" character varying(150) NOT NULL, PRIMARY KEY (\"CourseId\", \"Name\"))");
         transaction.Commit();
     }
 }
