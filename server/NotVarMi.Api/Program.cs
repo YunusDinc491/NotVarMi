@@ -69,22 +69,7 @@ using (var scope = app.Services.CreateScope())
     var missing = db.Courses.Where(c => !db.Notebooks.Any(n => n.CourseId == c.Id)).ToList();
     db.Notebooks.AddRange(missing.Select(NotebookExamples.ForCourse));
     db.SaveChanges();
-    var heatCourse = db.Courses.FirstOrDefault(c => !c.IsDeleted && (c.Name == "Heat Transfer" || c.Name == "Isı Transferi"));
-    var unitThreeName = "Ünite 3 Ders Notu";
-    if (heatCourse is not null && !db.CourseNotebooks.Any(n => n.CourseId == heatCourse.Id && n.Name == unitThreeName))
-    {
-        var htmlPath = Path.Combine(app.Environment.ContentRootPath, "Content", "Isi-Transferi-Unite-3.html");
-        if (File.Exists(htmlPath))
-        {
-            db.CourseNotebooks.Add(new CourseNotebook
-            {
-                CourseId = heatCourse.Id,
-                Name = unitThreeName,
-                Html = File.ReadAllText(htmlPath)
-            });
-            db.SaveChanges();
-        }
-    }
+    NotebookSeed.Apply(db, app.Environment.ContentRootPath);
 }
 // A same-origin custom header blocks browser cross-site form submissions on state-changing requests.
 app.Use(async (context, next) =>

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Content\Isi-Transferi-Unite-3.html" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Content\Notebooks\*" CopyToOutputDirectory="PreserveNewest" />
     <PackageReference Include="AWSSDK.S3" Version="4.0.104.8" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="10.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.0" />

@@ -1,0 +1,586 @@
+<div class="page">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <p class="sub">Isı Transferi · Incropera 7. baskı</p>
+    <h1>Ünite 4 — İki Boyutlu, Kararlı Rejimde İletim</h1>
+    <div class="legend">
+      <span style="border-color:var(--line);color:var(--text)">düz yazı: hocanın özeti</span>
+      <span class="ek">kitaptan ek</span>
+      <span class="dikkat">dikkat / düzeltme</span>
+      <span class="acik">açıklama, analoji</span>
+      <span class="sinav">sınav ipucu</span>
+      <span class="hatir">hatırlatma</span>
+    </div>
+  </header>
+
+  <section id="yol-haritasi">
+    <h2>Yol haritası</h2>
+    <div class="roadmap">
+      <span class="n">4.0</span><span>Neden 1-B'den 2-B'ye?</span><span class="st on">işlendi</span>
+      <span class="n">4.1</span><span>Alternatif yaklaşımlar: analitik, grafik, sayısal (hoca: "dikkatle okuyun")</span><span class="st on">işlendi</span>
+      <span class="n">4.2</span><span>Değişkenlere ayırma yöntemi (analitik / tam çözüm)</span><span class="st on">işlendi</span>
+      <span class="n">4.3</span><span>İletim şekil faktörü ve boyutsuz iletim ısı hızı, Örnek 4.1</span><span class="st on">işlendi</span>
+      <span class="n">4.4</span><span>Sonlu farklar denklemleri: düğüm ağı, enerji dengesi yöntemi, Tablo 4.2</span><span class="st on">işlendi</span>
+      <span class="n">4.5</span><span>Sonlu fark denklemlerinin çözümü: matris formu, Gauss-Seidel, doğruluk, Örnek 4.3</span><span class="st on">işlendi</span>
+    </div>
+  </section>
+
+  <!-- ============ SAYFA 2 ============ -->
+  <hr class="cut">
+  <section id="neden-2b">
+    <span class="src">Hoca özeti s. 2 · Kitap s. 230</span>
+    <h2>Neden 1-B'den 2-B'ye?</h2>
+    <p>3. ünitede neden 1-B ile başladık? Hocanın cevabı: <mark>temel analiz 1-B sistemde yapılır, temel gerçekler 1-B sistemde daha kolay gösterilir</mark>. Isıl direnç, sınır koşulları, ısı denkleminin sadeleştirilmesi gibi bütün temel fikirleri tek koordinatla öğrendik.</p>
+    <p>Ama <mark>birçok durumda 1-B yaklaşım gerçekçi değildir, çok boyutlu etkiler hesaba katılmalıdır</mark>. Kitap bunu daha sert söyler: bazı problemler 1-B ele alınırsa "fazlasıyla basitleştirilmiş" olur. Bu ünitede <b>kararlı rejim</b> koşullarında <b>2-B sistemleri</b> inceleyeceğiz; yani sıcaklık artık iki koordinata bağlı: \(T=T(x,y)\).</p>
+    <p class="box acik"><span class="k">Örnek:</span> 3.1.3'teki seri-paralel kompozit duvarı hatırla. Ortadaki F ve G katmanlarının k'ları farklıyken ısı yukarı-aşağı da akıyordu; biz bunu iki farklı 1-B devreyle alttan ve üstten sınırlamıştık. Gerçek değeri bulmak için 2-B çözüm gerekir. Bir binanın duvar köşesi, bir bacanın kesiti, toprağa gömülü bir boru da 2-B problemlerdir.</p>
+  </section>
+
+  <!-- ============ SAYFA 3 ============ -->
+  <hr class="cut">
+  <section id="alternatif-yaklasimlar">
+    <span class="src">Hoca özeti s. 3 · Kitap 4.1, s. 230–231</span>
+    <h2>4.1 Alternatif Yaklaşımlar</h2>
+    <p class="box dikkat"><span class="k">Hocanın notu:</span> Bu kısım özette yok; hoca "ayrıntılı açıklama kitapta s. 230–231, <b>lütfen bu sayfaları dikkatle okuyun</b>, derste notlarımla anlatıyorum, 4. bölümün ana hatları da burada" diyor. Aşağısı bu iki sayfanın eksiksiz anlatımı.</p>
+
+    <h3>Eş sıcaklık çizgileri ve ısı akış çizgileri</h3>
+    <p>Uzun, prizma şeklinde bir katı düşün. İki yüzeyi yalıtılmış, diğer iki yüzeyi farklı sıcaklıklarda tutuluyor (\(T_1>T_2\)). Isı iletimle 1. yüzeyden 2. yüzeye akar. Fourier yasasına göre yerel ısı akısı bir <b>vektördür</b> ve her yerde <mark>eş sıcaklık çizgilerine (izotermlere) diktir</mark>. Isı akısı vektörünün yönlerini gösteren çizgilere <b>ısı akış çizgileri</b> denir. Vektörün kendisi \(x\) ve \(y\) bileşenlerinin bileşkesidir:</p>
+    <div class="eq">\[ \vec{q}\,''=\vec i\,q''_x+\vec j\,q''_y \qquad\qquad q''_x=-k\frac{\partial T}{\partial x},\quad q''_y=-k\frac{\partial T}{\partial y} \]</div>
+    <p class="terms"><span>\(\vec i,\vec j\): \(x\) ve \(y\) yönlerindeki birim vektörler</span><span>\(q''_x, q''_y\): akının bileşenleri [W/m²]</span><span>\(\partial\): kısmi türev, çünkü T artık iki değişkene bağlı</span></p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 340" role="img" aria-label="İki boyutlu iletimde izotermler ve ısı akış çizgileri">
+        <defs><clipPath id="dom"><rect x="80" y="30" width="300" height="270"/></clipPath>
+          <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#fde047"/></marker></defs>
+        <rect x="80" y="30" width="300" height="270" fill="#1e293b" stroke="#cbd5e1" stroke-width="2"/>
+        <line x1="80" y1="30" x2="80" y2="300" stroke="#fb7185" stroke-width="6"/>
+        <line x1="80" y1="300" x2="380" y2="300" stroke="#60a5fa" stroke-width="6"/>
+        <g clip-path="url(#dom)">
+          <g stroke="#f472b6" stroke-width="2">
+            <line x1="80" y1="300" x2="380" y2="-60"/><line x1="80" y1="300" x2="380" y2="80"/><line x1="80" y1="300" x2="380" y2="180"/><line x1="80" y1="300" x2="380" y2="250"/><line x1="80" y1="300" x2="300" y2="-100"/>
+          </g>
+          <g stroke="#34d399" stroke-width="2" fill="none" class="flow">
+            <path d="M80,240 A60,60 0 0 1 140,300"/><path d="M80,180 A120,120 0 0 1 200,300"/><path d="M80,120 A180,180 0 0 1 260,300"/><path d="M80,60 A240,240 0 0 1 320,300"/>
+          </g>
+        </g>
+        <g stroke="#94a3b8" stroke-width="1.5"><line x1="100" y1="30" x2="92" y2="20"/><line x1="160" y1="30" x2="152" y2="20"/><line x1="220" y1="30" x2="212" y2="20"/><line x1="280" y1="30" x2="272" y2="20"/><line x1="340" y1="30" x2="332" y2="20"/>
+          <line x1="380" y1="60" x2="390" y2="52"/><line x1="380" y1="120" x2="390" y2="112"/><line x1="380" y1="180" x2="390" y2="172"/><line x1="380" y1="240" x2="390" y2="232"/></g>
+        <text x="230" y="16" fill="#94a3b8" font-size="13" text-anchor="middle">yalıtılmış</text>
+        <text x="70" y="160" fill="#fb7185" font-size="15" text-anchor="end">T₁</text>
+        <text x="230" y="325" fill="#60a5fa" font-size="15" text-anchor="middle">T₂ &lt; T₁</text>
+        <!-- vektör -->
+        <line x1="187" y1="193" x2="232" y2="238" stroke="#fde047" stroke-width="2.5" marker-end="url(#ah)"/>
+        <line x1="187" y1="193" x2="232" y2="193" stroke="#fde047" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+        <line x1="187" y1="193" x2="187" y2="238" stroke="#fde047" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#ah)"/>
+        <text x="238" y="248" fill="#fde047" font-size="14">q″</text><text x="236" y="190" fill="#fde047" font-size="12">q″x</text><text x="160" y="250" fill="#fde047" font-size="12">q″y</text>
+        <g font-size="14"><text x="420" y="70" fill="#f472b6">— izotermler (T = sabit)</text><text x="420" y="100" fill="#34d399">— ısı akış çizgileri (adyabatlar)</text><text x="420" y="130" fill="#fde047">→ akı vektörü ve bileşenleri</text>
+          <text x="420" y="175" fill="#cbd5e1">İki çizgi ailesi her yerde</text><text x="420" y="195" fill="#cbd5e1">birbirine DİK kesişir.</text>
+          <text x="420" y="235" fill="#cbd5e1">Yalıtılmış yüzeyler de</text><text x="420" y="255" fill="#cbd5e1">birer ısı akış çizgisidir:</text><text x="420" y="275" fill="#cbd5e1">izotermler onlara dik ulaşır.</text></g>
+      </svg>
+      <p class="cap">Kitap Şekil 4.1'in fikri. Sıcak yüzey (sol) ile soğuk yüzeyin (alt) birleştiği köşede izotermler köşeden çıkan ışınlar, ısı akış çizgileri ise yaylardır. Yeşil çizgiler boyunca akan ısı animasyonla gösteriliyor.</p>
+    </div>
+    <p>Isı akış çizgileri tanım gereği ısının aktığı yöndedir; bu yüzden <mark>bir ısı akış çizgisinin içinden (karşıya) ısı iletilemez</mark>. Bu nedenle bunlara bazen <b>adyabat</b> denir. Tersi de doğrudur: <mark>adyabatik yüzeyler (veya simetri çizgileri) birer ısı akış çizgisidir</mark>.</p>
+    <p class="box acik"><span class="k">Analoji:</span> Bir dağın haritasını düşün. İzotermler yükselti eğrileri (aynı yükseklikteki noktalar), ısı akış çizgileri ise yağmur suyunun aktığı yollardır. Su her zaman en dik yönden, yani yükselti eğrilerine dik akar; bir su yolunun karşısına su geçmez. Sıcaklık "yükseklik", ısı da "su" gibi.</p>
+
+    <h3>İletim analizinin iki ana hedefi</h3>
+    <p>Her iletim analizinde iki hedef vardır. <b>Birinci hedef</b> ortamdaki sıcaklık dağılımını bulmaktır; bu problemde \(T(x,y)\). Bu, ısı denkleminin uygun hali çözülerek yapılır. 2-B, kararlı, ısı üretimsiz ve \(k\) sabitken bu hal şudur:</p>
+    <div class="eq big">\[ \frac{\partial^2T}{\partial x^2}+\frac{\partial^2T}{\partial y^2}=0 \]</div>
+    <p class="hatir"><span class="k">Hatırlatma:</span> Bu, genel ısı denkleminden \(z\) terimi (2-B), \(\dot q\) (üretim yok) ve \(\rho c_p\,\partial T/\partial t\) (kararlı) silinip \(k\) dışarı alınarak elde edilir. Matematikte buna <b>Laplace denklemi</b> denir.</p>
+    <p><b>İkinci hedef</b> ısı akısı bileşenleri \(q''_x\) ve \(q''_y\)'yi bulmaktır. \(T(x,y)\) bulunduktan sonra bu kolaydır: yukarıdaki Fourier ifadelerinde türev almak yeter.</p>
+
+    <h3>Çözüm yöntemleri</h3>
+    <p>Bu denklemi çözmek için <b>analitik</b>, <b>grafik</b> ve <b>sayısal</b> (sonlu farklar, sonlu elemanlar veya sınır elemanları) yaklaşımlar vardır.</p>
+    <div class="tw"><table class="t">
+      <tr><th>Yöntem</th><th>Nasıl?</th><th>Artısı</th><th>Eksisi</th><th>Kitap</th></tr>
+      <tr><td><b>Analitik</b> (tam çözüm)</td><td>Denklemin matematiksel tam çözümü</td><td>\(T\), \(x\) ve \(y\)'nin <b>sürekli</b> fonksiyonu olarak bulunur; her noktadaki sıcaklık hesaplanabilir</td><td>Adi değil <b>kısmi</b> türevli denklem; çözümler karmaşık seriler ve fonksiyonlar içerir; sadece basit geometri ve sınır koşullarında elde edilir</td><td>4.2, 4.3</td></tr>
+      <tr><td><b>Grafik</b> (akı çizimi, flux plotting)</td><td>İzotermlerle ısı akış çizgilerinin dik kesişmesi kuralına göre elle ağ çizmek</td><td>Sıcaklık dağılımı için hızlı tahmin</td><td>Yaklaşık, ayrık noktalarda; sadece adyabatik ve izotermal sınırlı 2-B problemler; bilgisayar yöntemleri yerini almış</td><td>4S.1 (ek)</td></tr>
+      <tr><td><b>Sayısal</b> (sonlu fark / eleman / sınır eleman)</td><td>Ortamı noktalara (düğümlere) bölüp denklemleri bilgisayarla çözmek</td><td>Karmaşık 2-B veya 3-B geometri ve çok çeşitli sınır koşullarında <b>doğru</b> sonuç</td><td>Sonuçlar ayrık noktalarda, yaklaşık</td><td>4.4, 4.5</td></tr>
+    </table></div>
+    <p>Kitap analitik yöntemin doğasını göstermek için 4.2'de <b>değişkenlere ayırma</b> yöntemiyle bir tam çözüm elde ediyor. 4.3'teki <b>iletim şekil faktörleri</b> ve <b>boyutsuz iletim ısı hızları</b> ise mühendislikte sık karşılaşılan geometriler için önceden bulunmuş çözümlerin derlemesidir. 4.4 ve 4.5'te de bilgisayar yardımıyla sayısal yöntemlerle sıcaklıkların ve ısı hızlarının nasıl doğru tahmin edileceği gösteriliyor.</p>
+    <p class="box sinav"><span class="k">Sınavda (kavram sorusu):</span> "Analitik ve sayısal yöntemleri karşılaştırın" türü sorular bu iki sayfadan çıkar. Anahtar kelimeler: analitik = <b>tam, sürekli, her noktada, ama basit geometri</b>; sayısal = <b>yaklaşık, ayrık noktalarda, ama karmaşık geometri ve her tür sınır koşulu</b>; grafik = <b>hızlı tahmin, sadece adyabatik/izotermal sınırlar, izoterm ⟂ akış çizgisi</b>.</p>
+  </section>
+
+  <!-- ============ SAYFA 4–6 ============ -->
+  <hr class="cut">
+  <section id="degisken-ayirma">
+    <span class="src">Hoca özeti s. 4–6 · Kitap 4.2, s. 231–233</span>
+    <h2>4.2 Değişkenlere Ayırma Yöntemi (Analitik / Tam Yöntem)</h2>
+
+    <h3>Problem</h3>
+    <p>İnce dikdörtgen bir levha veya uzun dikdörtgen bir çubuk düşün (genişlik \(L\), yükseklik \(W\)). <b>Üç kenarı</b> sabit \(T_1\) sıcaklığında, <b>dördüncü kenarı</b> (üst kenar) sabit \(T_2\) sıcaklığında tutuluyor. Kabul: levhanın yüzeylerinden veya çubuğun uçlarından ısı transferi ihmal edilebilir. Bu yüzden \(x\)-\(y\) düzlemine dik yöndeki sıcaklık gradyanları ihmal edilebilir (\(\partial^2T/\partial z^2\approx0\)) ve <mark>iletim esas olarak \(x\) ve \(y\) yönlerindedir</mark>. Isı denklemi:</p>
+    <div class="eq">\[ \frac{\partial^2T}{\partial x^2}+\frac{\partial^2T}{\partial y^2}=0 \]</div>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 300" role="img" aria-label="Dikdörtgen levha ve sınır koşulları">
+        <rect x="200" y="40" width="300" height="200" fill="#1e293b" stroke="#cbd5e1" stroke-width="2"/>
+        <line x1="200" y1="40" x2="500" y2="40" stroke="#fb7185" stroke-width="6"/>
+        <line x1="200" y1="40" x2="200" y2="240" stroke="#60a5fa" stroke-width="6"/><line x1="500" y1="40" x2="500" y2="240" stroke="#60a5fa" stroke-width="6"/><line x1="200" y1="240" x2="500" y2="240" stroke="#60a5fa" stroke-width="6"/>
+        <text x="350" y="145" fill="#cbd5e1" font-size="18" text-anchor="middle">T(x, y)</text>
+        <g font-size="15"><text x="350" y="28" fill="#fb7185" text-anchor="middle">④ T₂ , θ = 1</text>
+          <text x="190" y="135" fill="#60a5fa" text-anchor="end">① T₁ , θ = 0</text><text x="510" y="135" fill="#60a5fa">③ T₁ , θ = 0</text>
+          <text x="350" y="265" fill="#60a5fa" text-anchor="middle">② T₁ , θ = 0</text></g>
+        <g stroke="#94a3b8" stroke-width="1.5"><line x1="200" y1="240" x2="200" y2="290"/><line x1="160" y1="240" x2="540" y2="240" stroke-dasharray="3 4"/></g>
+        <g font-size="14" fill="#94a3b8"><text x="200" y="285" text-anchor="middle">0</text><text x="500" y="285" text-anchor="middle">L</text><text x="185" y="45" text-anchor="end">W</text><text x="545" y="245">x</text><text x="195" y="300" text-anchor="end">y ↑</text></g>
+      </svg>
+      <p class="cap">Kitap Şekil 4.2 (hocanın çizimi). Kenar numaraları hocanınkiyle aynı: ① sol, ② alt, ③ sağ, ④ üst.</p>
+    </div>
+
+    <h3>Dönüşüm: \(T\) yerine \(\theta\)</h3>
+    <p>Bizi ilgilendiren \(T(x,y)\), ama çözümü basitleştirmek için \(T\)'yi boyutsuz bir \(\theta\) değişkenine dönüştürüyoruz:</p>
+    <div class="eq big">\[ \theta\equiv\frac{T-T_1}{T_2-T_1} \]</div>
+    <p class="terms"><span>\(\theta(x,y)\): boyutsuz sıcaklık</span><span>\(T=T_1\) olan yerde \(\theta=0\)</span><span>\(T=T_2\) olan yerde \(\theta=1\)</span></p>
+    <p>\(T_1\) ve \(T_2\) sabit olduğu için türevler sadece bir sabitle çarpılır; denklem aynı biçimde kalır:</p>
+    <div class="eq">\[ \frac{\partial^2\theta}{\partial x^2}+\frac{\partial^2\theta}{\partial y^2}=0 \]</div>
+    <p>Denklem hem \(x\)'te hem \(y\)'de ikinci mertebeden olduğu için <mark>her koordinat için 2 sınır koşulu</mark> gerekir:</p>
+    <div class="eq">\[ \theta(0,y)=0,\qquad \theta(L,y)=0,\qquad \theta(x,0)=0,\qquad \theta(x,W)=1 \]</div>
+    <p>Hocanın notu: dönüşüm sayesinde <mark>dört sınır koşulundan üçü homojen</mark> oldu ve <mark>\(0\le\theta\le1\)</mark> aralığına sıkıştı.</p>
+    <p class="box acik"><span class="k">"Homojen" ne demek, dönüşüm neden yapıldı?</span> Homojen sınır koşulu, değeri <b>sıfır</b> olan koşuldur. \(T\) ile çalışsaydık dört kenarın hepsinde sıfırdan farklı bir değer olurdu. \(T_1\)'i çıkarınca üç kenar sıfıra iner; değişkenlere ayırma yöntemi bu sıfır koşullar sayesinde işler (aşağıda \(C\) sabitlerini sıfır koşullarla eleyeceğiz). \(T_2-T_1\)'e bölmek de sonucu her sıcaklık değeri için geçerli, boyutsuz bir forma sokar.</p>
+
+    <h3>Ayırma: \(\theta=X(x)\cdot Y(y)\)</h3>
+    <p>Denklemi şöyle de yazabiliriz: \(\frac{\partial^2\theta}{\partial x^2}=-\frac{\partial^2\theta}{\partial y^2}\). Şimdi yöntemin özü geliyor: aranan çözümün, biri sadece \(x\)'e, diğeri sadece \(y\)'ye bağlı <b>iki fonksiyonun çarpımı</b> olarak yazılabileceğini kabul ediyoruz:</p>
+    <div class="eq big">\[ \theta(x,y)=X(x)\cdot Y(y) \]</div>
+    <p>Bunu denkleme koyunca \(X''Y=-XY''\) olur. Her iki tarafı \(XY\)'ye bölünce:</p>
+    <div class="eq">\[ -\frac{1}{X}\frac{d^2X}{dx^2}=\frac{1}{Y}\frac{d^2Y}{dy^2}=\text{sabit}=\lambda^2 \]</div>
+    <p>Denklem gerçekten <b>ayrılabilir</b>: sol taraf sadece \(x\)'in, sağ taraf sadece \(y\)'nin fonksiyonu. Bu eşitlik genel olarak (her \(x\) ve \(y\) için) ancak <mark>iki taraf da aynı sabite eşitse</mark> sağlanabilir. Bu sabite <b>ayırma sabiti</b> denir ve \(\lambda^2\) olarak gösterilir.</p>
+    <p class="box acik"><span class="k">Neden sabit olmak zorunda?</span> \(y\)'yi sabit tutup sadece \(x\)'i değiştir. Sağ taraf sadece \(y\)'ye bağlı, yani hiç değişmez. Eşitlik bozulmasın diye sol taraf da değişmemelidir. Aynı şeyi \(y\) için de yapabilirsin. İki taraf da hiçbir değişkenle değişmiyorsa ikisi de sabittir. <b>Analoji:</b> İki farklı şehirde iki termometre her an aynı değeri gösteriyorsa ve biri sadece İstanbul'un, öbürü sadece Ankara'nın havasına bağlıysa, ikisi de hep aynı sabit değerde kalıyor demektir.</p>
+
+    <h3>Kısmi türevli denklemden iki adi türevli denkleme</h3>
+    <p>Her tarafı \(\lambda^2\)'ye eşitleyince <mark>kısmi türevli denklem (PDE), iki adi diferansiyel denkleme (ODE) dönüşür</mark>:</p>
+    <div class="eq big">\[ \frac{d^2X}{dx^2}+\lambda^2X=0 \qquad\qquad \frac{d^2Y}{dy^2}-\lambda^2Y=0 \]</div>
+    <p class="box dikkat"><span class="k">İşarete dikkat:</span> Hocanın 6. sayfasında \(Y\) denkleminin işareti karalanmış/belirsiz görünüyor. Doğrusu kitaptaki gibi <b>eksi</b>dir: \(\frac{d^2Y}{dy^2}-\lambda^2Y=0\). Kontrol: \(\frac{1}{Y}Y''=+\lambda^2\) olduğundan \(Y''=\lambda^2Y\). \(X\) denkleminde ise baştaki eksi işareti yüzünden \(+\lambda^2\) gelir.</p>
+    <p>Bu iki adi denklemin genel çözümleri bilinen fonksiyonlardır: artı işaretli olan salınım (sinüs-kosinüs), eksi işaretli olan üstel büyüme/sönüm verir:</p>
+    <div class="eq">\[ X=C_1\cos\lambda x+C_2\sin\lambda x \qquad\qquad Y=C_3e^{-\lambda y}+C_4e^{+\lambda y} \]</div>
+    <p>İkisini çarpınca 2-B çözümün genel biçimi:</p>
+    <div class="eq big">\[ \theta=\left(C_1\cos\lambda x+C_2\sin\lambda x\right)\left(C_3e^{-\lambda y}+C_4e^{\lambda y}\right) \]</div>
+    <p class="terms"><span>\(C_1\ldots C_4\): integral sabitleri, sınır koşullarından bulunacak</span><span>\(\lambda\): ayırma sabiti (henüz bilinmiyor)</span></p>
+    <p class="box ek"><span class="k">Kitaptan ek, \(\lambda^2\) neden pozitif?</span> Kitap, sabitin \(+\lambda^2\) seçilmesinin keyfi olmadığını vurguluyor. Negatif bir değer veya \(\lambda^2=0\) seçilseydi, verilen sınır koşullarını sağlayan bir çözüm bulmak imkânsız olurdu (Problem 4.1). Sezgisel nedeni: \(x\) yönünde iki uçta da \(\theta=0\) (sol ve sağ kenar). Hem 0'da hem \(L\)'de sıfır olabilen fonksiyon <b>sinüs</b>tür; üstel fonksiyonlar bunu yapamaz. Bu yüzden \(X\)'e salınım veren işareti seçiyoruz.</p>
+    <p class="box sinav"><span class="k">Soru çözme anahtarı:</span> <b>İki homojen sınır koşulu olan yön sinüs-kosinüs alır</b>, homojen olmayan koşulun bulunduğu yön üstel (veya sinh/cosh) alır. Kenarlar farklı verilirse (örneğin \(T_2\) sağ kenarda) rolleri değiştir: o zaman \(Y\) sinüs-kosinüs, \(X\) üstel olur. Ayrıca \(C_3e^{-\lambda y}+C_4e^{\lambda y}\) yerine \(C_3\sinh\lambda y+C_4\cosh\lambda y\) yazmak eşdeğerdir ve sıfır koşullarında işi kolaylaştırır (\(\sinh0=0\)).</p>
+
+    <h3>Nereye varacağız? (önizleme)</h3>
+    <p>Hocanın sonraki sayfalarında sabitler sınır koşullarıyla bulunacak. Kitaptaki sonuç (Denk. 4.19) bir sonsuz seridir:</p>
+    <div class="eq">\[ \theta(x,y)=\frac{2}{\pi}\sum_{n=1}^{\infty}\frac{(-1)^{n+1}+1}{n}\,\sin\frac{n\pi x}{L}\;\frac{\sinh(n\pi y/L)}{\sinh(n\pi W/L)} \]</div>
+    <div class="fig">
+      <canvas id="sepCanvas" width="600" height="400" style="width:100%;max-width:600px;height:auto;display:block;margin:0 auto;border-radius:8px"></canvas>
+      <div class="controls">
+        <label for="sepN">serideki terim sayısı (n'ye kadar) = <span id="vsepN"></span><input id="sepN" type="range" min="1" max="41" step="2" value="15"></label>
+        <label for="sepW">W / L = <span id="vsepW"></span><input id="sepW" type="range" min="0.4" max="1.6" step="0.1" value="0.67"></label>
+      </div>
+      <p class="cap">Serinin hesaplanmış hali: renk θ değeri (mavi 0, kırmızı 1), beyaz çizgiler θ = 0.1, 0.2 … 0.9 izotermleri. Az terimle üst kenar dalgalı çıkar; terim arttıkça θ = 1 koşulu düzelir. Çift n terimleri sıfırdır, bu yüzden kaydırıcı tek sayılarla ilerliyor.</p>
+    </div>
+  </section>
+
+  <!-- ============ SAYFA 7–8 ============ -->
+  <hr class="cut">
+  <section id="sinir-kosullari">
+    <span class="src">Hoca özeti s. 7–8 · Kitap 4.2, s. 233–235</span>
+    <h2>4 Sınır Koşulunun Uygulanması</h2>
+    <p>Genel çözümümüz \(\theta=(C_1\cos\lambda x+C_2\sin\lambda x)(C_3e^{-\lambda y}+C_4e^{\lambda y})\) idi. Şimdi dört kenarın koşulunu sırayla uygulayıp sabitleri eliyoruz. Önce üç homojen (sıfır) koşulu kullanıyoruz; hepsi aynı mantıkla işler: bir çarpım her yerde sıfır olacaksa çarpanlardan biri sıfır olmalıdır.</p>
+
+    <p><b>BC ① (sol kenar), \(\theta(0,y)=0\):</b> \(x=0\)'da \(\cos0=1\), \(\sin0=0\) olduğu için geriye \(C_1(C_3e^{-\lambda y}+C_4e^{\lambda y})=0\) kalır. Bu her \(y\) için sıfır olacaksa:</p>
+    <div class="eq">\[ C_1=0 \]</div>
+    <p><b>BC ② (alt kenar), \(\theta(x,0)=0\):</b> \(y=0\)'da \(e^0=1\), yani \(C_2\sin\lambda x\,(C_3+C_4)=0\). İki seçenek var: \(C_2=0\) veya \(C_3+C_4=0\). \(C_2=0\) olsaydı her yerde \(\theta=0\) olurdu ve bu üst kenardaki \(\theta=1\) koşuluyla (BC ④) çelişirdi. Bu yüzden \(C_2\neq0\) ve:</p>
+    <div class="eq">\[ C_3=-C_4 \]</div>
+    <p><b>BC ③ (sağ kenar), \(\theta(L,y)=0\):</b> Elimizde \(\theta=C_2C_4\sin\lambda x\,(e^{\lambda y}-e^{-\lambda y})\) kaldı. \(x=L\)'de sıfır olması için (ve sıfır olmayan bir çözüm kalsın diye) \(\sin\lambda L=0\) olmalı. Sinüs, açı \(\pi\)'nin tam katı olduğunda sıfırdır; demek ki \(\lambda\) sadece belirli (ayrık) değerler alabilir:</p>
+    <div class="eq big">\[ \sin\lambda L=0 \quad\Longrightarrow\quad \lambda=\frac{n\pi}{L},\qquad n=1,2,3,\dots \]</div>
+    <p class="box ek"><span class="k">Kitaptan ek:</span> \(n=0\) dışarıda bırakılır, çünkü \(\lambda=0\) yine her yerde \(\theta=0\) verir. Bu \(\lambda\) değerlerine <b>özdeğer</b> denir.</p>
+    <p class="box acik"><span class="k">Analoji:</span> İki ucu sabitlenmiş bir gitar teli düşün. Tel sadece iki ucu sabit kalacak şekilde titreyebilir: yarım dalga, tam dalga, bir buçuk dalga… Ara değerler mümkün değildir. \(\sin(n\pi x/L)\) fonksiyonları da sol ve sağ kenarda sıfır olan "titreşim biçimleri" gibidir.</p>
+
+    <p>Sabitleri birleştirip (yeni sabit \(n\)'ye bağlı olabileceği için \(C_n\) diyoruz) ve \(e^{a}-e^{-a}=2\sinh a\) olduğunu kullanarak:</p>
+    <div class="eq">\[ \theta(x,y)=C_n\,\sin\frac{n\pi x}{L}\,\sinh\frac{n\pi y}{L} \]</div>
+    <p class="terms"><span>\(\sinh x=\dfrac{e^x-e^{-x}}{2}\) (hiperbolik sinüs); \(\sinh0=0\)</span><span>\(C_n\): BC ④ ile bulunacak</span></p>
+    <p>Aslında bu, denklemi ve üç sınır koşulunu sağlayan <b>sonsuz sayıda çözüm</b> demektir (her \(n\) için bir tane). Problem <b>doğrusal</b> olduğu için bunları toplayabiliriz (<mark>süperpozisyon</mark>); daha genel çözüm:</p>
+    <div class="eq big">\[ \theta(x,y)=\sum_{n=1}^{\infty}C_n\,\sin\frac{n\pi x}{L}\,\sinh\frac{n\pi y}{L} \]</div>
+    <p class="hatir"><span class="k">Hatırlatma:</span> Süperpozisyon, doğrusal bir denklemin çözümlerinin toplamının da bir çözüm olması demektir. Laplace denklemi doğrusaldır (θ'nın karesi, çarpımı yok).</p>
+
+    <h3>BC ④ ve \(C_n\)'nin bulunması</h3>
+    <p>Son koşul üst kenarda, \(\theta(x,W)=1\). \(y=W\) koyunca:</p>
+    <div class="eq">\[ \theta(x,W)=1=\sum_{n=1}^{\infty}C_n\,\sin\frac{n\pi x}{L}\,\sinh\frac{n\pi W}{L} \]</div>
+    <p class="box dikkat"><span class="k">Küçük düzeltme:</span> Hocanın BC ④ satırında \(\sinh(n\pi y/L)\) yazıyor; \(y=W\) konduğu için orada \(\sinh(n\pi W/L)\) olmalı (kitap Denk. 4.12 böyle). Bu artık bir sabittir, sadece \(n\)'ye bağlıdır.</p>
+    <p>Burada \(C_n\) bulunmalı. Hoca ayrıntıyı kitaba (s. 233–234) bırakmış; yöntem şu:</p>
+    <p class="box ek"><span class="k">Kitaptan ek, ortogonal fonksiyonlar yöntemi:</span> Bir fonksiyon ailesi \(g_1(x),g_2(x),\dots\) için \(\int_a^b g_m(x)\,g_n(x)\,dx=0\) (\(m\neq n\)) sağlanıyorsa bu fonksiyonlara <b>ortogonal</b> denir. \(0\le x\le L\) aralığında \(\sin(n\pi x/L)\) fonksiyonları ortogonaldir. Her fonksiyon böyle bir seriyle yazılabilir: \(f(x)=\sum A_n g_n(x)\). Katsayıyı bulmak için iki tarafı \(g_m\) ile çarpıp integral alınır; ortogonallik yüzünden sağdaki toplamın <b>bir terim hariç hepsi sıfır</b> olur:
+      \[ A_n=\frac{\int_a^b f(x)\,g_n(x)\,dx}{\int_a^b g_n^2(x)\,dx} \]
+      Bizim problemde \(f(x)=1\) ve \(g_n=\sin(n\pi x/L)\). İntegraller hesaplanınca "1"in Fourier serisi çıkar:
+      \[ 1=\sum_{n=1}^{\infty}\frac{2}{\pi}\,\frac{(-1)^{n+1}+1}{n}\,\sin\frac{n\pi x}{L} \]
+      Bunu BC ④ ifadesiyle terim terim karşılaştırınca \(C_n\sinh(n\pi W/L)=\frac{2}{\pi}\frac{(-1)^{n+1}+1}{n}\) olur.</p>
+    <p class="box acik"><span class="k">Ortogonallik sezgisi:</span> 3-B uzayda bir vektörün \(x\) bileşenini bulmak için onu \(\vec i\) ile skaler çarparsın; \(\vec j\) ve \(\vec k\) terimleri sıfır olur, çünkü birbirlerine diktirler. Burada da \(\sin(m\pi x/L)\) ile çarpıp integral almak, "1" fonksiyonunun o sinüs yönündeki bileşenini çekip çıkarmaktır.</p>
+    <p>Sonuç olarak:</p>
+    <div class="eq big">\[ C_n=\frac{2\left[(-1)^{n+1}+1\right]}{n\pi\,\sinh(n\pi W/L)},\qquad n=1,2,3,\dots \]</div>
+    <p>Bunu seride yerine koyunca son çözüm:</p>
+    <div class="eq big">\[ \theta(x,y)=\frac{2}{\pi}\sum_{n=1}^{\infty}\frac{(-1)^{n+1}+1}{n}\,\sin\frac{n\pi x}{L}\,\frac{\sinh(n\pi y/L)}{\sinh(n\pi W/L)} \]</div>
+    <p class="terms"><span>\((-1)^{n+1}+1\): tek \(n\) için 2, çift \(n\) için 0 → sadece tek terimler katkı yapar</span><span>sinh oranı: \(y=0\)'da 0, \(y=W\)'da 1</span></p>
+    <p class="box sinav"><span class="k">Hızlı kontrol (sınavda işe yarar):</span> Sonucu bulunca her kenarı kontrol et: \(x=0\) ve \(x=L\)'de \(\sin=0\) → \(\theta=0\) ✔; \(y=0\)'da \(\sinh0=0\) → \(\theta=0\) ✔; \(y=W\)'da sinh oranı 1 ve kalan seri "1"in Fourier serisi → \(\theta=1\) ✔. Sıcaklığa dönmek için \(T=T_1+\theta(T_2-T_1)\).</p>
+
+    <h3>İzotermler ve ısı akış çizgileri</h3>
+    <p>Hocanın 8. sayfadaki şekli kitaptaki Şekil 4.3'tür. Seri yakınsaktır ve her \((x,y)\) için \(\theta\) hesaplanabilir; şekil \(\theta=0.1, 0.25, 0.5, 0.75\) izotermlerini ve ısı akış çizgilerini gösteriyor. Isı üst kenardan (\(\theta=1\)) girip diğer üç kenara (\(\theta=0\)) dağılır; akış çizgileri izotermlere dik keser. Yukarıdaki renkli haritada aynı izotermleri görebilirsin.</p>
+    <div class="fig">
+      <svg viewBox="0 0 720 330" role="img" aria-label="Dikdörtgen levhada izotermler ve ısı akış çizgileri">
+        <defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#34d399"/></marker></defs>
+        <rect x="210" y="30" width="300" height="270" fill="#1e293b" stroke="#cbd5e1" stroke-width="2"/>
+        <line x1="210" y1="30" x2="510" y2="30" stroke="#fb7185" stroke-width="5"/>
+        <g fill="none" stroke="#f472b6" stroke-width="2">
+          <path d="M214,32 Q360,92 506,32"/><path d="M214,34 Q360,150 506,34"/><path d="M216,38 Q360,215 504,38"/><path d="M218,44 C230,240 490,240 502,44"/><path d="M222,52 C232,330 488,330 498,52"/>
+        </g>
+        <g font-size="13" fill="#f472b6"><text x="364" y="70">0.75</text><text x="364" y="114">0.5</text><text x="364" y="160">0.25</text><text x="364" y="196">θ=0.1</text></g>
+        <g fill="none" stroke="#34d399" stroke-width="1.8" marker-end="url(#ah2)" class="flow">
+          <line x1="360" y1="34" x2="360" y2="296"/>
+          <path d="M300,32 Q290,170 214,250"/><path d="M420,32 Q430,170 506,250"/>
+          <path d="M260,32 Q250,90 214,140"/><path d="M460,32 Q470,90 506,140"/>
+          <path d="M232,32 Q228,50 214,70"/><path d="M488,32 Q492,50 506,70"/>
+        </g>
+        <g font-size="14" fill="#cbd5e1"><text x="360" y="22" text-anchor="middle">θ = 1</text><text x="200" y="170" text-anchor="end">θ = 0</text><text x="520" y="170">θ = 0</text><text x="360" y="320" text-anchor="middle">θ = 0</text></g>
+        <g font-size="13" fill="#94a3b8"><text x="540" y="230">orta çizgi x = L/2:</text><text x="540" y="248">simetri → adyabatik</text><text x="540" y="266">→ bir ısı akış çizgisi</text></g>
+      </svg>
+      <p class="cap">Şekil 4.3'ün yeniden çizimi (şematik). Pembe: izotermler; yeşil: ısı akış çizgileri.</p>
+    </div>
+    <p class="box ek"><span class="k">Kitaptan ek, iki gözlem:</span> <b>(1)</b> Sıcaklık dağılımı \(x=L/2\)'ye göre simetriktir ve orada \(\partial T/\partial x=0\). Demek ki simetri düzlemi <b>adyabatiktir</b> ve bir ısı akış çizgisidir (4.1'deki kural). <b>(2)</b> Üst köşelerde sıcaklık aniden \(T_1\)'den \(T_2\)'ye atlıyor; bu süreksizlik <b>fiziksel olarak mümkün değildir</b>. Gerçekte köşelere yakın çok büyük sıcaklık gradyanları olabilir ama süreksizlik olamaz. Haritada az terimle üst köşelerdeki dalgalanma bu yüzden.</p>
+  </section>
+
+  <!-- ============ SAYFA 9–11 ============ -->
+  <hr class="cut">
+  <section id="sekil-faktoru">
+    <span class="src">Hoca özeti s. 9–11 · Kitap 4.3, s. 235–239</span>
+    <h2>4.3 İletim Şekil Faktörü ve Boyutsuz İletim Isı Hızı</h2>
+    <p>2-B ve 3-B ısı denkleminin analitik çözümünü bulmak <mark>genelde zaman alıcıdır, birçok durumda da mümkün değildir</mark>. Gördük: basit bir dikdörtgen için bile sonsuz seri çıktı. Bu yüzden <b>farklı bir yaklaşım</b> izlenir: birçok durumda 2-B ve 3-B iletim problemleri, ısı difüzyon denkleminin <mark>önceden bulunmuş çözümleri</mark> kullanılarak hızla çözülebilir. Bu hazır çözümler iki biçimde verilir: <b>şekil faktörü \(S\)</b> veya <b>kararlı rejim boyutsuz iletim ısı hızı \(q^*_{ss}\)</b>.</p>
+    <p class="box acik"><span class="k">Analoji:</span> Her seferinde integral tablosu türetmek yerine hazır integral tablosuna bakmak gibi. Birisi zor problemi bir kez çözmüş, sonucu bir katsayıya (S) sıkıştırmış; biz sadece tablodan okuyup çarpıyoruz.</p>
+
+    <h3>Şekil faktörü \(S\)</h3>
+    <p>Şekil faktörü, ısı hızını 1-B düzlem duvar formülü kadar basit bir biçime sokacak şekilde tanımlanır:</p>
+    <div class="eq big">\[ q=S\,k\,\Delta T_{1-2} \]</div>
+    <p class="terms"><span>\(S\): şekil faktörü [m] (sadece geometriye bağlı)</span><span>\(k\): ortamın ısı iletim katsayısı</span><span>\(\Delta T_{1-2}=T_1-T_2\): sınırlar arasındaki sıcaklık farkı</span></p>
+    <p>Buradan <b>2-B iletim direnci</b> de hemen çıkar (\(R=\Delta T/q\)):</p>
+    <div class="eq big">\[ R_{t,\text{cond(2D)}}=\frac{1}{S\,k} \]</div>
+    <p class="hatir"><span class="k">Hatırlatma:</span> 1-B geometriler için de şekil faktörü tanımlanabilir (Tablo 3.3'ten): düzlem duvar \(S=A/L\), silindir \(S=\frac{2\pi L}{\ln(r_2/r_1)}\), küre \(S=\frac{4\pi r_1r_2}{r_2-r_1}\). Yani \(q=Sk\Delta T\), aslında bildiğimiz \(q=\Delta T/R\)'nin başka yazılışı. Bu kitaptan bir ek.</p>
+    <p>Şekil faktörleri birçok 2-B ve 3-B sistem için analitik olarak bulunmuştur; yaygın olanların bir kısmı <b>Tablo 4.1</b>'de özetlenmiştir. Tabloda üç tür durum var:</p>
+    <ul style="margin:0;padding-left:22px">
+      <li><b>Durum 1–8 ve 11:</b> \(T_1\) ve \(T_2\)'de tutulan sınırlar arasında <b>2-B iletim</b> varsayılır, \(\Delta T_{1-2}=T_1-T_2\).</li>
+      <li><b>Durum 9:</b> köşe bölgesinde <b>3-B iletim</b>.</li>
+      <li><b>Durum 10:</b> (hocanın notunda yarım kalmış) iletim, izotermal bir disk (\(T_1\)) ile <b>disten uzaktaki noktalarda düzgün sıcaklıkta</b> (\(T_2\)) olan yarı-sonsuz bir ortam arasında olur.</li>
+    </ul>
+
+    <h3>Tablo 4.1(a): Şekil faktörleri, \(q=Sk(T_1-T_2)\)</h3>
+    <div class="tw"><table class="t" style="font-size:15px">
+      <tr><th>#</th><th>Sistem</th><th>Kısıt</th><th>Şekil faktörü \(S\)</th></tr>
+      <tr><td>1</td><td>Yarı-sonsuz ortama gömülü izotermal küre (çap D, merkez derinliği z)</td><td>\(z>D/2\)</td><td>\(\dfrac{2\pi D}{1-D/4z}\)</td></tr>
+      <tr><td>2</td><td>Yarı-sonsuz ortama gömülü yatay izotermal silindir (boy L)</td><td>\(L\gg D\)<br>\(L\gg D,\ z>3D/2\)</td><td>\(\dfrac{2\pi L}{\cosh^{-1}(2z/D)}\)<br>\(\dfrac{2\pi L}{\ln(4z/D)}\)</td></tr>
+      <tr><td>3</td><td>Yarı-sonsuz ortamda düşey silindir</td><td>\(L\gg D\)</td><td>\(\dfrac{2\pi L}{\ln(4L/D)}\)</td></tr>
+      <tr><td>4</td><td>Sonsuz ortamda iki silindir arası (aralık w)</td><td>\(L\gg D_1,D_2;\ L\gg w\)</td><td>\(\dfrac{2\pi L}{\cosh^{-1}\!\left(\frac{4w^2-D_1^2-D_2^2}{2D_1D_2}\right)}\)</td></tr>
+      <tr><td>5</td><td>Sonsuz genişlikte iki paralel düzlemin ortasında yatay silindir</td><td>\(z\gg D/2;\ L\gg z\)</td><td>\(\dfrac{2\pi L}{\ln(8z/\pi D)}\)</td></tr>
+      <tr><td>6</td><td>Kare kesitli katının ortasında silindir (kenar w)</td><td>\(w>D;\ L\gg w\)</td><td>\(\dfrac{2\pi L}{\ln(1.08\,w/D)}\)</td></tr>
+      <tr><td>7</td><td>Silindir içinde eksantrik silindir (kaçıklık z)</td><td>\(D>d;\ L\gg D\)</td><td>\(\dfrac{2\pi L}{\cosh^{-1}\!\left(\frac{D^2+d^2-4z^2}{2Dd}\right)}\)</td></tr>
+      <tr><td>8</td><td>Bitişik iki duvarın kenarından iletim (duvar kalınlığı L)</td><td>\(D>5L\)</td><td>\(0.54\,D\)</td></tr>
+      <tr><td>9</td><td>Üç duvarın köşesinden iletim</td><td>\(L\ll\) duvar boyu ve genişliği</td><td>\(0.15\,L\)</td></tr>
+      <tr><td>10</td><td>Yarı-sonsuz ortam üzerinde disk (çap D)</td><td>yok</td><td>\(2D\)</td></tr>
+      <tr><td>11</td><td>Kare kanal (dış kenar W, iç kenar w, boy L)</td><td>\(W/w\lt 1.4\)<br>\(W/w>1.4\)<br>\(L\gg W\)</td><td>\(\dfrac{2\pi L}{0.785\ln(W/w)}\)<br>\(\dfrac{2\pi L}{0.930\ln(W/w)-0.050}\)</td></tr>
+    </table></div>
+    <p class="box sinav"><span class="k">Tablo kullanma anahtarları:</span> (1) Önce problemi tablodaki şemayla eşleştir, sonra <b>kısıt sütununu kontrol et</b> (\(L\gg D\) gibi); kısıt sağlanmıyorsa formül geçersiz. (2) Gömülü cisimlerde \(z\) genellikle yüzeyden <b>merkeze</b> olan uzaklıktır. (3) \(\cosh^{-1}a=\ln\!\left(a+\sqrt{a^2-1}\right)\); hesap makinende cosh⁻¹ yoksa bunu kullan. (4) Durum 8 ve 9 bir odanın ısı kaybında kenar ve köşe düzeltmesi olarak kullanılır: toplam \(S\) = duvarlar (\(A/L\)) + kenarlar (\(0.54D\)) + köşeler (\(0.15L\)).</p>
+
+    <h3>Boyutsuz iletim ısı hızı \(q^*_{ss}\)</h3>
+    <p class="box ek"><span class="k">Kitaptan ek (hoca tabloyu verdi ama açıklamadı):</span> Durum 12–15, <b>sonsuz bir ortama gömülü</b> izotermal (\(T_1\)) cisimlerden, cisimden uzakta düzgün \(T_2\) sıcaklığındaki ortama iletimle ilgilidir. Bunlar için bir karakteristik uzunluk ve boyutsuz ısı hızı tanımlanır:
+      \[ L_c\equiv\left(\frac{A_s}{4\pi}\right)^{1/2} \qquad\qquad q^*_{ss}\equiv\frac{q\,L_c}{k\,A_s\,(T_1-T_2)} \qquad\Rightarrow\qquad q=q^*_{ss}\,\frac{kA_s(T_1-T_2)}{L_c} \]
+      Burada \(A_s\) cismin <b>aktif yüzey alanı</b>dır ("ss" = steady state, kararlı rejim). Tablodan görüldüğü gibi \(q^*_{ss}\) değerleri çok farklı şekiller için <b>birbirine çok yakındır</b> (≈ 0.9–1.1). Bu benzerlik sayesinde tabloda olmayan ama benzeyen bir şekil için \(q^*_{ss}\) tahmin edilebilir; örneğin küboid için \(0.1\le d/D\le10\) aralığında ara değer bulma (interpolasyon) yapılabilir. \(q^*_{ss}\) sonuçları \(S\)'ye de çevrilebilir: Durum 10'daki \(S=2D\), Durum 13'ten (sonsuz ortamı iki yarı-sonsuz ortam gibi düşünerek) türetilir.</p>
+    <div class="tw"><table class="t" style="font-size:15px">
+      <tr><th>#</th><th>Sonsuz ortamda (\(T_2\)) izotermal cisim (\(T_1\))</th><th>Aktif alan \(A_s\)</th><th>\(q^*_{ss}\)</th></tr>
+      <tr><td>12</td><td>Küre, çap D</td><td>\(\pi D^2\)</td><td>1</td></tr>
+      <tr><td>13</td><td>Sonsuz ince disk, çap D</td><td>\(\pi D^2/2\)</td><td>\(2\sqrt2/\pi=0.900\)</td></tr>
+      <tr><td>14</td><td>Sonsuz ince dikdörtgen, L × w</td><td>\(2wL\)</td><td>0.932</td></tr>
+      <tr><td>15</td><td>Kare tabanlı küboid, taban D, yükseklik d</td><td>\(2D^2+4Dd\)</td><td>d/D = 0.1: 0.943 · 1.0: 0.956 · 2.0: 0.961 · 10: 1.111</td></tr>
+    </table></div>
+    <p class="box ek"><span class="k">Kitaptan ek, düzgün ısı akısı durumu:</span> Tablodaki değerler cismin <b>düzgün sıcaklıkta</b> tutulduğu durum içindir. Cisim düzgün ısı akısıyla ısıtılıyorsa sıcaklığı her yerde aynı olmaz (kenarlara doğru soğur). O zaman \(\Delta T\) olarak ortalama yüzey sıcaklığı farkı \((\bar T_1-T_2)\) veya maksimum yüzey sıcaklığı farkı \((T_{1,max}-T_2)\) kullanılır. Durum 10 (disk) için bu değerler sırasıyla \(S=3\pi^2D/16\) ve \(S=\pi D/2\)'dir.</p>
+  </section>
+
+  <!-- ============ SAYFA 12 ============ -->
+  <hr class="cut">
+  <section id="ornek-41">
+    <span class="src">Hoca özeti s. 10, 12 · Kitap Örnek 4.1, s. 239–240</span>
+    <h2>Örnek 4.1 — Eksantrik Tel Yalıtımı</h2>
+    <p>Hoca bu örneği çözümüyle vermiş; burada her adımın <b>neden</b> yapıldığını açıklıyorum. Problem: çapı \(d=5\) mm olan metal bir elektrik teli, ısı iletim katsayısı \(k=0.35\) W/m·K olan yalıtımla kaplanacak. Dış ortamın taşınım + ışınım toplam katsayısı \(h=15\) W/m²·K. Telin Joule ısınmasıyla sıcaklık artışını en aza indirmek için yalıtım, <b>kritik yalıtım yarıçapına</b> göre seçiliyor (yani ısı atımı maksimum). Ama üretimde yalıtım kalınlığı çevre boyunca değişebiliyor ve tel yalıtımın ortasında değil, kaçık (eksantrik) kalıyor. Soru: kaçıklık kritik kalınlığın %50'si olursa yalıtımın ısıl direnci ne kadar değişir?</p>
+    <p class="box dikkat"><span class="k">Numara karışıklığı:</span> Hoca da kitap da "Örnek 3.5'ten kritik yarıçap" diyor; ama bizim kitapta (7. baskı) kritik yalıtım yarıçapı <b>Örnek 3.6</b>'dır, 3.5 koni örneğidir. Bu kitabın kendi baskı hatası; konu 3. ünite defterindeki "Kritik yalıtım yarıçapı" başlığı.</p>
+    <p><b>Kabuller:</b> kararlı rejim, 2-B iletim, sabit özellikler, ve yalıtımın hem iç hem dış yüzeyi düzgün sıcaklıkta. Son kabul önemli: şekil faktörü tabloları izotermal sınırlar için geçerli.</p>
+
+    <h3>Adım 1: Kritik yarıçap ve kalınlık</h3>
+    <div class="eq">\[ r_{cr}=\frac{k}{h}=\frac{0.35}{15}=0.023\ \text{m}=23\ \text{mm} \qquad\qquad t_{cr}=r_{cr}-\frac{d}{2}=0.023-0.0025=0.021\ \text{m}=21\ \text{mm} \]</div>
+    <p class="terms"><span>\(t_{cr}\): kritik yalıtım <b>kalınlığı</b> (yarıçaptan tel yarıçapı çıkarılır)</span><span>yalıtımın dış çapı \(D=2r_{cr}=46\) mm</span></p>
+
+    <h3>Adım 2: Merkezli (eş merkezli) telin direnci</h3>
+    <p>Tel tam ortadaysa problem 1-B radyal silindirdir; Tablo 3.3'teki silindir direncini birim boy için yazarız:</p>
+    <div class="eq">\[ R'_{t,cond}=\frac{\ln\left[r_{cr}/(d/2)\right]}{2\pi k}=\frac{\ln(0.023/0.0025)}{2\pi(0.35)}=1.0\ \text{m·K/W} \]</div>
+    <p class="terms"><span>\(R'\): birim boy başına direnç [m·K/W]</span></p>
+
+    <h3>Adım 3: Eksantrik telin direnci (Tablo 4.1, Durum 7)</h3>
+    <p>Kaçıklık \(z=0.5\,t_{cr}=0.5\times0.021=0.010\) m. Artık problem 2-B; Durum 7'nin şekil faktörünü kullanırız. Birim boy için \(S'=S/L\) ve \(R'=1/(S'k)\):</p>
+    <div class="eq">\[ R'_{t,cond(2D)}=\frac{1}{S'k}=\frac{\cosh^{-1}\!\left(\dfrac{D^2+d^2-4z^2}{2Dd}\right)}{2\pi k}=\frac{\cosh^{-1}\!\left(\dfrac{(0.046)^2+(0.005)^2-4(0.010)^2}{2(0.046)(0.005)}\right)}{2\pi(0.35)}=0.91\ \text{m·K/W} \]</div>
+    <p>Yani direnç \(1.0-0.91=0.10\) m·K/W azalmış, yaklaşık <mark>%10 azalma</mark>.</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 260" role="img" aria-label="Eş merkezli ve eksantrik yalıtımlı tel">
+        <circle cx="170" cy="130" r="105" fill="#7c2d3a" stroke="#cbd5e1" stroke-width="2"/>
+        <circle cx="170" cy="130" r="11.4" fill="#fb7185" stroke="#fff" stroke-width="1.5"/>
+        <text x="170" y="252" fill="#cbd5e1" font-size="14" text-anchor="middle">(a) eş merkezli: R′ = 1.00 m·K/W</text>
+        <circle cx="500" cy="130" r="105" fill="#7c2d3a" stroke="#cbd5e1" stroke-width="2"/>
+        <circle id="eWire" cx="500" cy="130" r="11.4" fill="#fb7185" stroke="#fff" stroke-width="1.5"/>
+        <line id="eZ" x1="500" y1="130" x2="500" y2="130" stroke="#fde047" stroke-width="2"/>
+        <text id="eZt" x="512" y="120" fill="#fde047" font-size="13"></text>
+        <text id="eR" x="500" y="252" fill="#cbd5e1" font-size="14" text-anchor="middle"></text>
+        <text x="335" y="60" fill="#94a3b8" font-size="13" text-anchor="middle">yalıtım k = 0.35</text>
+        <text x="335" y="80" fill="#94a3b8" font-size="13" text-anchor="middle">D = 46 mm, d = 5 mm</text>
+      </svg>
+      <div class="controls"><label for="ez">kaçıklık z = <span id="vez"></span> mm<input id="ez" type="range" min="0" max="18" step="0.5" value="10"></label></div>
+      <p class="cap">Kaçıklığı artırdıkça direnç düşüyor; z = 0'da Durum 7 formülü eş merkezli silindir sonucuna (1.00) iniyor.</p>
+    </div>
+    <p class="box ek"><span class="k">Kitabın yorumları:</span> <b>(1)</b> Yalıtımın inceldiği tarafta yerel direnç azalır, kalınlaştığı tarafta artar. Bu iki etki birbirini dengeler ama tam olarak değil: <b>maksimum direnç eş merkezli durumdadır</b>. Bu uygulamada (amaç teli soğutmak) kaçıklık aslında ısıl performansı <b>iyileştiriyor</b>. <b>(2)</b> Metal telin \(k\)'sı yalıtımınkinden çok büyük olduğu için yalıtımın iç yüzeyi neredeyse düzgün sıcaklıktadır; ama dış yüzey sıcaklığı, kalınlık değiştiği için tam düzgün olmaz.</p>
+    <p class="box sinav"><span class="k">Bu örnekten çıkan genel tüyolar:</span> Durum 7'de \(z=0\) koyunca \(\cosh^{-1}\!\left(\frac{D^2+d^2}{2Dd}\right)=\ln\frac{D}{d}\) olur ve silindir formülüne dönersin; tablo formülünü bu şekilde kontrol edebilirsin. Soru "birim boy başına" diyorsa \(L\)'yi formülden at (\(S'=S/L\)). Sonucu yüzde olarak isterse \(\frac{R'_{1D}-R'_{2D}}{R'_{1D}}\times100\).</p>
+  </section>
+
+  <!-- ============ SAYFA 13 ============ -->
+  <hr class="cut">
+  <section id="sonlu-farklar">
+    <span class="src">Hoca özeti s. 13 · Kitap 4.4, s. 240–241</span>
+    <h2>4.4 Sonlu Farklar Denklemleri</h2>
+    <p>Şimdiye kadar kararlı, 2-B iletim problemleri için <b>tam çözüm</b> veren analitik yöntemleri gördük. Ama bu çözümler <mark>basit geometriler ve basit sınır koşulları</mark> için bulunabiliyor; genelde 2-B problemlerin böyle basit geometri ve sınır koşulları yoktur. Bu durumda en iyi alternatif çoğu zaman bir <b>sayısal tekniktir</b>: <b>sonlu farklar</b>, <b>sonlu elemanlar</b> veya <b>sınır elemanları</b> yöntemi. Sayısal yöntemlerin bir güçlü yanı da <mark>3-B problemlere kolayca genişletilebilmeleridir</mark>. Burada uygulaması en kolay olduğu için <b>sonlu farklar yöntemi</b> tanıtılıyor. Üç alt başlık var: düğüm ağı (4.4.1), ısı denkleminin sonlu fark formu (4.4.2) ve alternatif olarak enerji dengesi yöntemi (4.4.3).</p>
+  </section>
+
+  <!-- ============ SAYFA 14 ============ -->
+  <hr class="cut">
+  <section id="dugum-agi">
+    <span class="src">Hoca özeti s. 14 · Kitap 4.4.1, s. 241–242</span>
+    <h2>4.4.1 Düğüm Ağı</h2>
+    <p>Analitik çözüm ortamdaki <b>her noktada</b> sıcaklığı verir. Sayısal çözüm ise sıcaklığı <mark>sadece ayrık (seçilmiş) noktalarda</mark> bulur; diğer noktalar ara değer bulma (interpolasyon) ile tahmin edilir. Bu yüzden her sayısal analizin <mark>ilk adımı bu ayrık noktaları seçmektir</mark>. Ortam küçük bölgelere ayrılır ve her bölgeye merkezinde bir referans noktası atanır.</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 300" role="img" aria-label="Düğüm ağı ve sonlu fark yaklaşımı">
+        <defs><clipPath id="blob"><path d="M40,150 C40,60 120,30 200,40 C290,50 330,90 320,170 C310,250 230,280 150,270 C70,262 40,220 40,150 Z"/></clipPath></defs>
+        <path d="M40,150 C40,60 120,30 200,40 C290,50 330,90 320,170 C310,250 230,280 150,270 C70,262 40,220 40,150 Z" fill="#1e293b" stroke="#cbd5e1" stroke-width="2"/>
+        <g clip-path="url(#blob)" stroke="#475569" stroke-width="1">
+          <line x1="60" y1="0" x2="60" y2="300"/><line x1="90" y1="0" x2="90" y2="300"/><line x1="120" y1="0" x2="120" y2="300"/><line x1="150" y1="0" x2="150" y2="300"/><line x1="180" y1="0" x2="180" y2="300"/><line x1="210" y1="0" x2="210" y2="300"/><line x1="240" y1="0" x2="240" y2="300"/><line x1="270" y1="0" x2="270" y2="300"/><line x1="300" y1="0" x2="300" y2="300"/>
+          <line x1="0" y1="60" x2="340" y2="60"/><line x1="0" y1="90" x2="340" y2="90"/><line x1="0" y1="120" x2="340" y2="120"/><line x1="0" y1="150" x2="340" y2="150"/><line x1="0" y1="180" x2="340" y2="180"/><line x1="0" y1="210" x2="340" y2="210"/><line x1="0" y1="240" x2="340" y2="240"/>
+        </g>
+        <rect x="195" y="105" width="30" height="30" fill="rgba(244,114,182,.35)" stroke="#f472b6" stroke-dasharray="3 3"/>
+        <g fill="#f472b6"><circle cx="210" cy="120" r="4"/></g>
+        <text x="60" y="292" fill="#94a3b8" font-size="13">Δx, Δy: düğüm aralıkları · m: x indisi, n: y indisi</text>
+        <!-- yakın plan -->
+        <g transform="translate(360,30)">
+          <g stroke="#475569"><line x1="0" y1="60" x2="180" y2="60"/><line x1="0" y1="120" x2="180" y2="120"/><line x1="0" y1="180" x2="180" y2="180"/><line x1="30" y1="0" x2="30" y2="230"/><line x1="90" y1="0" x2="90" y2="230"/><line x1="150" y1="0" x2="150" y2="230"/></g>
+          <rect x="60" y="90" width="60" height="60" fill="rgba(244,114,182,.3)" stroke="#f472b6" stroke-dasharray="4 3"/>
+          <g fill="#f472b6"><circle cx="90" cy="120" r="6"/></g>
+          <g fill="#cbd5e1"><circle cx="30" cy="120" r="5"/><circle cx="150" cy="120" r="5"/><circle cx="90" cy="60" r="5"/><circle cx="90" cy="180" r="5"/></g>
+          <g font-size="13" fill="#cbd5e1"><text x="96" y="114">m,n</text><text x="0" y="112">m−1,n</text><text x="154" y="112">m+1,n</text><text x="96" y="52">m,n+1</text><text x="96" y="200">m,n−1</text></g>
+          <text x="90" y="222" fill="#94a3b8" font-size="12" text-anchor="middle">(a) düğüm ağı</text>
+        </g>
+        <!-- FD yaklaşımı -->
+        <g transform="translate(565,30)">
+          <line x1="0" y1="0" x2="0" y2="200" stroke="#94a3b8"/><line x1="0" y1="200" x2="150" y2="200" stroke="#94a3b8"/>
+          <path d="M5,30 Q80,40 145,170" fill="none" stroke="#fb7185" stroke-width="2.5"/>
+          <g fill="#fde047"><circle cx="20" cy="31" r="4"/><circle cx="75" cy="52" r="4"/><circle cx="130" cy="138" r="4"/></g>
+          <line x1="20" y1="31" x2="75" y2="52" stroke="#34d399" stroke-width="2"/><line x1="75" y1="52" x2="130" y2="138" stroke="#60a5fa" stroke-width="2"/>
+          <g stroke="#475569" stroke-dasharray="3 3"><line x1="47" y1="0" x2="47" y2="200"/><line x1="102" y1="0" x2="102" y2="200"/></g>
+          <g font-size="12"><text x="14" y="22" fill="#fde047">m−1</text><text x="70" y="44" fill="#fde047">m</text><text x="134" y="132" fill="#fde047">m+1</text>
+            <text x="47" y="214" fill="#34d399" text-anchor="middle">m−½</text><text x="102" y="214" fill="#60a5fa" text-anchor="middle">m+½</text></g>
+          <text x="75" y="232" fill="#94a3b8" font-size="12" text-anchor="middle">(b) sonlu fark yaklaşımı</text>
+        </g>
+      </svg>
+      <p class="cap">Kitap Şekil 4.4. Sol: ortamın düğüm ağına bölünmesi. Orta: (m,n) düğümü ve dört komşusu; pembe kare düğümün temsil ettiği bölge. Sağ: düğümler arasındaki kirişlerin eğimi, ara noktadaki (m±½) türevin yaklaşığıdır.</p>
+    </div>
+    <p class="box ek"><span class="k">Kitaptan ek, terimler:</span> Referans noktasına <b>düğüm</b> (nodal point, node), noktaların tümüne <b>düğüm ağı</b> (nodal network, grid, mesh) denir. \(x\) konumu \(m\), \(y\) konumu \(n\) indisiyle gösterilir. Her düğüm bir bölgeyi temsil eder ve <b>düğümün sıcaklığı o bölgenin ortalama sıcaklığıdır</b> (şekildeki pembe alan). Düğüm seçimi nadiren keyfidir; geometrik kolaylığa ve istenen doğruluğa bağlıdır. Doğruluk büyük ölçüde düğüm sayısına bağlıdır: düğüm sayısı çoksa (<b>ince ağ</b>, fine mesh) doğru sonuç elde edilir.</p>
+    <p>Hocanın sağdaki şekli birinci türevin nasıl yaklaşıldığını gösteriyor: iki komşu düğüm arasındaki <b>kirişin eğimi</b>, tam aralarındaki noktada (yarım indis) türevin yaklaşık değeridir:</p>
+    <div class="eq">\[ \left.\frac{\partial T}{\partial x}\right|_{m-\frac12,\,n}\approx\frac{T_{m,n}-T_{m-1,n}}{\Delta x} \qquad\qquad \left.\frac{\partial T}{\partial x}\right|_{m+\frac12,\,n}\approx\frac{T_{m+1,n}-T_{m,n}}{\Delta x} \]</div>
+    <p class="terms"><span>\(T_{m,n}\): \((m,n)\) düğümünün sıcaklığı</span><span>\(m\pm\frac12\): iki düğümün tam ortası</span><span>\(\Delta x\): düğüm aralığı</span></p>
+  </section>
+
+  <!-- ============ SAYFA 15–16 ============ -->
+  <hr class="cut">
+  <section id="sonlu-fark-formu">
+    <span class="src">Hoca özeti s. 15–16 · Kitap 4.4.2, s. 242–243</span>
+    <h2>4.4.2 Isı Denkleminin Sonlu Fark Formu</h2>
+    <p>Sayısal analizin <mark>ikinci adımı</mark>: sıcaklığı bilinmeyen <b>her düğüm için</b> enerjinin korunumunu yazmak. Ortaya çıkan denklem takımı birlikte çözülerek her düğümün sıcaklığı bulunur. 2-B, kararlı, ısı üretimsiz ve \(k\) sabitken enerji korunumunun <b>tam</b> hali ısı denklemidir (4.1):</p>
+    <div class="eq">\[ \frac{\partial^2T}{\partial x^2}+\frac{\partial^2T}{\partial y^2}=0 \]</div>
+    <p>Ama sistemi bir düğüm ağıyla temsil ettiğimizde bu denklemin <b>yaklaşık</b>, yani <b>sonlu fark</b> formuyla çalışmamız gerekir.</p>
+
+    <h3>İkinci türevin yaklaşığı</h3>
+    <p>İkinci türev, birinci türevin türevidir. Şekil 4.4b'deki gibi, \((m,n)\)'deki ikinci türev, iki yanındaki yarım noktalardaki birinci türevlerin farkının \(\Delta x\)'e bölümüyle yaklaşılır:</p>
+    <div class="eq">\[ \left.\frac{\partial^2T}{\partial x^2}\right|_{m,n}\approx\frac{\left.\frac{\partial T}{\partial x}\right|_{m+\frac12,n}-\left.\frac{\partial T}{\partial x}\right|_{m-\frac12,n}}{\Delta x} \]</div>
+    <p>Hoca burada "ayrıntılar s. 242–243" diyor. Kitapta devamı şöyle: yukarıdaki iki birinci türev yaklaşığını yerine koyunca:</p>
+    <div class="eq big">\[ \left.\frac{\partial^2T}{\partial x^2}\right|_{m,n}\approx\frac{T_{m+1,n}+T_{m-1,n}-2T_{m,n}}{(\Delta x)^2} \]</div>
+    <p>Aynı işlem \(y\) yönü için yapılınca:</p>
+    <div class="eq big">\[ \left.\frac{\partial^2T}{\partial y^2}\right|_{m,n}\approx\frac{T_{m,n+1}+T_{m,n-1}-2T_{m,n}}{(\Delta y)^2} \]</div>
+    <p class="box acik"><span class="k">Formülü okumak:</span> Pay "iki komşunun toplamı eksi iki katım". Eğri yukarı bükükse (çukursa) komşuların ortalaması düğümden büyüktür ve ikinci türev pozitif çıkar; tümsekse negatif. Kirişlerden eğimi, eğimlerin farkından bükülmeyi okuyoruz.</p>
+
+    <h3>Isı denklemine koyunca</h3>
+    <p>\(T_{xx}\) ve \(T_{yy}\) yaklaşıklarını ısı denklemine koyup ayrıca <b>\(\Delta x=\Delta y\)</b> seçersek \((\Delta x)^2\) sadeleşir ve iç düğüm denklemi çıkar:</p>
+    <div class="eq big">\[ T_{m,n+1}+T_{m,n-1}+T_{m+1,n}+T_{m-1,n}-4\,T_{m,n}=0 \]</div>
+    <p>Sonuç olarak (hocanın 16. sayfası): <mark>tam diferansiyel ısı denklemi, yaklaşık bir cebirsel denkleme indirgendi</mark>. Isı denkleminin bu sonlu fark formu <mark>herhangi bir iç düğüme</mark> uygulanabilir. Dikkat: <mark>\(T_{m,n}\), dört komşu düğümün sıcaklıklarının ortalamasıdır</mark>:</p>
+    <div class="eq">\[ T_{m,n}=\frac{T_{m,n+1}+T_{m,n-1}+T_{m+1,n}+T_{m-1,n}}{4} \]</div>
+    <p class="box ek"><span class="k">Kitaptan ek, koşul:</span> Bu denklem dört komşusuna <b>eşit uzaklıkta</b> (\(\Delta x=\Delta y\)) olan iç düğümler için geçerlidir. Aralıklar farklıysa \((\Delta x)^2\) ve \((\Delta y)^2\) sadeleşmez ve katsayılar değişir.</p>
+    <p class="box acik"><span class="k">Analoji:</span> Bir odada dört kişinin ortasında duran biri düşün; herkes ellerini komşularına uzatıp "sıcaklığını" paylaşıyor. Kararlı rejimde ortadaki kişi, dört komşusunun tam ortalaması kadar sıcak olur; ne fazla ne az. Fazla olsaydı ısı ondan dışarı akar ve soğurdu.</p>
+
+    <h3>Deneme: sayısal çözüm iş başında</h3>
+    <p>Aşağıda 4.2'deki dikdörtgen levha (üst kenar \(\theta=1\), diğerleri \(\theta=0\)) kaba bir ağla (\(\Delta x=\Delta y\)) çözülüyor. Başta bütün iç düğümler 0; her iterasyonda her düğüm "dört komşunun ortalaması" kuralıyla güncelleniyor (Gauss-Seidel yöntemi, 4.5'te gelecek). Kaydırıcıyla iterasyonları ilerlet; yeterince ilerleyince sayılar değişmez olur. Altta da aynı noktalardaki analitik seri sonucuyla fark gösteriliyor.</p>
+    <div class="fig">
+      <svg id="gsSvg" viewBox="0 0 720 330" role="img" aria-label="Dikdörtgen levha için sonlu fark çözümü"></svg>
+      <div class="controls">
+        <label for="gsIt">iterasyon sayısı = <span id="vgsIt"></span><input id="gsIt" type="range" min="0" max="60" value="60"></label>
+        <label for="gsN">ağ: yatayda iç düğüm sayısı = <span id="vgsN"></span><input id="gsN" type="range" min="3" max="9" step="2" value="5"></label>
+      </div>
+      <div class="readout"><span>orta düğüm: sayısal <b id="gsNum"></b> · analitik <b id="gsEx"></b></span><span>en büyük fark: <b id="gsErr"></b></span></div>
+      <p class="cap">Hücrelerdeki sayılar θ değerleri (renk: mavi 0, kırmızı 1). İnce ağa geçince (düğüm sayısını artır) analitik sonuca daha çok yaklaşılıyor; kitabın "ince ağ = doğru sonuç" cümlesi bu.</p>
+    </div>
+  </section>
+
+  <!-- ============ SAYFA 17–19 ============ -->
+  <hr class="cut">
+  <section id="enerji-dengesi">
+    <span class="src">Hoca özeti s. 17–19 · Kitap 4.4.3, s. 243–247</span>
+    <h2>4.4.3 Enerji Dengesi Yöntemi</h2>
+    <p>Sıcaklığı bilinmeyen <b>her düğüm</b> için bir sonlu fark denklemi gerekir. Yukarıdaki denklem sadece <b>iç düğümler</b> için geçerli. Yalıtılmış bir yüzeydeki veya taşınıma maruz bir yüzeydeki bilinmeyen sıcaklıklar için sonlu fark denklemi <mark>enerji dengesi yöntemiyle</mark> elde edilir.</p>
+    <p class="box ek"><span class="k">Kitaptan ek, yöntemin mantığı:</span> Düğümün temsil ettiği bölgenin etrafına bir kontrol hacmi çizilir ve enerjinin korunumu uygulanır. Kararlı rejimde, ısı üretimi varken: \(\dot E_{in}+\dot E_g=0\). Isının gerçekte düğüme mi girdiği yoksa çıktığı mı genelde bilinmediği için <b>bütün ısı akışlarının düğüme girdiği varsayılır</b>. Bu fiziksel olarak imkânsızdır, ama hız denklemleri bu varsayımla tutarlı yazılırsa (her terimde "komşunun sıcaklığı eksi düğümün sıcaklığı") doğru denklem çıkar; bazı terimler kendiliğinden negatif olur. Bu yöntem birden fazla malzemeli problemler, gömülü ısı kaynakları ve koordinat eksenine uymayan yüzeyler için de kullanılabilir.</p>
+    <p>İletim terimleri için ısının sadece \(x\) veya \(y\) yönündeki "şeritler" boyunca aktığı kabul edilir ve Fourier yasasının basitleştirilmiş hali kullanılır. Örneğin \((m-1,n)\)'den \((m,n)\)'ye iletim (birim derinlik için):</p>
+    <div class="eq">\[ q_{(m-1,n)\to(m,n)}=k\,(\Delta y\cdot1)\,\frac{T_{m-1,n}-T_{m,n}}{\Delta x} \]</div>
+    <p class="terms"><span>\(\Delta y\cdot1\): ısının geçtiği alan (şerit genişliği × birim derinlik)</span><span>\(\frac{T_{m-1,n}-T_{m,n}}{\Delta x}\): iki düğüm arasındaki sınırda sıcaklık gradyanının sonlu fark yaklaşığı</span></p>
+
+    <h3>İç düğüm, ısı üretimli (hocanın s. 19'daki denklemi)</h3>
+    <p>Dört komşudan gelen iletim + bölgede üretilen ısı (\(\dot q\cdot\Delta x\cdot\Delta y\cdot1\)) toplamı sıfıra eşitlenir. \(\Delta x=\Delta y\) için her iletim terimi \(k(T_{komşu}-T_{m,n})\) olur; hepsini \(k\)'ya bölünce:</p>
+    <div class="eq big">\[ T_{m,n+1}+T_{m,n-1}+T_{m+1,n}+T_{m-1,n}+\frac{\dot q\,(\Delta x)^2}{k}-4\,T_{m,n}=0 \]</div>
+    <p class="terms"><span>\(\dot q\): birim hacimde ısı üretimi [W/m³]</span><span>\(\dot q=0\) olunca 4.4.2'deki iç düğüm denklemine döner → hocanın "aynı denklem bu yöntemle de elde edilebilir" notu</span></p>
+
+    <h3>İç köşe düğümü, taşınımlı</h3>
+    <p>Hocanın 17. sayfadaki şekli: düğüm bir iç köşede ve <b>dörtte üçü taralı</b> bir bölgeyi temsil ediyor; açık kenarları taşınım koşullarına (\(T_\infty, h\)) maruz.</p>
+    <div class="fig">
+      <svg viewBox="0 0 720 300" role="img" aria-label="Taşınımlı iç köşe düğümü için enerji dengesi">
+        <defs><marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#f472b6"/></marker>
+          <marker id="ah4" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#60a5fa"/></marker></defs>
+        <path d="M60,30 H420 V150 H300 V270 H60 Z" fill="#22304a" stroke="#cbd5e1" stroke-width="2"/>
+        <text x="520" y="230" fill="#60a5fa" font-size="16">akışkan T∞, h</text>
+        <path d="M240,90 H360 V150 H300 V210 H240 Z" fill="rgba(244,114,182,.28)" stroke="#f472b6" stroke-dasharray="5 4"/>
+        <g fill="#cbd5e1"><circle cx="180" cy="150" r="5"/><circle cx="420" cy="150" r="5"/><circle cx="300" cy="30" r="5"/><circle cx="300" cy="270" r="5"/></g>
+        <circle cx="300" cy="150" r="7" fill="#f472b6"/>
+        <g font-size="13" fill="#cbd5e1"><text x="150" y="140">m−1,n</text><text x="428" y="140">m+1,n</text><text x="308" y="26">m,n+1</text><text x="308" y="290">m,n−1</text><text x="268" y="142">m,n</text></g>
+        <g stroke="#f472b6" stroke-width="2.5" marker-end="url(#ah3)">
+          <line x1="190" y1="150" x2="290" y2="150"/><line x1="300" y1="40" x2="300" y2="140"/><line x1="410" y1="120" x2="312" y2="120"/><line x1="270" y1="260" x2="270" y2="162"/>
+        </g>
+        <g stroke="#60a5fa" stroke-width="2.5" marker-end="url(#ah4)" class="flow"><line x1="400" y1="200" x2="335" y2="160"/><line x1="380" y1="225" x2="306" y2="190"/></g>
+        <g font-size="12" fill="#fde047"><text x="200" y="168">alan Δy</text><text x="304" y="80">alan Δx</text><text x="350" y="112">alan Δy/2</text><text x="200" y="230">alan Δx/2</text></g>
+        <g font-size="13" fill="#cbd5e1"><text x="470" y="60">pembe: iletim (4 şerit)</text><text x="470" y="80">mavi: taşınım (2 yarım şerit:</text><text x="470" y="98">Δx/2 ve Δy/2)</text><text x="470" y="128">taralı bölge = dörtte üç kare</text></g>
+      </svg>
+      <p class="cap">Kitap Şekil 4.6. Bütün oklar düğüme doğru çizilir (varsayım). Tam şerit genişliğinde iki iletim yolu, yarım şeritte iki iletim yolu ve iki yarım taşınım yüzeyi.</p>
+    </div>
+    <p>Kitapta (s. 244–245) terimler tek tek şöyle yazılıyor. Sol ve üst komşulardan iletim tam şerit (\(\Delta y\), \(\Delta x\)) boyunca, sağ ve alt komşulardan iletim yarım şerit (\(\Delta y/2\), \(\Delta x/2\)) boyunca olur. Taşınım da iki yarım yüzeyden olur:</p>
+    <div class="eq">\[ k\Delta y\frac{T_{m-1,n}-T_{m,n}}{\Delta x}+k\Delta x\frac{T_{m,n+1}-T_{m,n}}{\Delta y}+k\frac{\Delta y}{2}\frac{T_{m+1,n}-T_{m,n}}{\Delta x}+k\frac{\Delta x}{2}\frac{T_{m,n-1}-T_{m,n}}{\Delta y}+h\left(\frac{\Delta x}{2}+\frac{\Delta y}{2}\right)(T_\infty-T_{m,n})=0 \]</div>
+    <p class="box ek"><span class="k">Kitaptan ek, gizli kabul:</span> Taşınım teriminde köşenin açık yüzeylerinin düğüm sıcaklığı \(T_{m,n}\)'de olduğu kabul edilir. Bu, bütün düğüm bölgesinin tek bir (ortalama) sıcaklıkla temsil edilmesi fikriyle tutarlıdır.</p>
+    <p>\(\Delta x=\Delta y\) koyup \(k\)'ya bölünce 2-B, kararlı, üretimsiz sistem için:</p>
+    <div class="eq big">\[ T_{m-1,n}+T_{m,n+1}+\frac12\left(T_{m+1,n}+T_{m,n-1}\right)+\frac{h\Delta x}{k}\,T_\infty-\left(3+\frac{h\Delta x}{k}\right)T_{m,n}=0 \]</div>
+    <p class="box dikkat"><span class="k">Dikkat (indis):</span> Hocanın el yazısında ilk terim \(T_{m+1,n}\) gibi okunuyor ve parantez içinde de \(T_{m+1,n}\) var. Kitaba göre tam şeritli komşular \(T_{m-1,n}\) ve \(T_{m,n+1}\), yarım şeritli olanlar \(T_{m+1,n}\) ve \(T_{m,n-1}\). Yani ilk terim <b>\(T_{m-1,n}\)</b> olmalı. Katsayı kontrolü: \(1+1+\tfrac12+\tfrac12=3\) ✔.</p>
+
+    <h3>Tablo 4.2: Düğüm sonlu fark denklemlerinin özeti (\(\Delta x=\Delta y\), \(\dot q=0\))</h3>
+    <div class="tw"><table class="t" style="font-size:15px">
+      <tr><th>Durum</th><th>Düğüm bölgesi</th><th>Sonlu fark denklemi</th></tr>
+      <tr><td><b>1</b> İç düğüm</td><td>tam kare</td><td>\(T_{m,n+1}+T_{m,n-1}+T_{m+1,n}+T_{m-1,n}-4T_{m,n}=0\)</td></tr>
+      <tr><td><b>2</b> Taşınımlı iç köşe</td><td>¾ kare</td><td>\(2(T_{m-1,n}+T_{m,n+1})+(T_{m+1,n}+T_{m,n-1})+2\frac{h\Delta x}{k}T_\infty-2\left(3+\frac{h\Delta x}{k}\right)T_{m,n}=0\)</td></tr>
+      <tr><td><b>3</b> Taşınımlı düz yüzey</td><td>½ kare</td><td>\((2T_{m-1,n}+T_{m,n+1}+T_{m,n-1})+\frac{2h\Delta x}{k}T_\infty-2\left(\frac{h\Delta x}{k}+2\right)T_{m,n}=0\)</td></tr>
+      <tr><td><b>4</b> Taşınımlı dış köşe</td><td>¼ kare</td><td>\((T_{m,n-1}+T_{m-1,n})+2\frac{h\Delta x}{k}T_\infty-2\left(\frac{h\Delta x}{k}+1\right)T_{m,n}=0\)</td></tr>
+      <tr><td><b>5</b> Düzgün ısı akılı düz yüzey</td><td>½ kare</td><td>\((2T_{m-1,n}+T_{m,n+1}+T_{m,n-1})+\frac{2q''\Delta x}{k}-4T_{m,n}=0\)</td></tr>
+    </table></div>
+    <p class="box acik"><span class="k">Durum 2 ile yukarıdaki türetme:</span> Tablodaki Durum 2, yukarıda türettiğimiz denklemin <b>2 ile çarpılmış</b> halidir (½'lerden kurtulmak için). İkisi aynı denklem.</p>
+    <p>Hocanın tablo üzerindeki notu: <mark>adyabatik yüzey (veya simetri yüzeyi) için \(h\) veya \(q''\) sıfır alınır</mark>. Örneğin Durum 5'te \(q''=0\) koyunca \(2T_{m-1,n}+T_{m,n+1}+T_{m,n-1}-4T_{m,n}=0\) olur. Hoca "bunu Durum 1 ile karşılaştırın" diyor:</p>
+    <p class="box acik"><span class="k">Karşılaştırmanın anlamı:</span> Yalıtılmış yüzeydeki düğüm, yüzeyin öbür yanında kendi <b>ayna görüntüsü</b> olan hayali bir düğüm varmış gibi davranır: \(T_{m+1,n}=T_{m-1,n}\). Bunu Durum 1'e koyarsan \(T_{m-1,n}\) iki kez gelir ve yalıtılmış yüzey denklemi çıkar. Simetri çizgisi de aynı şekilde çalışır (simetri çizgisi adyabatiktir, 4.1).</p>
+    <p class="box sinav"><span class="k">Kendi denklemini türetme reçetesi (sınavda tablo verilmeyebilir):</span> (1) Düğümün temsil ettiği bölgeyi çiz (tam, ½, ¾, ¼ kare). (2) Her komşu için şerit genişliğini belirle: tam kenar → \(\Delta x\), yarım kenar → \(\Delta x/2\). (3) Her terimi "komşu eksi kendisi" diye yaz, taşınımı \(h\cdot(\text{açık yüzey uzunluğu})(T_\infty-T_{m,n})\), üretimi \(\dot q\cdot(\text{bölge alanı})\) olarak ekle. (4) Toplamı sıfıra eşitle, \(k\)'ya böl. <b>Kontrol:</b> bütün sıcaklıklar eşit olsaydı (\(T_{komşu}=T_\infty=T_{m,n}\)) denklem sıfır vermeli; yani komşu katsayıları + \(T_\infty\) katsayısı = \(T_{m,n}\) katsayısı. Örneğin Durum 3: \(2+1+1+2\frac{h\Delta x}{k}=2\left(\frac{h\Delta x}{k}+2\right)\) ✔.</p>
+
+    <h3>Örnek 4.2 (hoca: "çözün")</h3>
+    <p class="box sinav"><span class="k">Anahtar:</span> Soru: düzgün ısı üretimli bir ortamın <b>yalıtılmış düz yüzeyindeki</b> \((m,n)\) düğümü için enerji dengesi yöntemiyle sonlu fark denklemini türetin. Düğüm bölgesi <b>yarım kare</b>dir: \(\frac{\Delta x}{2}\cdot\Delta y\cdot1\). Komşular: içerideki \((m-1,n)\) tam şerit \(\Delta y\); yüzey boyunca \((m,n+1)\) ve \((m,n-1)\) yarım şerit \(\Delta x/2\); yalıtılmış yüzeyden gelen ısı \(q_3=0\). Üretim terimi \(\dot q\cdot\frac{\Delta x}{2}\Delta y\). Hepsini toplayıp \(k/2\)'ye bölünce Durum 5'in \(q''=0\) haline bir üretim terimi eklenmiş biçim çıkar. Kitabın yorumu: aynı sonucu iç düğüm denkleminde (üretimli) ayna koşulu \(T_{m+1,n}=T_{m-1,n}\) kullanarak da bulabilirsin; bu cevabını kontrol etmenin en hızlı yolu.</p>
+  </section>
+
+  <!-- ============ SAYFA 20–21 ============ -->
+  <hr class="cut">
+  <section id="cozum">
+    <span class="src">Hoca özeti s. 20–21 · Kitap 4.5 ve 4.5.1, s. 249–250</span>
+    <h2>4.5 Sonlu Fark Denklemlerinin Çözümü</h2>
+    <p>Düğüm ağı kurulup her düğüm için uygun sonlu fark denklemi yazıldıktan sonra sıcaklık dağılımı bulunabilir. Yani <mark>diferansiyel denklemli bir problem, doğrusal cebirsel denklem takımı problemine indirgenmiş olur</mark>. Bu bölümde bu takım bir <b>matris denklemi</b> olarak yazılıyor ve <b>matris tersi alma</b> yöntemiyle çözümü kısaca tartışılıyor; ayrıca çözümün <b>doğruluğu</b> üzerine bazı yorumlar veriliyor.</p>
+
+    <h3>Matris denklemi olarak yazmak</h3>
+    <p>\(N\) bilinmeyen sıcaklığa karşılık gelen \(N\) sonlu fark denklemi düşün. İşi kolaylaştırmak için düğümleri çift indis \((m,n)\) yerine <b>tek bir numarayla</b> adlandırıyoruz: \(T_{m,n}\to T_i\), \(1\le i\le N\). Her denklem, bilinmeyenlerin doğrusal bir toplamıdır:</p>
+    <div class="eq">\[ \begin{aligned} a_{11}T_1+a_{12}T_2+a_{13}T_3+\dots+a_{1N}T_N&=C_1\\ a_{21}T_1+a_{22}T_2+a_{23}T_3+\dots+a_{2N}T_N&=C_2\\ &\;\;\vdots\\ a_{N1}T_1+a_{N2}T_2+a_{N3}T_3+\dots+a_{NN}T_N&=C_N \end{aligned} \]</div>
+    <p class="terms"><span>\(a_{ij}\), \(C_i\): bilinen katsayılar ve sabitler; \(\Delta x\), \(k\), \(h\), \(T_\infty\) gibi büyüklüklerden oluşur</span><span>\(T_i\): bilinmeyen düğüm sıcaklıkları</span></p>
+    <p class="box ek"><span class="k">Kitaptan ek, matris gösterimi ve ters matris:</span> Bu takım kısaca \([A][T]=[C]\) diye yazılır. \([A]\) <b>katsayı matrisi</b>dir, kare (\(N\times N\)); \(a_{ij}\)'deki ilk indis satırı, ikinci indis sütunu gösterir. \([T]\) <b>çözüm vektörü</b>, \([C]\) <b>sağ taraf vektörü</b>dür (tek sütunlu). Çözüm, katsayı matrisinin tersiyle bulunur:
+      \[ [A][T]=[C]\qquad\Longrightarrow\qquad [T]=[A]^{-1}[C] \]
+      Doğrusal denklem takımlarını çözmek için birçok yöntem var ve birçok hesap programı bunu hazır yapar. Küçük matrisler programlanabilir hesap makinesiyle veya elle çözülebilir. Elle ve bilgisayarla kullanılabilen yöntemlerden biri <b>Gauss-Seidel yöntemidir</b> (kitapta Ek D).</p>
+    <p class="box acik"><span class="k">Matris neden çoğunlukla sıfır?</span> Her düğüm denklemi sadece kendisini ve en fazla dört komşusunu içerir. 100 düğümlü bir ağda her satırda 100 katsayıdan en fazla 5'i sıfırdan farklıdır. Örnek 4.3'teki 21×21 matris de büyük ölçüde sıfırlarla dolu.</p>
+  </section>
+
+  <!-- ============ SAYFA 22 ============ -->
+  <hr class="cut">
+  <section id="gauss-seidel">
+    <span class="src">Hoca özeti s. 22 · Kitap Ek D</span>
+    <h2>Gauss-Seidel İterasyonu (örnek)</h2>
+    <p>Hoca yöntemi dört bilinmeyenli bir doğrusal denklem takımıyla gösteriyor:</p>
+    <div class="eq">\[ \begin{aligned} 10x_1-x_2+2x_3\phantom{{}-x_4}&=6\\ -x_1+11x_2-x_3+3x_4&=25\\ 2x_1-x_2+10x_3-x_4&=-11\\ 3x_2-x_3+8x_4&=15 \end{aligned} \]</div>
+    <p class="box dikkat"><span class="k">İşaret kontrolü:</span> 3. denklemde \(x_3\)'ün katsayısı <b>+10</b>'dur. Hocanın 1. adımdaki \(x_3\) ifadesi ve iterasyon tablosu bununla tutarlı; tam çözümle de kontrol edilebilir: \(2(1)-2+10(-1)-1=-11\) ✔. El yazısında işaret eksi gibi görünüyorsa yazım hatasıdır.</p>
+
+    <p><b>1. adım:</b> Her denklemi, köşegendeki bilinmeyeni yalnız bırakacak şekilde çöz (\(i\). denklemden \(x_i\)):</p>
+    <div class="eq">\[ \begin{aligned} x_1&=\tfrac{x_2}{10}-\tfrac{x_3}{5}+\tfrac35\\ x_2&=\tfrac{x_1}{11}+\tfrac{x_3}{11}-\tfrac{3x_4}{11}+\tfrac{25}{11}\\ x_3&=-\tfrac{x_1}{5}+\tfrac{x_2}{10}+\tfrac{x_4}{10}-\tfrac{11}{10}\\ x_4&=-\tfrac{3x_2}{8}+\tfrac{x_3}{8}+\tfrac{15}{8} \end{aligned} \]</div>
+    <p><b>2. adım:</b> Bir başlangıç tahmini seç ve bilinmeyenleri sırayla hesapla. Hoca \((0,0,0,0)\) ile başlıyor. Gauss-Seidel'in püf noktası: <mark>yeni bulunan değer hemen bir sonraki denklemde kullanılır</mark>. \(x_1=3/5=0.6\) bulununca \(x_2\) hesaplanırken \(x_1=0.6\) konur: \(x_2=(0.6)/11+25/11=2.3272\). Ardından \(x_3=-(0.6)/5+2.3272/10-11/10=-0.9873\), \(x_4=-3(2.3272)/8+(-0.9873)/8+15/8=0.8789\). Hocanın notu: <mark>tahmin ne kadar iyiyse algoritma o kadar hızlı yakınsar</mark>.</p>
+    <p><b>3. adım:</b> Yakınsayana kadar iterasyona devam et. Kaydırıcıyla iterasyonları kendin ilerlet; hocanın tablosundaki değerler aynen çıkıyor:</p>
+    <div class="fig">
+      <div class="tw"><table class="t" id="gsTable" style="font-size:15.5px;text-align:center"></table></div>
+      <div class="controls"><label for="gs4">gösterilen iterasyon sayısı = <span id="vgs4"></span><input id="gs4" type="range" min="1" max="8" value="4"></label></div>
+      <p class="cap">Tam çözüm (1, 2, −1, 1). Son sütun bir önceki iterasyona göre en büyük değişim; bu bir eşik değerin (ε) altına inince durulur.</p>
+    </div>
+    <p class="box ek"><span class="k">Kitaptan ek (Ek D), yakınsama ve durma ölçütü:</span> İterasyon, ardışık iki iterasyon arasındaki değişim bütün bilinmeyenler için seçilen küçük bir \(\varepsilon\)'dan küçük olunca durdurulur: \(\left|T_i^{(k)}-T_i^{(k-1)}\right|\le\varepsilon\). Yöntemin iyi yakınsaması için denklemler, her satırda <b>köşegen elemanın mutlak değeri büyük</b> olacak şekilde sıralanmalıdır (köşegen baskınlık). Hocanın örneğinde köşegenler 10, 11, 10, 8 ve diğerlerinden çok büyük; bu yüzden 4 iterasyonda yakınsıyor. Isı problemlerinde sonlu fark denklemleri zaten böyledir: iç düğümde köşegen −4, komşular +1.</p>
+    <p class="box acik"><span class="k">Jacobi ile farkı:</span> Jacobi yönteminde bir iterasyondaki bütün hesaplar bir önceki iterasyonun değerleriyle yapılır. Gauss-Seidel'de yeni değer bulunur bulunmaz kullanılır; bu yüzden genellikle daha hızlı yakınsar. Isı sorusunda bunun fiziksel anlamı: her düğümü komşularının en güncel ortalamasıyla güncellemek (4.4.2'deki levha çözücüsü bunu yapıyordu).</p>
+    <p class="box sinav"><span class="k">Sınavda elle Gauss-Seidel:</span> Önce her denklemi köşegen bilinmeyene göre düzenle (gerekirse denklemlerin sırasını köşegen baskın olacak şekilde değiştir). Bir tablo çiz: satırlar iterasyon, sütunlar bilinmeyenler. Her hücreyi doldururken o satırda <b>daha önce bulduğun</b> değerleri kullan. Genelde 2–3 iterasyon istenir; ara sonuçları 4–5 ondalıkla yaz.</p>
+  </section>
+
+  <!-- ============ DOĞRULUK (kitap 4.5.2) ============ -->
+  <hr class="cut">
+  <section id="dogruluk">
+    <span class="src">Hocanın s. 20'deki "doğruluk üzerine yorumlar" · Kitap 4.5.2, s. 251</span>
+    <h2>4.5.2 Çözümün Doğruluğunun Kontrolü</h2>
+    <p class="box ek"><span class="k">Kitaptan ek (hoca s. 20'de bahsedip ayrıntı vermemiş):</span> Kitap üç kontrol öneriyor. <b>(1) Enerji dengesi kontrolü:</b> Sıcaklığı bulunan bütün düğüm bölgelerini çevreleyen bir kontrol yüzeyinde enerji dengesi kurulur ve bulunan sıcaklıklar yerine konur. Denge yüksek hassasiyetle sağlanmıyorsa sonlu fark denklemlerinde hata vardır. <b>(2) Ağ (grid) çalışması:</b> Denklemler doğru kurulup çözülse bile sonuç kaba bir yaklaşım olabilir; çünkü düğümler arasında sonlu aralık var ve Fourier yasası \(k(\Delta y\cdot1)(T_{m-1,n}-T_{m,n})/\Delta x\) gibi yaklaşıklarla temsil ediliyor. Ağ inceldikçe yaklaşım iyileşir. Örneğin \(\Delta x\) ve \(\Delta y\) yarıya indirilir (düğüm ve denklem sayısı 4 katına çıkar) ve sonuçlar karşılaştırılır; sıcaklıklar \(\Delta x\), \(\Delta y\) seçimine artık belirgin şekilde bağlı olmayana kadar devam edilir. Bu <b>ağdan bağımsız</b> sonuç doğru çözümdür. <b>(3) Tam çözümle karşılaştırma:</b> Sayısal yöntem önce tam çözümü bilinen daha basit bir probleme uygulanarak test edilebilir (örneğin Şekil 4.2'deki levha, Denk. 4.19'la). Bunun sınırı, tam çözümü olan problemleri zaten nadiren sayısal çözmemizdir.</p>
+  </section>
+
+  <!-- ============ SAYFA 23 ============ -->
+  <hr class="cut">
+  <section id="ornek-43">
+    <span class="src">Hoca özeti s. 23 · Kitap Örnek 4.3, s. 251–256</span>
+    <h2>Örnek 4.3 — İçten Soğutmalı Türbin Kanadı</h2>
+    <p>Gaz türbinlerinde kanatların dayanabileceği sıcaklık, türbin giriş sıcaklığını ve dolayısıyla verimi sınırlar. Kanatlar içlerine açılan kanallardan hava geçirilerek soğutulur. Kitap kanadı, içinde dikdörtgen kanallar olan dikdörtgen bir katı gibi modelliyor: kalınlık 6 mm, kanallar 2 mm × 6 mm, kanallar arası 4 mm, \(k=25\) W/m·K. Dışta yanma gazları (\(T_{\infty,o}=1700\) K, \(h_o=1000\) W/m²·K), kanalda hava (\(T_{\infty,i}=400\) K, \(h_i=200\) W/m²·K). İstenen: sıcaklık alanı, kanala birim boy başına ısı hızı ve maksimum sıcaklığın yeri.</p>
+
+    <h3>Hocanın vurgusu: simetri</h3>
+    <p>Hocanın notu: <mark>geometri ve sınır koşulları simetrikse kontrol hacmi için birçok basitleştirme yapılabilir</mark>. Kanatta üç simetri çizgisi var: yatay orta düzlem (sl₁) ve iki düşey çizgi (sl₂: iki kanalın tam ortası, sl₃: bir kanalın tam ortası). Bu çizgilerle sınırlanan küçük L şeklindeki parça, <mark>büyük kanadın tamamını temsil etmeye yeter ve tam olarak aynı sonuçlar elde edilir</mark>. Simetri çizgileri adyabatik olduğu için (4.1) bu kenarlarda yalıtılmış yüzey koşulu kullanılır.</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 270" role="img" aria-label="Türbin kanadı, simetri çizgileri ve kontrol hacmi">
+        <rect x="20" y="70" width="440" height="120" fill="#22304a" stroke="#cbd5e1" stroke-width="2"/>
+        <g fill="#0f172a" stroke="#60a5fa" stroke-width="1.5"><rect x="20" y="110" width="60" height="40"/><rect x="160" y="110" width="120" height="40"/><rect x="360" y="110" width="100" height="40"/></g>
+        <g stroke="#fde047" stroke-width="1.8" stroke-dasharray="6 5"><line x1="10" y1="130" x2="470" y2="130"/><line x1="120" y1="55" x2="120" y2="205"/><line x1="220" y1="55" x2="220" y2="205"/></g>
+        <rect x="120" y="70" width="100" height="60" fill="rgba(244,114,182,.3)" stroke="#f472b6" stroke-width="2"/>
+        <g class="flow" stroke="#fb7185" stroke-width="2"><line x1="40" y1="50" x2="440" y2="50"/><line x1="40" y1="212" x2="440" y2="212"/></g>
+        <g font-size="13"><text x="240" y="40" fill="#fb7185" text-anchor="middle">yanma gazları T∞,o, h₀</text><text x="240" y="232" fill="#fb7185" text-anchor="middle">yanma gazları T∞,o, h₀</text>
+          <text x="250" y="145" fill="#60a5fa">kanal: hava T∞,i, hᵢ</text>
+          <text x="475" y="134" fill="#fde047">sl₁</text><text x="120" y="250" fill="#fde047" text-anchor="middle">sl₂</text><text x="220" y="250" fill="#fde047" text-anchor="middle">sl₃</text></g>
+        <!-- KH yakın -->
+        <g transform="translate(470,40)">
+          <path d="M0,0 H200 V80 H80 V120 H0 Z" fill="rgba(244,114,182,.25)" stroke="#f472b6" stroke-width="2"/>
+          <g stroke="#fde047" stroke-width="1.8" stroke-dasharray="5 4"><line x1="0" y1="0" x2="0" y2="120"/><line x1="200" y1="0" x2="200" y2="80"/><line x1="0" y1="120" x2="80" y2="120"/></g>
+          <line x1="0" y1="0" x2="200" y2="0" stroke="#fb7185" stroke-width="4"/>
+          <path d="M80,120 V80 H200" fill="none" stroke="#60a5fa" stroke-width="4"/>
+          <g font-size="12"><text x="100" y="-8" fill="#fb7185" text-anchor="middle">taşınım (gaz)</text><text x="140" y="100" fill="#60a5fa" text-anchor="middle">taşınım (hava)</text><text x="-6" y="60" fill="#fde047" text-anchor="end">adyabat</text><text x="206" y="44" fill="#fde047">adyabat</text><text x="40" y="138" fill="#fde047" text-anchor="middle">adyabat</text><text x="100" y="185" fill="#94a3b8" text-anchor="middle">5 mm × 3 mm, kanal 3 mm × 1 mm</text></g>
+        </g>
+      </svg>
+      <p class="cap">Sol: kanat ve üç simetri çizgisi (sarı). Pembe parça kontrol hacmi. Sağ: yakından kontrol hacmi; sarı kenarlar adyabatik (simetri), kırmızı ve mavi kenarlar taşınımlı.</p>
+    </div>
+
+    <h3>Düğüm ağı ve denklemler</h3>
+    <p class="box ek"><span class="k">Kitaptaki çözümün anahtarları:</span> \(\Delta x=\Delta y=1\) mm ile 21 düğüm oluşuyor. Denklemler Tablo 4.2'den veya enerji dengesinden gelir: <b>düğüm 2–5</b> taşınımlı düz yüzey (Durum 3); <b>7, 12, 13, 20</b> yalıtılmış (simetri) yüzey (Durum 5, \(q''=0\)); <b>8–11 ve 14</b> iç düğüm (Durum 1); <b>15</b> taşınımlı iç köşe (Durum 2); <b>16, 17</b> kanal yüzeyinde taşınımlı düz yüzey (Durum 3). Tabloda olmayan <b>1, 6, 18, 21</b> (bir kenarı adyabat, bir kenarı taşınımlı çeyrek bölge) ve <b>19</b> (iki kenarı adyabat) için enerji dengesi yazılır. Örneğin düğüm 1: \(T_2+T_7-\left(2+\frac{h_o\Delta x}{k}\right)T_1=-\frac{h_o\Delta x}{k}T_{\infty,o}\); düğüm 19: \(T_{13}+T_{20}-2T_{19}=0\). Kanala ısı hızı, kanal yüzeyindeki düğümlerin taşınımları toplanıp simetri yüzünden <b>4 ile çarpılarak</b> bulunur.</p>
+
+    <div class="fig">
+      <svg id="bladeSvg" viewBox="0 0 720 300" role="img" aria-label="Türbin kanadı kontrol hacminde düğüm sıcaklıkları"></svg>
+      <div class="controls">
+        <label for="bk">kanat k = <span id="vbk"></span> W/m·K<input id="bk" type="range" min="10" max="100" step="5" value="25"></label>
+        <label for="bhi">kanal hᵢ = <span id="vbhi"></span> W/m²·K<input id="bhi" type="range" min="100" max="2000" step="100" value="200"></label>
+      </div>
+      <div class="readout"><span>T₁ (maksimum) = <b id="bT1"></b> K</span><span>q′ = <b id="bq"></b> W/m</span></div>
+      <p class="cap">21 düğümlü sistem sayfada gerçekten çözülüyor (kitaptaki denklemlerle). Varsayılan değerlerde kitabın sonuçları çıkar: T₁ = 1526.0 K, q′ = 3540.6 W/m. k ve hᵢ'yi değiştir: kitabın 4. yorumundaki tablo (hᵢ = 1000 → T₁ = 1154.5 K) da buradan görülebilir.</p>
+    </div>
+    <p class="box ek"><span class="k">Kitabın yorumları:</span> <b>Maksimum sıcaklık</b> soğutucudan en uzak noktada, düğüm 1'dedir. <b>Enerji kontrolü:</b> gazdan kanada geçen ısı ile kanattan havaya geçen ısı aynı çıkıyor (3540.6 W/m); bu, 4.5.2'deki enerji dengesi kontrolünün ta kendisi. <b>Ağ çalışması:</b> aralık 0.5 mm'ye indirilince (65 düğüm) T₁ = 1525.9 K ve q′ = 3539.9 W/m bulunuyor; uyum mükemmel, yani 1 mm'lik ağ yeterli. Uygun ağı seçmek mühendisin vereceği bir karardır. <b>Tasarım:</b> \(k\)'yı artırmak sıcaklığı biraz, \(h_i\)'yi (soğutma havası debisini) artırmak çok düşürür, çünkü toplam dirençte baskın olan kanal tarafındaki taşınım direncidir. Dış yüzey çok sıcak olduğu için ışınım da önemli olabilir; \(h_r\) yüzey sıcaklığına bağlı olduğu için o zaman iteratif çözüm gerekir.</p>
+    <p class="box sinav"><span class="k">Bu örnekten genel tüyolar:</span> (1) Önce simetri çizgilerini bul ve kontrol hacmini küçült; simetri kenarı = yalıtılmış yüzey. (2) Her düğüm için "bölgesi ne kadar (tam, ½, ¾, ¼)?" ve "hangi kenarlar taşınımlı/adyabatik?" sorularını sor; Tablo 4.2'de yoksa enerji dengesiyle türet. (3) Sonuçta ısı hızı istenirse kontrol hacminden çıkan ısıyı simetri sayısıyla çarpmayı unutma. (4) Cevabı "giren = çıkan" ile kontrol et.</p>
+  </section>
+
+  <hr class="cut">
+  <p class="sub" style="margin-top:14px">Sıradaki: hocanın bir sonraki sayfası (kitapta 4.6 Özet, sonra 5. ünite)</p>
+</div>
