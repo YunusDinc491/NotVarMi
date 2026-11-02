@@ -8,6 +8,7 @@ public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options) : D
     public DbSet<Course> Courses => Set<Course>();
     public DbSet<CourseFile> Files => Set<CourseFile>();
     public DbSet<Notebook> Notebooks => Set<Notebook>();
+    public DbSet<CourseNotebook> CourseNotebooks => Set<CourseNotebook>();
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,12 +20,27 @@ public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options) : D
         modelBuilder.Entity<Notebook>().HasKey(n => n.CourseId);
         modelBuilder.Entity<Notebook>().HasOne<Course>().WithOne().HasForeignKey<Notebook>(n => n.CourseId).OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Notebook>().Property(n => n.Version).IsConcurrencyToken();
+        modelBuilder.Entity<CourseNotebook>().HasKey(n => n.Id);
+        modelBuilder.Entity<CourseNotebook>().HasOne<Course>().WithMany().HasForeignKey(n => n.CourseId).OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<CourseNotebook>().Property(n => n.Name).HasMaxLength(150).IsRequired();
+        modelBuilder.Entity<CourseNotebook>().Property(n => n.Version).IsConcurrencyToken();
     }
 }
 
 public sealed class Notebook
 {
     public int CourseId { get; set; }
+    public string Html { get; set; } = "";
+    public string Css { get; set; } = "";
+    public string Javascript { get; set; } = "";
+    public int Version { get; set; }
+}
+
+public sealed class CourseNotebook
+{
+    public int Id { get; set; }
+    public int CourseId { get; set; }
+    public string Name { get; set; } = "";
     public string Html { get; set; } = "";
     public string Css { get; set; } = "";
     public string Javascript { get; set; } = "";

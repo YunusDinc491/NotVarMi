@@ -1,0 +1,847 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Isı Transferi Ünite 3 Defteri</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shantell+Sans:wght@700&family=Nunito:wght@400;600;700&family=Patrick+Hand&display=swap">
+<script>
+window.MathJax = { tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] }, svg: { fontCache: 'global' } };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg-full.js"></script>
+<style>
+/* Layout: koyu slate zemin üstünde yuvarlak köşeli defter kartı; Shantell Sans başlık, Nunito gövde, Patrick Hand not */
+:root{
+  color-scheme: dark;
+  --bg:#0b1120; --card:#172033; --well:rgba(15,23,42,.8); --line:#334155; --line2:rgba(51,65,85,.6);
+  --text:#e2e8f0; --muted:#94a3b8; --strong:#f1f5f9;
+  --pink:#f472b6; --pink-soft:#f9a8d4; --yellow:#fde047;
+  --hl-bg:rgba(250,204,21,.25); --hl-fg:#fef08a;
+  --accent:#fb7185; --flow:#34d399;
+  --f-title:'Shantell Sans','Nunito',cursive;
+  --f-body:'Nunito',system-ui,sans-serif;
+  --f-note:'Patrick Hand','Nunito',cursive;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--f-body);font-size:17px;line-height:1.7;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px}
+.page{max-width:880px;margin:0 auto;background:var(--card);border:1px solid var(--line2);border-radius:18px;
+  box-shadow:0 25px 50px -12px rgba(0,0,0,.6);padding:clamp(18px,4vw,34px)}
+h1,h2,h3{font-family:var(--f-title);font-weight:700;text-wrap:balance;line-height:1.25;margin:0}
+h1{font-size:clamp(26px,4.4vw,36px);color:var(--pink)}
+h2{font-size:clamp(23px,3.6vw,29px);color:var(--pink);padding-bottom:8px;border-bottom:1px solid var(--line2)}
+h3{font-size:20px;color:var(--yellow);margin-top:8px}
+p{margin:0}
+b{color:var(--strong);font-weight:700}
+.sub{color:var(--muted);font-family:var(--f-note);font-size:17px}
+.src{font-family:var(--f-note);font-size:15px;color:var(--pink-soft);border:1px solid rgba(244,114,182,.35);border-radius:999px;padding:0 12px;align-self:flex-start}
+section{display:flex;flex-direction:column;gap:14px;margin-top:34px}
+mark{background:var(--hl-bg);color:var(--hl-fg);padding:1px 8px;border-radius:999px;font-weight:600;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+b.r{color:var(--accent)}
+
+/* Kutular: renkli saydam zemin + ince kenar türü söyler */
+.box{padding:14px 18px;border-radius:16px;border:1px solid;break-inside:avoid;font-size:16px;box-shadow:0 10px 15px -3px rgba(0,0,0,.25)}
+.box .k{font-family:var(--f-title);font-weight:700;margin-right:6px}
+.ek{background:rgba(6,78,59,.28);border-color:rgba(16,185,129,.32);color:#d1fae5} .ek .k{color:#6ee7b7}
+.dikkat{background:rgba(136,19,55,.25);border-color:rgba(244,63,94,.35);color:#ffe4e6} .dikkat .k{color:#fda4af}
+.acik{background:rgba(69,26,3,.3);border-color:rgba(245,158,11,.3);color:#fef3c7} .acik .k{color:#fcd34d}
+.sinav{background:rgba(12,74,110,.3);border-color:rgba(56,189,248,.32);color:#e0f2fe} .sinav .k{color:#7dd3fc}
+.hatir{background:rgba(59,7,100,.3);border-color:rgba(168,85,247,.32);color:#f3e8ff} .hatir .k{color:#d8b4fe}
+.box b{color:inherit}
+.legend{display:flex;flex-wrap:wrap;gap:8px 10px;font-family:var(--f-note);font-size:15px;margin-top:4px}
+.legend span{padding:2px 12px;border-radius:999px;border:1px solid;box-shadow:none}
+
+/* Formül: kendi satırında, ortada, koyu kuyu içinde */
+.eq{font-size:122%;text-align:center;overflow-x:auto;overflow-y:hidden;padding:10px 14px;break-inside:avoid;
+  background:rgba(15,23,42,.7);border:1px solid rgba(51,65,85,.8);border-radius:16px;color:var(--strong)}
+.eq mjx-container{margin:4px 0!important}
+.eq.big{background:var(--well);border:2px dashed rgba(244,114,182,.4);box-shadow:0 4px 6px -1px rgba(0,0,0,.3)}
+.terms{display:flex;flex-wrap:wrap;gap:2px 18px;justify-content:center;font-family:var(--f-note);font-size:16px;color:var(--muted);margin-top:-6px}
+
+/* Akış (türetme zinciri) */
+.chain{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 4px;break-inside:avoid}
+.chain .node{border:1px solid var(--line);border-radius:14px;padding:6px 12px;background:var(--well);font-size:15px;text-align:center}
+.chain .node.end{border:2px dashed rgba(244,114,182,.5);color:var(--pink-soft)}
+.chain .arr{display:flex;flex-direction:column;align-items:center;font-family:var(--f-note);font-size:14px;color:var(--flow);line-height:1.1;padding:0 2px}
+.chain .arr::after{content:"⟶";font-size:24px;line-height:1}
+
+.roadmap{display:grid;grid-template-columns:auto 1fr auto;gap:6px 12px;align-items:baseline}
+.roadmap .n{font-family:var(--f-title);font-size:18px;font-weight:700;color:var(--pink-soft)}
+.roadmap .st{font-family:var(--f-note);font-size:14px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:0 10px;white-space:nowrap}
+.roadmap .st.on{color:var(--flow);border-color:rgba(52,211,153,.5)}
+
+table.t{border-collapse:collapse;font-size:15.5px;width:100%}
+table.t td,table.t th{border:1px solid var(--line);padding:6px 10px;text-align:left;vertical-align:top}
+table.t th{color:var(--yellow);background:var(--well);font-family:var(--f-title);font-weight:700}
+.tw{overflow-x:auto;break-inside:avoid;border-radius:12px}
+
+.fig{border:1px solid var(--line);background:rgba(15,23,42,.55);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px;break-inside:avoid}
+.fig svg{display:block;width:100%;max-width:700px;height:auto;margin:0 auto}
+.fig text{font-family:var(--f-note)}
+.fig .cap{font-family:var(--f-note);font-size:16px;color:var(--muted);text-align:center}
+.flow{stroke-dasharray:10 8;animation:flow var(--spd,1.1s) linear infinite}
+@keyframes flow{to{stroke-dashoffset:-18}}
+@media (prefers-reduced-motion: reduce){.flow{animation:none}}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:6px 16px;font-family:var(--f-note);font-size:16px;color:var(--muted)}
+.controls label{display:flex;flex-direction:column}
+.controls input{width:100%;accent-color:var(--pink)}
+.readout{display:flex;flex-wrap:wrap;gap:4px 24px;justify-content:center;font-size:16px}
+.readout b{color:var(--pink)}
+hr.cut{border:0;border-top:1px solid var(--line2);margin:34px 0 0}
+
+@media print{
+  body{font-size:11.5pt;padding:0}
+  .page{max-width:none;box-shadow:none;border:0;border-radius:0}
+  .controls{display:none}
+  h2,h3{break-after:avoid}
+  .flow{animation:none}
+}
+</style>
+
+<div class="page">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <p class="sub">Isı Transferi · Incropera 7. baskı</p>
+    <h1>Ünite 3 — Tek Boyutlu, Kararlı Rejimde İletim</h1>
+    <div class="legend">
+      <span style="border-color:var(--line);color:var(--text)">düz yazı: hocanın özeti</span>
+      <span class="ek">kitaptan ek</span>
+      <span class="dikkat">dikkat / düzeltme</span>
+      <span class="acik">açıklama, analoji</span>
+      <span class="sinav">sınav ipucu</span>
+      <span class="hatir">hatırlatma</span>
+    </div>
+  </header>
+
+  <section id="yol-haritasi">
+    <h2>Yol haritası</h2>
+    <div class="roadmap">
+      <span class="n">3.0</span><span>Giriş: 1-B ve kararlı rejim ne demek?</span><span class="st on">işlendi</span>
+      <span class="n">3.1</span><span>Düzlem duvar: sıcaklık dağılımı ✔, ısıl direnç ✔, kompozit duvar ✔, temas direnci ✔ (gözenekli ortam özette yok)</span><span class="st on">işlendi</span>
+      <span class="n">3.2</span><span>Alternatif iletim analizi (A(x), k(T) değişken)</span><span class="st on">işlendi</span>
+      <span class="n">3.3</span><span>Radyal sistemler: silindir, küre, kritik yalıtım yarıçapı</span><span class="st on">işlendi</span>
+      <span class="n">3.4</span><span>Tek boyutlu sonuçların özet tablosu</span><span class="st on">işlendi</span>
+      <span class="n">3.5</span><span>Isı üretimli iletim: düzlem duvar, radyal sistemler</span><span class="st on">işlendi</span>
+      <span class="n">3.6</span><span>Kanatçıklar: verim, etkinlik, toplam yüzey verimi</span><span class="st">hoca özetinde yok</span>
+      <span class="n">3.7–9</span><span>Biyoısı denklemi, termoelektrik, mikro/nano ölçek</span><span class="st">hoca özetinde yok</span>
+    </div>
+  </section>
+
+  <!-- ============ SAYFA 2–3 ============ -->
+  <hr class="cut">
+  <section id="giris">
+    <span class="src">Hoca özeti s. 2–3 · Kitap s. 112</span>
+    <h2>Giriş: "1-B" ve "kararlı rejim" ne demek?</h2>
+
+    <p><b>Tek boyutlu (1D) sistem</b>, sıcaklık gradyanlarının <mark>yalnızca tek bir koordinat yönünde</mark> bulunduğu ve ısı transferinin (HT) <mark>yalnızca o yönde</mark> gerçekleştiği sistemdir. Yani bağımlı değişkenlerin (sıcaklık \(T\) veya ısı hızı \(q\)) uzayda nasıl değiştiğini anlatmak için tek bir koordinat yeter. <b>Kararlı rejim (steady-state, SS)</b> ise bu bağımlı değişkenlerin <mark>zamandan bağımsız</mark> olması, yani her noktanın sıcaklığının zamanla değişmemesidir. İkisi birleşince:</p>
+    <div class="eq">\[ T = T(x) \qquad \text{veya} \qquad q = q(x) \]</div>
+    <p class="terms"><span>\(T\): sıcaklık [K, °C]</span><span>\(q\): ısı transfer hızı [W]</span><span>\(x\): ısının aktığı tek koordinat [m] (silindir/kürede \(r\))</span></p>
+
+    <p class="box acik"><span class="k">Analoji:</span> Kışın odanın duvarını düşün: içerisi 20 °C, dışarısı 0 °C ve saatlerdir böyle. Duvarın içine termometre koysan değer sabit kalır; bu kararlı rejimdir. Duvar çok geniş ve yüksek ama ince olduğu için sıcaklık sadece kalınlık boyunca değişir, yukarı-aşağı değişmez; bu da tek boyuttur.</p>
+
+    <p class="box dikkat"><span class="k">Küçük düzeltme:</span> Hocanın "\(q = q(x)\)" yazması genel 1-B durum içindir. Isı üretimi olmayan düzlem duvarda \(q\) aslında \(x\)'e bile bağlı değildir, sabit çıkar (3.1'de göreceğiz). Silindirde de \(q\) sabittir ama akı \(q''\) yarıçapa bağlıdır. Bunu "tek koordinata bağlı <i>olabilir</i>" diye oku.</p>
+
+    <p>Hoca bu modellerin basit olduğunu ama <mark>1-B kararlı rejim modellerinin birçok mühendislik sistemini doğru şekilde temsil ettiğini</mark> vurguluyor. Ünitede sırayla şunları yapacağız:</p>
+    <div class="tw"><table class="t">
+      <tr><th>Konu</th><th>Amaç</th><th>Kitap</th></tr>
+      <tr><td>1-B SS iletim, ısı üretimi <b>yok</b></td><td>Düzlem, silindir ve küre için sıcaklık dağılımı ve ısı hızı ifadeleri; <mark>ısıl direnç</mark> kavramının tanıtılması</td><td>3.1–3.4</td></tr>
+      <tr><td>1-B SS iletim, ısı üretimi <b>var</b></td><td>Yine sıcaklık dağılımı ve ısı hızı ifadeleri</td><td>3.5</td></tr>
+      <tr><td>Genişletilmiş yüzeylerden iletim ve HT</td><td>Kanatçıklar (fins); kitaba göre ayrıca performans parametreleri (verim, etkinlik)</td><td>3.6</td></tr>
+      <tr style="background:rgba(6,78,59,.28)"><td>Biyoısı, termoelektrik, mikro/nano</td><td>Isıl direnç fikrinin insan vücuduna, Seebeck etkisine ve ince filmlere uygulanması</td><td>3.7–3.9</td></tr>
+    </table></div>
+    <p class="box ek"><span class="k">Kitaptan ek:</span> Kitap ısıl direnci şöyle tanıtıyor: "Elektrik devreleri akımı nasıl modelliyorsa, ısıl devreler de ısı akışını öyle modeller." Bu benzetme bütün ünitenin omurgası, aklında tut.</p>
+  </section>
+
+  <!-- ============ SAYFA 4–5 ============ -->
+  <hr class="cut">
+  <section id="duzlem-duvar">
+    <span class="src">Hoca özeti s. 4–5 · Kitap 3.1.1, s. 112–114</span>
+    <h2>3.1 Düzlem Duvar — Sıcaklık Dağılımı</h2>
+
+    <p>Bir düzlem duvar iki akışkanı ayırıyor. Isı sıcak akışkandan (\(T_{\infty,1}\)) duvarın sol yüzeyine (\(T_{s,1}\)) <b>taşınımla</b>, duvarın içinden <b>iletimle</b>, sağ yüzeyden (\(T_{s,2}\)) soğuk akışkana (\(T_{\infty,2}\)) yine <b>taşınımla</b> geçiyor. Şimdilik sadece <mark>duvarın içine</mark> odaklanıyoruz. Yapacağımız işin tamamı şu yol haritasıyla özetlenebilir:</p>
+
+    <div class="chain">
+      <span class="node">Genel ısı<br>denklemi</span>
+      <span class="arr">1-B, \(\dot q=0\),<br>kararlı</span>
+      <span class="node">\(\frac{d}{dx}\!\left(k\frac{dT}{dx}\right)=0\)</span>
+      <span class="arr">2 kez integral<br>(k sabit)</span>
+      <span class="node">\(T=C_1x+C_2\)</span>
+      <span class="arr">2 sınır<br>koşulu</span>
+      <span class="node">\(T(x)\) doğrusal</span>
+      <span class="arr">Fourier<br>yasası</span>
+      <span class="node end">\(q_x,\ q''_x\)</span>
+    </div>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 300" role="img" aria-label="Düzlem duvarda doğrusal sıcaklık dağılımı">
+        <rect x="250" y="30" width="220" height="200" fill="#22304a" stroke="#cbd5e1" stroke-width="2.5"/>
+        <text x="360" y="22" text-anchor="middle" fill="#94a3b8" font-size="16">duvar, iletim katsayısı k</text>
+        <text x="120" y="60" text-anchor="middle" fill="#fb7185" font-size="17">Sıcak akışkan</text>
+        <text x="120" y="82" text-anchor="middle" fill="#fb7185" font-size="16">T∞,1 , h₁</text>
+        <text x="600" y="60" text-anchor="middle" fill="#8ab4ff" font-size="17">Soğuk akışkan</text>
+        <text x="600" y="82" text-anchor="middle" fill="#8ab4ff" font-size="16">T∞,2 , h₂</text>
+        <polyline id="profFluid1" fill="none" stroke="#fb7185" stroke-width="2" stroke-dasharray="5 5"/>
+        <polyline id="profFluid2" fill="none" stroke="#fb7185" stroke-width="2" stroke-dasharray="5 5"/>
+        <line id="profWall" stroke="#fb7185" stroke-width="4"/>
+        <circle id="pt1" r="6" fill="#fb7185"/><circle id="pt2" r="6" fill="#fb7185"/>
+        <text id="lb1" fill="#fb7185" font-size="16" text-anchor="end"></text>
+        <text id="lb2" fill="#fb7185" font-size="16"></text>
+        <line id="qline" class="flow" x1="270" y1="200" x2="440" y2="200" stroke="#34d399" stroke-width="4"/>
+        <polygon id="qhead" points="440,191 460,200 440,209" fill="#34d399"/>
+        <text x="360" y="190" fill="#34d399" font-size="18" text-anchor="middle">qx</text>
+        <line x1="250" y1="255" x2="490" y2="255" stroke="#94a3b8" stroke-width="1.5"/>
+        <polygon points="490,250 500,255 490,260" fill="#94a3b8"/>
+        <text x="505" y="260" fill="#94a3b8" font-size="16">x</text>
+        <text x="250" y="280" fill="#94a3b8" font-size="16" text-anchor="middle">x = 0</text>
+        <text x="470" y="280" fill="#94a3b8" font-size="16" text-anchor="middle">x = L</text>
+      </svg>
+      <div class="controls">
+        <label for="sT1">Ts,1 = <span id="vT1"></span> °C<input id="sT1" type="range" min="0" max="150" value="100"></label>
+        <label for="sT2">Ts,2 = <span id="vT2"></span> °C<input id="sT2" type="range" min="0" max="150" value="20"></label>
+        <label for="sK">k = <span id="vK"></span> W/m·K<input id="sK" type="range" min="0.1" max="5" step="0.1" value="1.4"></label>
+        <label for="sL">L = <span id="vL"></span> m<input id="sL" type="range" min="0.05" max="0.5" step="0.01" value="0.2"></label>
+      </div>
+      <div class="readout"><span>eğim dT/dx = <b id="oSlope"></b> K/m</span><span>q″ = <b id="oFlux"></b> W/m²</span></div>
+      <p class="cap">Duvar içindeki çizgi hep düz (doğrusal). Sıcaklık farkı veya k artınca akı artar, L artınca azalır; ok hızı akıyla orantılı. Ts,2 &gt; Ts,1 yaparsan ok ters döner (q negatif olur).</p>
+    </div>
+
+    <h3>Genel ısı denkleminden başlıyoruz</h3>
+    <p>2. üniteden genel ısı iletim denklemini (HD = heat diffusion) Kartezyen koordinatta yazıp, bu problemde sıfır olan terimleri siliyoruz:</p>
+    <div class="eq">\[ \begin{aligned} &\frac{\partial}{\partial x}\!\left(k\frac{\partial T}{\partial x}\right)+\cancelto{0}{\frac{\partial}{\partial y}\!\left(k\frac{\partial T}{\partial y}\right)}+\cancelto{0}{\frac{\partial}{\partial z}\!\left(k\frac{\partial T}{\partial z}\right)} \\ &\qquad +\cancelto{0}{\dot q}\;=\;\rho c_p\,\cancelto{0}{\frac{\partial T}{\partial t}} \end{aligned} \]</div>
+    <p class="terms"><span>\(\dot q\): birim hacimde ısı üretimi [W/m³]</span><span>\(\rho\): yoğunluk [kg/m³]</span><span>\(c_p\): özgül ısı [J/kg·K]</span><span>\(\rho c_p\,\partial T/\partial t\): birim hacimde enerji depolama hızı</span></p>
+    <p>\(y\) ve \(z\) terimlerini sistem <mark>tek boyutlu</mark> olduğu için, \(\dot q\)'yu <mark>ısı üretimi olmadığı</mark> için, sağ taraftaki depolama terimini de <mark>kararlı rejim</mark> olduğu için sildik. Geriye düzlem duvarın temel denklemi kalıyor (\(T\) artık sadece \(x\)'e bağlı olduğundan kısmi türev \(\partial\) yerine adi türev \(d\) yazıyoruz):</p>
+    <div class="eq big">\[ \frac{d}{dx}\left( k\,\frac{dT}{dx} \right) = 0 \]</div>
+
+    <h3>Hocanın "why?" sorusu: Neden \(q\) sabit?</h3>
+    <p>Fourier yasasını hatırla: \(q''_x = -k\,dT/dx\). Yukarıdaki denklemde parantezin içi tam olarak \(-q''_x\)'tir. Türevi sıfır olan bir şey sabittir:</p>
+    <div class="eq">\[ \frac{d}{dx}\Big(\underbrace{k\frac{dT}{dx}}_{=\,-q''_x}\Big)=0 \quad\Longrightarrow\quad \frac{dq''_x}{dx}=0 \]</div>
+    <div class="eq">\[ \Longrightarrow\quad q''_x=\text{sabit} \qquad\text{ve}\qquad q_x = q''_x\,A=\text{sabit} \]</div>
+    <p>Düzlem duvarda alan \(A\) değişmediği için \(q_x\) de sabittir.</p>
+    <p class="box acik"><span class="k">Fiziksel neden:</span> Enerji korunumu. Duvarın herhangi bir dilimine giren ısı çıkan ısıya eşittir, çünkü içeride ne üretim var (\(\dot q=0\)) ne de depolama (kararlı rejim). Sızıntısız bir boru gibi düşün: boruya saniyede 1 litre su giriyorsa her kesitten saniyede 1 litre geçer; ortada su ne kaybolur ne birikir.</p>
+
+    <h3>İntegral alıp genel çözümü buluyoruz</h3>
+    <p>Denklemi bir kez integre edince parantezin içi sabit çıkar; \(k\) sabitse \(dT/dx\) de sabittir. İkinci integralle doğrusal bir fonksiyon elde ederiz:</p>
+    <div class="eq">\[ k\frac{dT}{dx}=C \;\;\Longrightarrow\;\; \frac{dT}{dx}=\text{sabit} \;\;\Longrightarrow\;\; T(x)=C_1x+C_2 \]</div>
+    <p class="terms"><span>\(C_1, C_2\): integral sabitleri; sınır koşullarından bulunacak. \(C_1\) doğrunun eğimi, \(C_2\) ise \(x=0\)'daki sıcaklık.</span></p>
+    <p class="box dikkat"><span class="k">Gizli kabul!</span> Hoca \(k\,dT/dx=\text{sabit}\)'ten \(dT/dx=\text{sabit}\)'e geçerken <b class="r">\(k\)'nın sabit olduğunu kabul ediyor</b>. Kitap bunu açıkça yazar ("if the thermal conductivity is assumed to be constant…"). \(k\) sıcaklıkla değişirse (\(k=k(T)\)) profil doğrusal olmaz; bu durum 3.2'de işlenecek.</p>
+
+    <h3>Sınır koşullarıyla özel çözüm</h3>
+    <p>Denklem ikinci mertebeden olduğu için iki sabit, dolayısıyla <mark>iki sınır koşulu (BC)</mark> gerekiyor. Sol yüzeyde \(T(0)=T_{s,1}\), sağ yüzeyde \(T(L)=T_{s,2}\) alıp genel çözüme yerleştiriyoruz:</p>
+    <div class="eq">\[ x=0:\;\; T_{s,1}=C_2 \qquad\qquad x=L:\;\; T_{s,2}=C_1L+T_{s,1}\;\Rightarrow\; C_1=\frac{T_{s,2}-T_{s,1}}{L} \]</div>
+    <p>Sabitleri yerine koyunca sıcaklık dağılımı elde edilir:</p>
+    <div class="eq big">\[ T(x) = \left(T_{s,2}-T_{s,1}\right)\frac{x}{L} + T_{s,1} \]</div>
+    <p class="terms"><span>\(T_{s,1}, T_{s,2}\): sol (\(x=0\)) ve sağ (\(x=L\)) yüzey sıcaklıkları ("s" = surface)</span><span>\(L\): duvar kalınlığı [m]</span><span>\(x/L\): 0 (sol yüz) ile 1 (sağ yüz) arasında boyutsuz konum</span></p>
+    <p class="box ek"><span class="k">Kitaptan ek, BC türleri (2. üniteden):</span> Burada kullandığımız <b>1. tür</b> sınır koşuludur (yüzey sıcaklığı belli). <b>2. tür</b>de yüzey ısı akısı bellidir: \(-k\,dT/dx|_{x=0}=q''_s\) (yalıtılmış yüzeyde bu sıfırdır). <b>3. tür</b>de yüzeyde taşınım vardır: \(-k\,dT/dx|_{x=0}=h\,[T_\infty-T(0)]\).</p>
+    <p class="box sinav"><span class="k">Sınavda:</span> "Isı üretimi yok + kararlı + k sabit + düzlem duvar" ise <b>sıcaklık doğrusaldır</b>. Tersinden düşün: bir soruda profil eğri çizilmişse ya \(\dot q\neq0\) ya da \(k\) değişkendir. Bulduğun ifadeyi kontrol etmek için \(x=0\) koy, \(T_{s,1}\) çıkmalı; \(x=L\) koy, \(T_{s,2}\) çıkmalı.</p>
+
+    <h3>Isı transfer hızı ve ısı akısı</h3>
+    <p>Sıcaklık dağılımını bulduk, şimdi onu <b>Fourier yasasına</b> sokuyoruz. \(T(x)\)'in türevi sabit eğimdir: \(dT/dx=(T_{s,2}-T_{s,1})/L\). Buradan iletimle ısı transfer hızı:</p>
+    <div class="eq big">\[ q_x = -kA\,\frac{dT}{dx} = \frac{kA}{L}\left(T_{s,1}-T_{s,2}\right) \]</div>
+    <p>Bunu alana bölünce birim alan başına düşen ısı hızı, yani ısı akısı çıkar:</p>
+    <div class="eq big">\[ q''_x = \frac{q_x}{A} = \frac{k}{L}\left(T_{s,1}-T_{s,2}\right) \]</div>
+    <p class="terms"><span>\(q_x\): ısı hızı [W]</span><span>\(q''_x\): ısı akısı [W/m²] (çift üs ″ = "birim alan başına")</span><span>\(A\): ısı akış yönüne <b>dik</b> alan [m²], düzlem duvarda sabit</span></p>
+    <p class="box acik"><span class="k">İşaret neden döndü?</span> Fourier'deki eksi işareti, \((T_{s,2}-T_{s,1})\)'i \((T_{s,1}-T_{s,2})\)'ye çevirdi. Anlamı: \(T_{s,1}>T_{s,2}\) ise \(q_x\) pozitiftir, yani ısı \(+x\) yönünde, sıcaktan soğuğa akar. Hocanın da vurguladığı gibi <mark>\(q_x\) ve \(q''_x\) ikisi de \(x\)'ten bağımsızdır</mark>; bu, yukarıdaki "why?" cevabıyla tutarlı.</p>
+
+    <h3>Standart yaklaşım</h3>
+    <p>Bütün iletim problemlerinde aynı yolu izleriz: <b>(1)</b> ısı denkleminin uygun halini sadeleştirip integral alarak <b>genel çözümü</b> bul, <b>(2)</b> sınır koşullarını uygulayarak \(C_1, C_2\)'yi bul ve <b>özel çözümü</b> elde et, <b>(3)</b> bu sıcaklık dağılımını <b>Fourier yasasına</b> sokup ısı hızını hesapla.</p>
+    <p class="box dikkat"><span class="k">Eksik:</span> Hocanın listesinde sadece ilk iki adım var. Kitapta 3. adım (Fourier yasasıyla \(q\)'yu bulmak) açıkça yazıyor; soruların çoğu zaten \(q\)'yu soruyor.</p>
+    <p class="box ek"><span class="k">Kitaptan ek, önemli pratik not:</span> Sınır koşulu olarak yüzey sıcaklıklarını (\(T_{s,1}, T_{s,2}\)) verdik ama gerçekte genelde <b>akışkan sıcaklıkları</b> (\(T_{\infty,1}, T_{\infty,2}\)) bilinir. Bunu iki şekilde çözebilirsin: ya yüzey enerji dengesiyle akışkan ve yüzey sıcaklığını ilişkilendirirsin, örneğin \(h_1(T_{\infty,1}-T_{s,1})=q''_x\); ya da baştan 3. tür (taşınım) BC kullanarak \(C_1, C_2\)'yi bulursun (Problem 3.1 tam olarak bunu istiyor). Sıradaki konu olan <b>ısıl direnç</b> bu işi çok kolaylaştıracak.</p>
+
+    <h3>Kendini test et</h3>
+    <p class="hatir"><span class="k">Hatırlatma:</span> \(q''=\frac{k}{L}\Delta T\): k = malzemenin ısıyı iletme yeteneği, L = kalınlık, ΔT = iki yüzey arasındaki sıcaklık farkı. Akı, sıcaklık farkı ve k ile doğru, kalınlıkla ters orantılı.</p>
+    <p>Örnek: \(L=0.2\) m, \(k=1.4\) W/m·K, \(A=10\) m², \(T_{s,1}=80\) °C, \(T_{s,2}=20\) °C olsun. Akı \(q''_x=\frac{1.4}{0.2}(80-20)=420\) W/m², ısı hızı \(q_x=420\times10=4200\) W olur. Duvarın tam ortasında (\(x=0.1\) m) sıcaklık \(T=(20-80)\frac{0.1}{0.2}+80=50\) °C çıkar; profil doğrusal olduğu için tam ortalama değer.</p>
+    <p class="box sinav"><span class="k">Soru çözme anahtarları:</span> Soruyu okur okumaz kabulleri yaz (kararlı, 1-B, \(\dot q=0\), k sabit); kabuller puan getirir. Birimden \(q\) mu (W) \(q''\) mı (W/m²) sorulduğunu anla. Bir yüzey sıcaklığı ve akı verilmişse \(q''_x=\frac{k}{L}\Delta T\)'den bilinmeyeni (\(T\), \(k\) veya \(L\)) çek. Yalıtım kalınlığı sorularında \(q''\propto1/L\) olduğunu unutma: kalınlığı iki katına çıkarırsan akı yarıya düşer.</p>
+  </section>
+
+  <!-- ============ SAYFA 6 ============ -->
+  <hr class="cut">
+  <section id="isil-direnc">
+    <span class="src">Hoca özeti s. 6 · Kitap 3.1.2, s. 114–115</span>
+    <h2>3.1.2 Isıl Direnç</h2>
+
+    <p>Bir önceki konuda düzlem duvardan geçen ısı hızını \(q_x=\frac{kA}{L}(T_{s,1}-T_{s,2})\) olarak bulmuştuk. Bu ifadeye dikkatli bakınca <mark>ısının yayılması (difüzyonu) ile elektrik yükünün iletimi arasında bir benzerlik</mark> olduğu görülüyor. Elektrikte akımı bir gerilim farkı iter ve direnç zorlaştırır (Ohm yasası); ısıda da ısı akışını bir sıcaklık farkı iter ve malzeme zorlaştırır. İki yasayı alt alta yazınca benzerlik çok net:</p>
+    <div class="eq">\[ \underbrace{\;i=\frac{V_1-V_2}{R}\;}_{\text{Ohm yasası}} \qquad\Longleftrightarrow\qquad \underbrace{\;q=\frac{T_1-T_2}{L/kA}\;}_{\text{Fourier yasası}} \]</div>
+    <p>Yani paydadaki \(L/kA\) ifadesi ısı transferine karşı gösterilen dirençtir (<mark>resistance to HT</mark>). Kitap direnci genel olarak şöyle tanımlar: <b>direnç = itici potansiyel / ilgili transfer hızı</b>. Bu tanım bütün direnç formüllerinin anahtarı: hangi ısı transferi türü olursa olsun, sıcaklık farkını ısı hızına bölersen o türün direncini elde edersin.</p>
+    <div class="tw"><table class="t">
+      <tr><th>Elektrik</th><th>Isı</th></tr>
+      <tr><td>Akım \(i\) veya \(I\) [A]</td><td>Isı transfer hızı \(q\) [W]</td></tr>
+      <tr><td>Gerilim (potansiyel) farkı \(V_1-V_2\) [V]</td><td>Sıcaklık farkı \(T_1-T_2\) [K]</td></tr>
+      <tr><td>Elektrik direnci \(R_e=\dfrac{L}{\sigma A}\) [Ω]</td><td>Isıl direnç \(R_t=\dfrac{L}{kA}\) [K/W]</td></tr>
+      <tr><td>Elektrik iletkenliği \(\sigma\)</td><td>Isıl iletkenlik \(k\)</td></tr>
+    </table></div>
+    <p class="box ek"><span class="k">Kitaptan ek, ne zaman geçerli?</span> Kitap bu kavramı özellikle <b>tek boyutlu, iç ısı üretimi olmayan ve özellikleri sabit</b> (k sabit) durum için çıkarıyor. Isı üretimi varsa \(q\) duvar boyunca sabit kalmaz ve basit seri direnç devresi doğrudan kurulamaz (3.5'te göreceğiz).</p>
+
+    <h3>Her ısı transferi türü için bir direnç</h3>
+    <p>Hocanın "Thermal Resistance for Heat Transfer" kutusundaki iki formülü aynı mantıkla türetiyoruz. İletim için sıcaklık farkı duvarın iki yüzü arasındadır, ısı hızı da Fourier yasasından gelir:</p>
+    <div class="eq big">\[ R_{t,\text{cond}}=\frac{T_{s,1}-T_{s,2}}{q_x}=\frac{L}{kA} \]</div>
+    <p>Taşınım için Newton'un soğuma yasasını kullanıyoruz: \(q=hA(T_s-T_\infty)\). Sıcaklık farkını ısı hızına bölünce taşınım direnci çıkar:</p>
+    <div class="eq big">\[ R_{t,\text{conv}}=\frac{T_s-T_\infty}{q}=\frac{1}{hA} \]</div>
+    <p class="terms"><span>"cond" = conduction (iletim)</span><span>"conv" = convection (taşınım)</span><span>\(h\): taşınım katsayısı [W/m²·K]</span><span>\(T_s\): yüzey, \(T_\infty\): akışkan sıcaklığı</span><span>birim: K/W</span></p>
+    <p>Hoca "benzer bir denklem ışınım için de yazılabilir" diyor ama yazmıyor. Kitapta şöyle:</p>
+    <div class="eq">\[ R_{t,\text{rad}}=\frac{T_s-T_{sur}}{q_{rad}}=\frac{1}{h_rA} \qquad\text{burada}\qquad h_r=\varepsilon\sigma\,(T_s+T_{sur})(T_s^2+T_{sur}^2) \]</div>
+    <p class="terms"><span>\(T_{sur}\): çevre (surroundings) sıcaklığı</span><span>\(h_r\): ışınım ısı transfer katsayısı [W/m²·K]</span><span>\(\varepsilon\): yayıcılık</span><span>\(\sigma=5.67\times10^{-8}\) W/m²·K⁴</span><span>\(h_r\)'de sıcaklıklar <b>kelvin</b>!</span></p>
+    <p class="box ek"><span class="k">Kitaptan ek, ışınım ve taşınım paralel:</span> Bir yüzeyden ısı hem taşınımla akışkana hem ışınımla çevreye <b>aynı anda</b> gider; yani bu iki direnç <b>paraleldir</b>. Taşınım katsayısı küçükse (örneğin gazda doğal taşınım) ışınım ihmal edilemez. \(T_\infty=T_{sur}\) ise ikisi tek bir etkin yüzey direncinde birleştirilebilir: \(\frac{1}{R_{yüzey}}=\frac{1}{R_{conv}}+\frac{1}{R_{rad}}=(h+h_r)A\). Örnek 3.1 ve 3.3 tam olarak bunu kullanıyor.</p>
+    <p class="hatir"><span class="k">Hatırlatma:</span> Seri dirençler toplanır: \(R_{eş}=R_1+R_2+\dots\) (aynı ısı hepsinden sırayla geçer). Paralel dirençlerin tersleri toplanır: \(\frac{1}{R_{eş}}=\frac{1}{R_1}+\frac{1}{R_2}\) (ısı yollara bölünür, uçlardaki sıcaklık farkı aynıdır).</p>
+
+    <h3>Isıl devre: duvar + iki akışkan</h3>
+    <p>Şimdi ilk başta bıraktığımız tam probleme dönüyoruz: sıcak akışkan → duvar → soğuk akışkan. Isı sırayla üç dirençten geçer: sol yüzeyde taşınım (\(1/h_1A\)), duvarda iletim (\(L/kA\)), sağ yüzeyde taşınım (\(1/h_2A\)). Hocanın çizdiği devre budur. Aşağıdaki çizimde kaydırıcıları oynat; hangi direnç büyükse <b>en büyük sıcaklık düşümü</b> onun üzerinde olur.</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 360" role="img" aria-label="Duvar ve iki akışkan için sıcaklık profili ve eşdeğer ısıl devre">
+        <rect x="250" y="30" width="200" height="190" fill="#22304a" stroke="#cbd5e1" stroke-width="2"/>
+        <text x="350" y="22" text-anchor="middle" fill="#94a3b8" font-size="15">duvar (k, L)</text>
+        <text x="110" y="22" text-anchor="middle" fill="#fb7185" font-size="15">sıcak akışkan T∞,1 = 100 °C, h₁</text>
+        <text x="590" y="22" text-anchor="middle" fill="#60a5fa" font-size="15">soğuk akışkan T∞,2 = 0 °C, h₂</text>
+        <path id="cProf" fill="none" stroke="#fb7185" stroke-width="3.5"/>
+        <g font-size="15" fill="#fde047">
+          <text id="cTs1" text-anchor="end"></text><text id="cTs2"></text>
+        </g>
+        <line x1="30" y1="232" x2="690" y2="232" stroke="#334155"/>
+        <!-- devre -->
+        <g stroke="#cbd5e1" stroke-width="2.5" fill="none">
+          <path data-res="30,290,250"/><path data-res="250,290,450"/><path data-res="450,290,690"/>
+        </g>
+        <g fill="#f472b6"><circle cx="30" cy="290" r="6"/><circle cx="250" cy="290" r="6"/><circle cx="450" cy="290" r="6"/><circle cx="690" cy="290" r="6"/></g>
+        <g font-size="15" fill="#cbd5e1" text-anchor="middle">
+          <text x="30" y="318">T∞,1</text><text x="250" y="318">Ts,1</text><text x="450" y="318">Ts,2</text><text x="690" y="318">T∞,2</text>
+          <text x="140" y="266">1/(h₁A)</text><text x="350" y="266">L/(kA)</text><text x="570" y="266">1/(h₂A)</text>
+        </g>
+        <g font-size="14" fill="#fde047" text-anchor="middle">
+          <text id="cD1" x="140" y="342"></text><text id="cD2" x="350" y="342"></text><text id="cD3" x="570" y="342"></text>
+        </g>
+        <line class="flow" x1="40" y1="246" x2="660" y2="246" stroke="#34d399" stroke-width="3"/>
+        <polygon points="660,240 674,246 660,252" fill="#34d399"/>
+        <text x="40" y="262" fill="#34d399" font-size="14">q aynı, her dirençten geçiyor</text>
+      </svg>
+      <div class="controls">
+        <label for="ch1">h₁ = <span id="vh1"></span> W/m²·K<input id="ch1" type="range" min="5" max="200" value="25"></label>
+        <label for="ck">k = <span id="vck"></span> W/m·K<input id="ck" type="range" min="0.05" max="5" step="0.05" value="0.7"></label>
+        <label for="cL">L = <span id="vcL"></span> m<input id="cL" type="range" min="0.01" max="0.4" step="0.01" value="0.1"></label>
+        <label for="ch2">h₂ = <span id="vh2"></span> W/m²·K<input id="ch2" type="range" min="5" max="200" value="10"></label>
+      </div>
+      <div class="readout"><span>R″top = <b id="cR"></b> m²·K/W</span><span>q″ = <b id="cq"></b> W/m²</span><span>U = <b id="cU"></b> W/m²·K</span></div>
+      <p class="cap">Sarı sayılar her direnç üzerindeki sıcaklık düşümü (ΔT = q·R). Duvar içinde profil doğrusal, akışkan tarafında sınır tabakada eğri. h'yi büyütünce o taraftaki düşüm küçülür.</p>
+    </div>
+
+    <p>Isı hızı \(q_x\) devrenin her yerinde aynı olduğu için, her elemanı ayrı ayrı yazabiliriz; hepsi aynı \(q_x\)'i verir. Hepsini birden de yazabiliriz: toplam sıcaklık farkı bölü toplam direnç. Hocanın sayfanın sağındaki kutusu tam olarak bu:</p>
+    <div class="eq big">\[ q_x=\frac{T_{\infty,1}-T_{s,1}}{1/h_1A}=\frac{T_{s,1}-T_{s,2}}{L/kA}=\frac{T_{s,2}-T_{\infty,2}}{1/h_2A}=\frac{T_{\infty,1}-T_{\infty,2}}{\dfrac{1}{h_1A}+\dfrac{L}{kA}+\dfrac{1}{h_2A}} \]</div>
+    <p>Son paydadaki toplam, seri dirençlerin toplamı olan <b>toplam direnç</b>tir:</p>
+    <div class="eq">\[ R_{tot}=\frac{1}{h_1A}+\frac{L}{kA}+\frac{1}{h_2A} \qquad\Longrightarrow\qquad q_x=\frac{T_{\infty,1}-T_{\infty,2}}{R_{tot}} \]</div>
+    <p class="box acik"><span class="k">Analoji:</span> Arka arkaya üç dar köprüden geçen bir trafik düşün. Arabaların akışı (ısı hızı) her köprüde aynıdır, çünkü araçlar yolda kaybolmaz. Ama en dar köprünün önünde en büyük "sıkışma" (sıcaklık düşümü) olur. Toplam yavaşlık, köprülerin yavaşlıklarının toplamıdır; seri dirençler de böyle toplanır.</p>
+    <p class="box ek"><span class="k">Kitaptan ek, toplam ısı transfer katsayısı U:</span> Kompozit sistemlerde Newton'un soğuma yasasına benzeyen bir ifade kullanmak pratiktir: \(q_x=UA\,\Delta T\). Buradaki \(\Delta T\) toplam sıcaklık farkı (\(T_{\infty,1}-T_{\infty,2}\)), \(U\) ise toplam ısı transfer katsayısıdır [W/m²·K]. Toplam dirençle ilişkisi \(UA=1/R_{tot}\), yani genel olarak \(R_{tot}=\sum R_t=\frac{\Delta T}{q}=\frac{1}{UA}\). Bu duvar için \(U=\dfrac{1}{1/h_1+L/k+1/h_2}\) olur. Sınavlarda "toplam ısı transfer katsayısını bulun" diye sıkça sorulur.</p>
+    <p class="box sinav"><span class="k">Soru çözme anahtarı:</span> Önce toplam dirençten \(q\)'yu bul, sonra ara sıcaklıkları <b>tek tek direnç</b> üzerinden geri çöz: örneğin \(T_{s,1}=T_{\infty,1}-q\cdot\frac{1}{h_1A}\), \(T_{s,2}=T_{s,1}-q\cdot\frac{L}{kA}\). Alan verilmemişse her şeyi birim alan başına yaz (\(R''=R\cdot A\), birimi m²·K/W) ve \(q''\) ile çalış. Bir direnç diğerlerinden çok küçükse (örneğin \(h\) çok büyük) ihmal edilebilir; o yüzeyde \(T_s\approx T_\infty\) olur.</p>
+  </section>
+
+  <!-- ============ SAYFA 7 ============ -->
+  <hr class="cut">
+  <section id="kompozit">
+    <span class="src">Hoca özeti s. 7 · Kitap 3.1.3, s. 115–117</span>
+    <h2>Örnek çizim ve 3.1.3 Kompozit Duvar</h2>
+    <p>Hocanın 7. sayfadaki çizimi, yukarıdaki etkileşimli şeklin aynısıdır: soldan \(T_{\infty,1}, h_1\) sıcak akışkanı, ortada \(x=0\) ile \(x=L\) arasında duvar, sağda \(T_{\infty,2}, h_2\) soğuk akışkanı. Hocanın kırmızıyla çizdiği <b>düz çizgi</b> duvar içindeki doğrusal profili, iki yandaki eğriler ise akışkan tarafındaki sınır tabakasını gösteriyor. Altında da eşdeğer ısıl devre var (equivalent thermal circuit).</p>
+    <p>Hoca ısıl direnç kavramının iki yere daha uygulanabildiğini söylüyor: <mark>basit kompozit duvarlar</mark> ve <mark>seri-paralel kompozit duvar</mark>. Ayrıntısını özete koymamış, kitaptan tamamlıyoruz.</p>
+
+    <h3>Seri kompozit duvar</h3>
+    <p class="box ek"><span class="k">Kitaptan ek:</span> Kompozit duvar, farklı malzemelerden katmanların üst üste geldiği duvardır (örneğin sıva + tuğla + yalıtım). Her katman kendi \(L/kA\) direncini ekler. Üç katmanlı (A, B, C) bir duvar için iki uçta taşınım da varken devre beş seri dirençten oluşur.</p>
+    <div class="fig">
+      <svg viewBox="0 0 720 270" role="img" aria-label="Üç katmanlı seri kompozit duvar ve devresi">
+        <rect x="200" y="30" width="90" height="150" fill="#22304a" stroke="#cbd5e1" stroke-width="2"/>
+        <rect x="290" y="30" width="130" height="150" fill="#2c2a45" stroke="#cbd5e1" stroke-width="2"/>
+        <rect x="420" y="30" width="80" height="150" fill="#1f3a3a" stroke="#cbd5e1" stroke-width="2"/>
+        <g font-size="16" fill="#cbd5e1" text-anchor="middle"><text x="245" y="170">A</text><text x="355" y="170">B</text><text x="460" y="170">C</text></g>
+        <g font-size="13" fill="#94a3b8" text-anchor="middle"><text x="245" y="24">L_A, k_A</text><text x="355" y="24">L_B, k_B</text><text x="460" y="24">L_C, k_C</text></g>
+        <polyline points="40,45 150,48 200,62 290,80 420,145 500,152 560,165 690,168" fill="none" stroke="#fb7185" stroke-width="3"/>
+        <g font-size="13" fill="#fde047"><text x="40" y="38">T∞,1</text><text x="185" y="58" text-anchor="end">Ts,1</text><text x="294" y="74">T₂</text><text x="424" y="139">T₃</text><text x="505" y="146">Ts,4</text><text x="650" y="160">T∞,4</text></g>
+        <g stroke="#cbd5e1" stroke-width="2.2" fill="none">
+          <path data-res="30,225,160"/><path data-res="160,225,290"/><path data-res="290,225,420"/><path data-res="420,225,550"/><path data-res="550,225,690"/>
+        </g>
+        <g fill="#f472b6"><circle cx="30" cy="225" r="5"/><circle cx="160" cy="225" r="5"/><circle cx="290" cy="225" r="5"/><circle cx="420" cy="225" r="5"/><circle cx="550" cy="225" r="5"/><circle cx="690" cy="225" r="5"/></g>
+        <g font-size="14" fill="#cbd5e1" text-anchor="middle"><text x="95" y="205">1/h₁A</text><text x="225" y="205">L_A/k_A A</text><text x="355" y="205">L_B/k_B A</text><text x="485" y="205">L_C/k_C A</text><text x="620" y="205">1/h₄A</text></g>
+        <g font-size="13" fill="#94a3b8" text-anchor="middle"><text x="30" y="252">T∞,1</text><text x="160" y="252">Ts,1</text><text x="290" y="252">T₂</text><text x="420" y="252">T₃</text><text x="550" y="252">Ts,4</text><text x="690" y="252">T∞,4</text></g>
+      </svg>
+      <p class="cap">Kitap Şekil 3.2'nin yeniden çizimi. Her katmanda profil doğrusal ama eğimler farklı: k küçük olan katmanda (burada B) eğim dik, yani sıcaklık en çok orada düşer.</p>
+    </div>
+    <div class="eq big">\[ q_x=\frac{T_{\infty,1}-T_{\infty,4}}{\sum R_t}=\frac{T_{\infty,1}-T_{\infty,4}}{\dfrac{1}{h_1A}+\dfrac{L_A}{k_AA}+\dfrac{L_B}{k_BA}+\dfrac{L_C}{k_CA}+\dfrac{1}{h_4A}} \]</div>
+    <p>Yine ara sıcaklıklar tek tek elemanlardan bulunur: \(q_x=\frac{T_{\infty,1}-T_{s,1}}{1/h_1A}=\frac{T_{s,1}-T_2}{L_A/k_AA}=\frac{T_2-T_3}{L_B/k_BA}=\dots\) Toplam ısı transfer katsayısı da aynı mantıkla:</p>
+    <div class="eq">\[ U=\frac{1}{R_{tot}A}=\frac{1}{\dfrac{1}{h_1}+\dfrac{L_A}{k_A}+\dfrac{L_B}{k_B}+\dfrac{L_C}{k_C}+\dfrac{1}{h_4}} \]</div>
+    <p class="box acik"><span class="k">Neden eğimler farklı?</span> Isı akısı \(q''\) her katmanda aynı. \(q''=-k\,dT/dx\) olduğu için \(dT/dx=-q''/k\): \(k\) küçükse eğim dik olur. Yalıtım malzemesi (küçük k) bu yüzden sıcaklığın büyük kısmını "üstüne alır".</p>
+
+    <h3>Seri-paralel kompozit duvar</h3>
+    <p class="box ek"><span class="k">Kitaptan ek:</span> Bazı duvarlarda bir katman ikiye bölünmüştür: aşağıdaki şekilde ortadaki katmanın üst yarısı F, alt yarısı G malzemesidir. Bu durumda ısı akışı aslında <b>çok boyutludur</b> (ısı F ile G arasında yukarı-aşağı da akar). Yine de 1-B kabul etmek çoğu zaman makuldür ve iki farklı devre kurulabilir.</p>
+    <div class="fig">
+      <svg viewBox="0 0 720 430" role="img" aria-label="Seri-paralel kompozit duvar ve iki farklı eşdeğer devre">
+        <rect x="200" y="20" width="80" height="120" fill="#22304a" stroke="#cbd5e1" stroke-width="2"/>
+        <rect x="280" y="20" width="110" height="60" fill="#2c2a45" stroke="#cbd5e1" stroke-width="2"/>
+        <rect x="280" y="80" width="110" height="60" fill="#3a2a35" stroke="#cbd5e1" stroke-width="2"/>
+        <rect x="390" y="20" width="90" height="120" fill="#1f3a3a" stroke="#cbd5e1" stroke-width="2"/>
+        <g font-size="16" fill="#cbd5e1" text-anchor="middle"><text x="240" y="85">E</text><text x="335" y="55">F</text><text x="335" y="115">G</text><text x="435" y="85">H</text></g>
+        <text x="185" y="85" text-anchor="end" font-size="16" fill="#fb7185">T₁</text><text x="495" y="85" font-size="16" fill="#60a5fa">T₂</text>
+        <text x="560" y="40" font-size="14" fill="#94a3b8">toplam alan A</text>
+        <text x="560" y="62" font-size="14" fill="#94a3b8">F ve G: her biri A/2</text>
+        <text x="560" y="84" font-size="14" fill="#94a3b8">L_F = L_G</text>
+        <!-- (a) -->
+        <text x="30" y="178" font-size="16" fill="#fde047">(a) x'e dik yüzeyler izotermal</text>
+        <g stroke="#cbd5e1" stroke-width="2.2" fill="none">
+          <path data-res="60,235,190"/>
+          <line x1="190" y1="205" x2="190" y2="265"/><line x1="190" y1="205" x2="220" y2="205"/><line x1="190" y1="265" x2="220" y2="265"/>
+          <path data-res="220,205,380"/><path data-res="220,265,380"/>
+          <line x1="380" y1="205" x2="410" y2="205"/><line x1="380" y1="265" x2="410" y2="265"/><line x1="410" y1="205" x2="410" y2="265"/>
+          <path data-res="410,235,560"/>
+        </g>
+        <g fill="#f472b6"><circle cx="60" cy="235" r="5"/><circle cx="190" cy="235" r="5"/><circle cx="410" cy="235" r="5"/><circle cx="560" cy="235" r="5"/></g>
+        <g font-size="13" fill="#cbd5e1" text-anchor="middle"><text x="125" y="222">L_E/(k_E A)</text><text x="300" y="194">L_F/(k_F A/2)</text><text x="300" y="290">L_G/(k_G A/2)</text><text x="485" y="222">L_H/(k_H A)</text><text x="60" y="258">T₁</text><text x="560" y="258">T₂</text></g>
+        <!-- (b) -->
+        <text x="30" y="322" font-size="16" fill="#fde047">(b) x'e paralel yüzeyler adyabatik</text>
+        <g stroke="#cbd5e1" stroke-width="2.2" fill="none">
+          <line x1="60" y1="350" x2="60" y2="405"/><line x1="660" y1="350" x2="660" y2="405"/>
+          <path data-res="60,350,250"/><path data-res="250,350,450"/><path data-res="450,350,660"/>
+          <path data-res="60,405,250"/><path data-res="250,405,450"/><path data-res="450,405,660"/>
+        </g>
+        <g fill="#f472b6"><circle cx="60" cy="377" r="5"/><circle cx="660" cy="377" r="5"/></g>
+        <g font-size="13" fill="#cbd5e1" text-anchor="middle"><text x="155" y="340">L_E/(k_E A/2)</text><text x="350" y="340">L_F/(k_F A/2)</text><text x="555" y="340">L_H/(k_H A/2)</text>
+          <text x="155" y="426">L_E/(k_E A/2)</text><text x="350" y="426">L_G/(k_G A/2)</text><text x="555" y="426">L_H/(k_H A/2)</text>
+          <text x="40" y="381" text-anchor="end">T₁</text><text x="680" y="381" text-anchor="start">T₂</text></g>
+      </svg>
+      <p class="cap">Kitap Şekil 3.3'ün yeniden çizimi. (a)'da sadece ortadaki F ve G paralel; (b)'de duvar yukarıdan aşağı ikiye bölünüp iki bağımsız seri kol paralel bağlanıyor.</p>
+    </div>
+    <p class="box ek"><span class="k">İki devrenin farkı:</span> <b>(a)</b> durumunda \(x\) yönüne <b>dik</b> yüzeylerin <b>izotermal</b> (her noktası aynı sıcaklıkta) olduğu varsayılır. Bu yüzden E'den çıkan ısı F ve G'ye bölünür, sonra H'de tekrar birleşir. <b>(b)</b> durumunda \(x\) yönüne <b>paralel</b> yüzeylerin <b>adyabatik</b> (içinden ısı geçmeyen) olduğu varsayılır; duvar ortadan ince bir yalıtımla ikiye bölünmüş gibi düşünülür. İki devre farklı \(R_{tot}\) verir ve bulunan iki \(q\) değeri <mark>gerçek ısı hızını alttan ve üstten sınırlar</mark>. Fark \(|k_F-k_G|\) büyüdükçe artar, çünkü çok boyutlu etkiler güçlenir.</p>
+
+    <h3>Hocanın "Örnek 3.1, 3.2, 3.3'ü çözün" dediği örnekler</h3>
+    <p>Çözümleri yazmıyorum, ama her birinde neye dikkat etmen gerektiğini anahtar olarak veriyorum. Üçü de "önce devreyi doğru çiz, gerisi cebir" mantığında.</p>
+    <p class="box sinav"><span class="k">Örnek 3.1, aerojel giysi:</span> İnsan vücudu içten 35 °C, dışarısı 10 °C hava veya su. İstenen: ısı kaybını 100 W'a düşürecek yalıtım kalınlığı. Devre: <b>deri/yağ iletimi + yalıtım iletimi</b> seri, sonra dış yüzeyde <b>taşınım ∥ ışınım</b> paralel (suda ışınım yok). Anahtar: \(R_{tot}=\frac{T_i-T_\infty}{q}\) ile toplam direnci bul, bilinen dirençleri çıkar, kalan yalıtım direncinden \(L=R\cdot kA\). \(h_r\) dış yüzey sıcaklığına bağlı olduğu için yaklaşık bir değerle başlayıp kontrol etmek gerekebilir.</p>
+    <p class="box sinav"><span class="k">Örnek 3.2, çip + epoksi + alüminyum:</span> Çip ısı üretiyor ve ısı <b>iki yoldan</b> gidiyor: üstten doğrudan havaya (\(1/h\)), alttan epoksi temas direnci + alüminyum iletimi + havaya taşınım (\(R''_{t,c}+L/k+1/h\)). Yani iki kol paralel ve ikisinin uçlarındaki sıcaklık farkı aynı (\(T_c-T_\infty\)). Anahtar denklem: \(q''_c=\frac{T_c-T_\infty}{1/h}+\frac{T_c-T_\infty}{R''_{t,c}+L/k+1/h}\). Epoksinin \(R''_{t,c}\) değeri Tablo 3.2'den alınır (temas direnci, aşağıda).</p>
+    <p class="box sinav"><span class="k">Örnek 3.3, güneş paneli:</span> Katmanlar: cam, yapıştırıcı, silisyum, lehim, AlN taban; alt ve yanlar yalıtılmış, yani <b>alttan ısı gitmez</b>, o katmanlar devreye girmez. Isı silisyum katmanında oluşuyor ve yukarı doğru yapıştırıcı + cam iletimi, sonra yüzeyde taşınım ∥ ışınım üzerinden gidiyor. Camın üst yüzeyinde de bir miktar güneş enerjisi soğuruluyor; bu, devreye o düğümde dışarıdan giren ek bir ısı gibi eklenir. Verim \(\eta\) silisyum sıcaklığına bağlı olduğu için çözüm <b>iteratif</b>: bir \(T_{si}\) tahmin et, enerji dengesini kur, kontrol et.</p>
+  </section>
+
+  <!-- ============ SAYFA 8–9 ============ -->
+  <hr class="cut">
+  <section id="temas-direnci">
+    <span class="src">Hoca özeti s. 8–9 · Kitap 3.1.4, s. 117–119</span>
+    <h2>3.1.4 Temas Direnci</h2>
+    <p>Şimdiye kadar iki katmanın birleştiği yerde sıcaklığın aynı olduğunu kabul ettik. Gerçekte <mark>temas yüzeylerinde önemli bir sıcaklık farkı oluşabilir</mark>. Bu sıcaklık düşümü <mark>ısıl temas direnci</mark> (thermal contact resistance) ile modellenir. Kitap tanımını birim alan için verir (hocanın özetinde tanım formülü yok):</p>
+    <div class="eq big">\[ R''_{t,c}=\frac{T_A-T_B}{q''_x} \]</div>
+    <p class="terms"><span>\(R''_{t,c}\): birim alan başına temas direnci [m²·K/W]; "t,c" = thermal, contact</span><span>\(T_A, T_B\): ara yüzeyin iki yanındaki sıcaklıklar</span><span>Devrede kullanmak için: \(R_{t,c}=R''_{t,c}/A\)</span></p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 340" role="img" aria-label="Temas direncinden kaynaklanan sıcaklık düşümü ve pürüzlü yüzeylerin yakından görünüşü">
+        <defs><clipPath id="zc"><circle cx="555" cy="130" r="100"/></clipPath></defs>
+        <rect x="40" y="40" width="160" height="160" fill="#22304a" stroke="#cbd5e1" stroke-width="2"/>
+        <rect x="200" y="40" width="160" height="160" fill="#2c2a45" stroke="#cbd5e1" stroke-width="2"/>
+        <g font-size="18" fill="#cbd5e1" text-anchor="middle"><text x="120" y="190">A</text><text x="280" y="190">B</text></g>
+        <polyline points="40,60 200,95" fill="none" stroke="#fb7185" stroke-width="3.5"/>
+        <polyline points="200,140 360,175" fill="none" stroke="#fb7185" stroke-width="3.5"/>
+        <line x1="200" y1="95" x2="200" y2="140" stroke="#fde047" stroke-width="2" stroke-dasharray="4 4"/>
+        <g font-size="15" fill="#fde047"><text x="194" y="90" text-anchor="end">T_A</text><text x="206" y="155">T_B</text><text x="210" y="123">ΔT</text></g>
+        <line class="flow" x1="50" y1="220" x2="340" y2="220" stroke="#34d399" stroke-width="3"/>
+        <polygon points="340,214 354,220 340,226" fill="#34d399"/><text x="60" y="242" fill="#34d399" font-size="14">q″x</text>
+        <circle cx="200" cy="118" r="18" fill="none" stroke="#94a3b8" stroke-width="1.5"/>
+        <line x1="215" y1="108" x2="460" y2="80" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="3 4"/>
+        <!-- zoom -->
+        <g clip-path="url(#zc)">
+          <rect x="450" y="25" width="220" height="210" fill="#1e293b"/>
+          <polygon points="440,25 530,25 548,48 534,72 560,100 536,122 550,146 532,166 560,190 538,212 546,240 440,240" fill="#22304a" stroke="#cbd5e1" stroke-width="1.5"/>
+          <polygon points="680,25 568,25 556,48 576,72 560,100 580,122 568,146 584,166 560,190 576,212 564,240 680,240" fill="#2c2a45" stroke="#cbd5e1" stroke-width="1.5"/>
+          <line class="flow" x1="500" y1="100" x2="615" y2="100" stroke="#f472b6" stroke-width="3"/>
+          <line class="flow" x1="500" y1="190" x2="615" y2="190" stroke="#f472b6" stroke-width="3"/>
+          <line class="flow" x1="510" y1="146" x2="605" y2="146" stroke="#60a5fa" stroke-width="2" style="--spd:2.6s"/>
+          <line class="flow" x1="510" y1="60" x2="605" y2="60" stroke="#60a5fa" stroke-width="2" style="--spd:2.6s"/>
+        </g>
+        <circle cx="555" cy="130" r="100" fill="none" stroke="#94a3b8" stroke-width="2"/>
+        <g font-size="14"><text x="640" y="246" fill="#f472b6">temas noktası</text><text x="430" y="246" fill="#60a5fa">boşluk (hava)</text></g>
+        <!-- paralel direnç -->
+        <g stroke="#cbd5e1" stroke-width="2" fill="none">
+          <line x1="430" y1="300" x2="460" y2="300"/><line x1="460" y1="280" x2="460" y2="320"/>
+          <path data-res="460,280,640"/><path data-res="460,320,640"/>
+          <line x1="640" y1="280" x2="640" y2="320"/><line x1="640" y1="300" x2="670" y2="300"/>
+        </g>
+        <g font-size="13" text-anchor="middle"><text x="550" y="270" fill="#f472b6">R₁: temas noktaları</text><text x="550" y="338" fill="#60a5fa">R₂: hava dolu boşluklar</text></g>
+        <text x="40" y="290" font-size="15" fill="#cbd5e1">Ara yüzeyde sıcaklık aniden düşer (ΔT).</text>
+        <text x="40" y="312" font-size="15" fill="#cbd5e1">Büyüteç: yüzeyler aslında pürüzlü.</text>
+      </svg>
+      <p class="cap">Kitap Şekil 3.4'ün yeniden çizimi + hocanın paralel direnç çizimi. Pembe oklar temas noktalarından iletim (hızlı), mavi oklar boşluktaki havadan iletim/ışınım (yavaş).</p>
+    </div>
+
+    <p>Peki bu direnç neden var? İki malzemenin teması aslında kusursuz değildir; <mark>yüzey pürüzlülüğü</mark> yüzünden yüzeyler sadece birkaç <b>temas noktasında</b> (spot) birbirine değer. Aradaki <b>boşluklar</b> (gap) genelde <b>havayla</b> doludur. Isı iki yoldan geçer: temas noktalarından katı iletimiyle ve boşluklardaki havadan iletim ve/veya ışınımla. Bu iki yol yan yana olduğu için <mark>paralel dirençler</mark> gibi davranır:</p>
+    <div class="eq">\[ R''_{t,c}=\frac{1}{\dfrac{1}{R_1}+\dfrac{1}{R_2}} \]</div>
+    <p class="terms"><span>\(R_1\): temas noktalarının direnci</span><span>\(R_2\): hava dolu boşlukların direnci</span></p>
+    <p class="box ek"><span class="k">Kitaptan ek:</span> Temas alanı genelde çok küçüktür; özellikle pürüzlü yüzeylerde <b>direncin büyük kısmı boşluklardan</b> gelir. Hava kötü bir iletken olduğu için boşluk yolu dar bir yoldur.</p>
+    <p class="box acik"><span class="k">Analoji:</span> Bilgisayar işlemcisinin üstüne soğutucu koyarken araya <b>termal macun</b> sürülür. İşlemci ile soğutucu yüzeyleri çıplak gözle düz görünse de mikroskopta pürüzlüdür; macun aradaki hava boşluklarını doldurur ve temas direncini düşürür. Bu konunun ta kendisi.</p>
+
+    <h3>Temas direnci nasıl azaltılır?</h3>
+    <p>Hoca katı malzeme temasları için üç yol sayıyor: <mark>bağlantı basıncını artırmak</mark>, <mark>temas eden yüzeylerin pürüzlülüğünü azaltmak</mark> ve araya <mark>ısı iletim katsayısı yüksek bir ara yüzey akışkanı koymak</mark>. İlk ikisi aynı işi yapar: temas noktalarının toplam alanını büyütür (yüzeyler birbirine daha çok yaslanır). Üçüncüsü boşluk yolunu iyileştirir.</p>
+    <p class="box ek"><span class="k">Kitaptan ek, ince noktalar:</span> Basıncı artırmak, katının k'sı ara akışkanınkinden büyük olduğunda işe yarar (genelde öyledir). Ara yüzeyde <b>hiç akışkan olmaması</b> (vakum) boşluktan iletimi yok eder ve temas direncini <b>artırır</b>; uzay uygulamalarında bu önemlidir. Çok düzgün yüzeylerde boşluk çok daralırsa, gazın ısı iletimi mikro ölçek etkileriyle düşebilir (2.2'deki ortalama serbest yol konusu).</p>
+
+    <h3>Değerler nereden gelir?</h3>
+    <p>\(R''_{t,c}\)'yi tahmin etmek için teoriler geliştirilmiştir ama <mark>genellikle deneysel değerler kullanılır</mark>: <b>Tablo 3.1</b> ve <b>Tablo 3.2</b>.</p>
+    <div class="tw"><table class="t">
+      <tr><th colspan="3">Tablo 3.1(a): vakumda metal ara yüzeyler, \(R''_{t,c}\times10^4\) [m²·K/W]</th></tr>
+      <tr><td>Temas basıncı</td><td>100 kN/m²</td><td>10 000 kN/m²</td></tr>
+      <tr><td>Paslanmaz çelik</td><td>6–25</td><td>0.7–4.0</td></tr>
+      <tr><td>Bakır</td><td>1–10</td><td>0.1–0.5</td></tr>
+      <tr><td>Magnezyum</td><td>1.5–3.5</td><td>0.2–0.4</td></tr>
+      <tr><td>Alüminyum</td><td>1.5–5.0</td><td>0.2–0.4</td></tr>
+    </table></div>
+    <div class="tw"><table class="t">
+      <tr><th colspan="6">Tablo 3.1(b): alüminyum ara yüzey, farklı ara akışkanlar, \(R''_{t,c}\times10^4\) [m²·K/W]</th></tr>
+      <tr><td>Hava 2.75</td><td>Helyum 1.05</td><td>Hidrojen 0.720</td><td>Silikon yağı 0.525</td><td>Gliserin 0.265</td></tr>
+    </table></div>
+    <p class="box acik"><span class="k">Tablo nasıl okunur?</span> Tablodaki sayı \(R''_{t,c}\times10^4\) olarak verilmiş; yani tabloda "2.75" yazıyorsa gerçek değer \(2.75\times10^{-4}\) m²·K/W'dır. 3.1(a)'dan çıkan ders: basınç 100 kat artınca direnç yaklaşık 10 kat düşüyor. 3.1(b)'den çıkan ders: aradaki akışkanın k'sı arttıkça (hava → gliserin) direnç düşüyor.</p>
+    <p class="box ek"><span class="k">Tablo 3.2:</span> Farklı katılar ve dolgu malzemeleri için tipik değerler verir; örneğin indiyum folyolu alüminyum/alüminyum ≈ 0.07, Dow Corning 340 gresli alüminyum/alüminyum ≈ 0.07, silisyum çip/alüminyum 0.02 mm epoksi ile 0.2–0.9 (×10⁻⁴ m²·K/W). Örnek 3.2'de bu son değer kullanılıyor.</p>
+
+    <h3>Ara yüzey dolgu malzemeleri</h3>
+    <p>Boşluğu dolduran ve k'sı havadan büyük olan her madde temas direncini düşürür. Hoca iki sınıf sayıyor. Birincisi <b>yumuşak metaller</b>: indiyum (In), kurşun (Pb), kalay (Sn) ve gümüş (Ag); ince folyo olarak araya konur ya da malzemelerden birine ince kaplama olarak uygulanır. Yumuşak oldukları için basınç altında pürüzlerin arasına yayılırlar. İkincisi <b>termal gresler</b>: silikon bazlı bu gresler boşlukları tamamen doldurur ve ısı iletim katsayıları havanınkinin yaklaşık 50 katıdır:</p>
+    <div class="eq">\[ k_{gres}\approx 50\,k_{hava} \]</div>
+    <p class="box ek"><span class="k">Kitaptan ek, kalıcı bağlantılar:</span> Folyo ve gres kalıcı değildir. Epoksi, lehim veya sert lehim (altın/kalay alaşımı) gibi <b>kalıcı bağlantılarda</b> gerçek direnç, teorik \(L/k\) değerinden <b>büyük</b> çıkar. Nedeni bağlantı malzemesi ile ana malzemeler arasındaki ek ara yüzey dirençleri, ayrıca üretimde veya ısıl çevrimler sırasında oluşan boşluk ve çatlaklardır.</p>
+    <p class="box sinav"><span class="k">Soru çözme anahtarı:</span> Temas direnci devreye iki katman arasına konan <b>bir seri direnç daha</b>dır: \(R_{t,c}=R''_{t,c}/A\). Tablodaki \(\times10^4\)'ü unutma (en sık yapılan hata). Soruda "temas direnci ihmal edilebilir mi?" diye sorulursa \(R''_{t,c}\)'yi katmanların \(L/k\) değerleriyle karşılaştır: onlardan çok küçükse ihmal edilir. Ara yüzeydeki sıcaklık sıçraması \(\Delta T=q''\cdot R''_{t,c}\).</p>
+  </section>
+
+  <!-- ============ SAYFA 10 ============ -->
+  <hr class="cut">
+  <section id="alternatif">
+    <span class="src">Hoca özeti s. 10 · Kitap 3.2, s. 132–135</span>
+    <h2>3.2 Alternatif İletim Analizi</h2>
+    <p class="box dikkat"><span class="k">Not:</span> Hoca 3.1.4'ten doğrudan 3.2'ye geçmiş; kitaptaki <b>3.1.5 Gözenekli ortam</b> (porous media) bölümü özette yok. Sınav kapsamında olup olmadığını hocaya sormakta fayda var.</p>
+
+    <p>3.1'de <b>standart yaklaşımı</b> kullanmıştık: önce ısı denklemini çözüp \(T(x)\)'i bulduk, sonra Fourier yasasından \(q\)'yu hesapladık. Şimdi daha kısa bir yol görüyoruz. Aşağıdaki gibi kesit alanı \(x\) boyunca değişen (\(A(x)\)) ve yan yüzeyi yalıtılmış (<mark>adyabatik yüzey</mark>) bir cisim düşün. Kararlı rejimde, ısı üretimi yokken ve yanlardan ısı kaçmıyorken, enerji korunumu gereği her \(dx\) diliminden geçen ısı aynıdır: \(q_x=q_{x+dx}\). Yani <mark>adyabatik yüzey → sabit iletim ısı hızına sahip sistem</mark>. Bu, alan \(A(x)\) değişse ve \(k\) sıcaklıkla değişse (\(k(T)\)) bile doğrudur.</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 300" role="img" aria-label="Kesit alanı değişen, yanları yalıtılmış cisim ve iki sıcaklık profili karşılaştırması">
+        <polygon points="60,95 380,40 380,170 60,115" fill="#22304a" stroke="#cbd5e1" stroke-width="2"/>
+        <g stroke="#94a3b8" stroke-width="1.5">
+          <line x1="80" y1="88" x2="72" y2="76"/><line x1="130" y1="80" x2="122" y2="68"/><line x1="180" y1="71" x2="172" y2="59"/><line x1="230" y1="63" x2="222" y2="51"/><line x1="280" y1="54" x2="272" y2="42"/><line x1="330" y1="46" x2="322" y2="34"/>
+          <line x1="80" y1="122" x2="72" y2="134"/><line x1="130" y1="130" x2="122" y2="142"/><line x1="180" y1="139" x2="172" y2="151"/><line x1="230" y1="147" x2="222" y2="159"/><line x1="280" y1="156" x2="272" y2="168"/><line x1="330" y1="164" x2="322" y2="176"/>
+        </g>
+        <text x="200" y="30" fill="#94a3b8" font-size="14" text-anchor="middle">adyabatik (yalıtılmış) yan yüzey</text>
+        <line x1="210" y1="68" x2="210" y2="143" stroke="#fde047" stroke-width="2" stroke-dasharray="4 3"/>
+        <line x1="240" y1="63" x2="240" y2="148" stroke="#fde047" stroke-width="2" stroke-dasharray="4 3"/>
+        <text x="225" y="165" fill="#fde047" font-size="14" text-anchor="middle">dx</text>
+        <line class="flow" x1="70" y1="105" x2="400" y2="105" stroke="#34d399" stroke-width="3"/>
+        <polygon points="400,99 414,105 400,111" fill="#34d399"/>
+        <text x="190" y="100" fill="#34d399" font-size="14" text-anchor="end">q_x</text><text x="246" y="100" fill="#34d399" font-size="14">q_x+dx</text>
+        <text x="50" y="100" fill="#fb7185" font-size="14" text-anchor="end">T₀, A(x₀)</text>
+        <text x="388" y="190" fill="#60a5fa" font-size="14">T₁ (x₁)</text>
+        <line x1="60" y1="200" x2="400" y2="200" stroke="#94a3b8"/><polygon points="400,195 410,200 400,205" fill="#94a3b8"/><text x="415" y="205" fill="#94a3b8" font-size="14">x</text>
+        <!-- mini profiller -->
+        <g transform="translate(450,20)">
+          <rect x="0" y="0" width="120" height="70" fill="#22304a" stroke="#cbd5e1"/>
+          <line x1="0" y1="35" x2="120" y2="35" stroke="#34d399" stroke-width="2"/>
+          <line x1="0" y1="20" x2="120" y2="20" stroke="#34d399" stroke-width="1" opacity=".5"/><line x1="0" y1="50" x2="120" y2="50" stroke="#34d399" stroke-width="1" opacity=".5"/>
+          <text x="60" y="88" fill="#cbd5e1" font-size="13" text-anchor="middle">A = sabit</text>
+          <line x1="0" y1="105" x2="0" y2="215" stroke="#94a3b8"/><line x1="0" y1="215" x2="120" y2="215" stroke="#94a3b8"/>
+          <line x1="0" y1="115" x2="120" y2="205" stroke="#fb7185" stroke-width="3"/>
+          <text x="60" y="232" fill="#cbd5e1" font-size="13" text-anchor="middle">T(x) doğrusal</text>
+        </g>
+        <g transform="translate(590,20)">
+          <polygon points="0,0 120,22 120,48 0,70" fill="#22304a" stroke="#cbd5e1"/>
+          <line x1="0" y1="35" x2="120" y2="35" stroke="#34d399" stroke-width="2"/>
+          <line x1="0" y1="18" x2="120" y2="30" stroke="#34d399" stroke-width="1" opacity=".5"/><line x1="0" y1="52" x2="120" y2="40" stroke="#34d399" stroke-width="1" opacity=".5"/>
+          <text x="60" y="88" fill="#cbd5e1" font-size="13" text-anchor="middle">A azalıyor →</text>
+          <line x1="0" y1="105" x2="0" y2="215" stroke="#94a3b8"/><line x1="0" y1="215" x2="120" y2="215" stroke="#94a3b8"/>
+          <path d="M0,115 Q70,122 120,205" fill="none" stroke="#fb7185" stroke-width="3"/>
+          <text x="60" y="232" fill="#cbd5e1" font-size="13" text-anchor="middle">T(x) gittikçe dikleşir</text>
+        </g>
+      </svg>
+      <p class="cap">Sol: kitap Şekil 3.6 (hocanın çizimi). Sağ: hocanın "ikisinde de q sabit, T(x)'teki farka dikkat" dediği karşılaştırma. Alan daraldıkça akı çizgileri sıklaşır, yani q″ artar.</p>
+    </div>
+
+    <p>\(q_x\) sabit olduğuna göre, değerini ve \(T(x)\)'i bilmesek bile Fourier yasasını doğrudan integre edebiliriz. Değişkenleri ayırıp (\(x\)'li terimler bir yana, \(T\)'li terimler öbür yana) integral alıyoruz:</p>
+    <div class="eq">\[ q_x=-k(T)\,A(x)\,\frac{dT}{dx} \qquad\Longrightarrow\qquad \frac{q_x\,dx}{A(x)}=-k(T)\,dT \]</div>
+    <div class="eq big">\[ q_x\int_{x_0}^{x}\frac{dx}{A(x)}=-\int_{T_0}^{T}k(T)\,dT \]</div>
+    <p class="terms"><span>\(A(x)\): \(x\)'e göre değişen kesit alanı (biliniyor)</span><span>\(k(T)\): sıcaklıkla değişen ısı iletim katsayısı</span><span>\(T_0\): \(x_0\)'daki bilinen sıcaklık</span><span>\(q_x\) sabit olduğu için integralin dışına çıktı</span></p>
+    <p>Bu denklemi iki şekilde kullanırız. \(x_0\)'dan herhangi bir \(x\)'e kadar integre edersek \(T(x)\)'in fonksiyon biçimini verir. Başka bir noktada da sıcaklık biliniyorsa (\(x_1\)'de \(T_1\)), \(x_0\)'dan \(x_1\)'e integre ederek \(q_x\)'i hesaplarız. Alan ve \(k\) sabitse integraller basitleşir ve tanıdık düzlem duvar formülüne döneriz:</p>
+    <div class="eq">\[ A=\text{sabit},\;\; k=k_0 \qquad\Longrightarrow\qquad \frac{q_x\,\Delta x}{A}=-k\,\Delta T \]</div>
+    <p class="terms"><span>\(\Delta x=x_1-x_0\)</span><span>\(\Delta T=T_1-T_0\)</span><span>yani \(q_x=kA\frac{T_0-T_1}{\Delta x}\), düzlem duvarla aynı</span></p>
+    <p>Hocanın notu: <mark>kararlı rejimdeki, 1-B ve ısı üretimsiz (\(\dot q=0\)) difüzyon problemleri çoğu zaman \(q_x\) denklemlerinin integre edilmiş halleriyle çözülebilir</mark>. Kitap bu sınır koşullarının "aklımızda sağlamca durması gerektiğini" vurguluyor: <b>kararlı + 1-B + ısı üretimi yok</b>. Biri bozulursa \(q_x\) sabit olmaz ve bu yöntem kullanılamaz.</p>
+    <p class="box acik"><span class="k">Hocanın küçük grafiklerinin nedeni:</span> İki durumda da \(q\) sabit. Ama \(q''=q/A\) olduğu için alan daraldıkça akı büyür. \(q''=-k\,dT/dx\) olduğundan akı büyüdükçe eğim de büyür. Bu yüzden \(A\) sabitken profil düz, \(A\) azalırken giderek dikleşen bir eğri. <b>Analoji:</b> Hortumun ucunu sıkınca debi aynı kalır ama su daha hızlı fışkırır; burada da "debi" (\(q\)) aynı, "hız" (\(q''\)) artıyor.</p>
+    <p class="box ek"><span class="k">Kitaptan ek, k(T) değişirse:</span> Alan sabit olsa bile \(k\) sıcaklıkla değişirse profil eğri olur. Sınavlarda sık görülen biçim \(k=k_0(1+\beta T)\): sağ taraf \(\int k\,dT=k_0\left(T+\frac{\beta T^2}{2}\right)\) olur ve \(T(x)\) ikinci dereceden bir denklemden çıkar. Isı hızı için kısa yol: ortalama sıcaklıktaki \(k\) değeriyle düzlem duvar formülünü kullanmak, bu doğrusal \(k(T)\) için tam sonucu verir.</p>
+    <p class="box sinav"><span class="k">Örnek 3.5 anahtarı (koni):</span> Kesit dairesel ve çap \(D=ax\), yani \(A=\frac{\pi a^2x^2}{4}\); yan yüzey yalıtılmış, \(k\) sabit. Fourier'i ayırınca \(\frac{4q_x}{\pi a^2}\int\frac{dx}{x^2}=-k\int dT\) olur. \(\int dx/x^2=-1/x\) olduğunu hatırla. Önce \(x_1\)'den genel \(x\)'e integre edip \(T(x)\)'i, sonra \(x_2\)'deki koşulu kullanıp \(q_x\)'i bul. Sonucun kontrolü: \(dT/dx\propto 1/x^2\), yani alan büyüdükçe eğim ve akı küçülür.</p>
+  </section>
+
+  <!-- ============ SAYFA 11 ============ -->
+  <hr class="cut">
+  <section id="radyal">
+    <span class="src">Hoca özeti s. 11 · Kitap 3.3 ve 3.4, s. 136–144</span>
+    <h2>3.3 Radyal Sistemler (Silindir ve Küre)</h2>
+    <p>Silindirik ve küresel sistemlerde (boru, tank, küresel kap) sıcaklık gradyanı çoğu zaman <mark>yalnızca radyal yönde (\(r\))</mark> bulunur; bu yüzden bunlar da <b>1-B</b> olarak ele alınabilir. Hoca iki yöntemin ikisinin de kullanılabildiğini söylüyor: <b>standart yöntem</b> uygun ısı denklemiyle başlar (silindirde kullanılan), <b>alternatif yöntem</b> doğrudan Fourier yasasıyla başlar (kürede kullanılan).</p>
+
+    <h3>Silindir: standart yöntem</h3>
+    <p>Silindirik koordinatta, ısı üretimsiz ve kararlı 1-B ısı denklemi:</p>
+    <div class="eq">\[ \frac{1}{r}\frac{d}{dr}\left(k\,r\,\frac{dT}{dr}\right)=0 \qquad\Longrightarrow\qquad k\,r\,\frac{dT}{dr}=\text{sabit} \]</div>
+    <p>Fourier yasasında ısının geçtiği alan silindirin yan yüzeyidir, \(A=2\pi rL\). Yani \(q_r=-k(2\pi rL)\frac{dT}{dr}\); bu da yukarıdaki sabitle orantılı. Sonuç: <mark>silindirde ısı hızı \(q_r\) sabittir ama ısı akısı \(q''_r\) sabit değildir</mark> (r büyüdükçe alan büyür, akı küçülür). \(k\) sabitse iki kez integralle genel çözüm logaritmiktir:</p>
+    <div class="eq">\[ T(r)=C_1\ln r+C_2 \]</div>
+    <p>\(T(r_1)=T_{s,1}\) ve \(T(r_2)=T_{s,2}\) sınır koşullarıyla \(C_1, C_2\) bulunur ve aşağıdaki tablodaki \(T(r)\) ifadesi elde edilir. Profil düzlem duvardaki gibi <b>doğrusal değil, logaritmiktir</b>.</p>
+
+    <h3>Küre: alternatif yöntem</h3>
+    <p>Kürede ısının geçtiği alan küre yüzeyidir, \(A=4\pi r^2\). \(q_r\) sabit olduğu için 3.2'deki integral formu doğrudan uygularız:</p>
+    <div class="eq">\[ q_r=-k\,(4\pi r^2)\frac{dT}{dr} \;\Longrightarrow\; \frac{q_r}{4\pi}\int_{r_1}^{r_2}\frac{dr}{r^2}=-k\int_{T_{s,1}}^{T_{s,2}}dT \;\Longrightarrow\; q_r=\frac{4\pi k\,(T_{s,1}-T_{s,2})}{(1/r_1)-(1/r_2)} \]</div>
+
+    <h3>1-B iletimin özeti (kararlı, \(\dot q=0\))</h3>
+    <p>Hocanın kutu içindeki tablosu kitaptaki Tablo 3.3'tür; kontrol ettim, ifadeler kitapla aynı. Bu tablo ezberlenecek kadar önemli.</p>
+    <div class="tw"><table class="t" style="font-size:16px">
+      <tr><th></th><th>Düzlem duvar</th><th>Silindirik duvar</th><th>Küresel duvar</th></tr>
+      <tr><td>Isı denklemi</td><td>\(\dfrac{d^2T}{dx^2}=0\)</td><td>\(\dfrac{1}{r}\dfrac{d}{dr}\!\left(r\dfrac{dT}{dr}\right)=0\)</td><td>\(\dfrac{1}{r^2}\dfrac{d}{dr}\!\left(r^2\dfrac{dT}{dr}\right)=0\)</td></tr>
+      <tr><td>Sıcaklık dağılımı \(T\)</td><td>\(T_{s,1}-\Delta T\,\dfrac{x}{L}\)</td><td>\(T_{s,2}+\Delta T\,\dfrac{\ln(r/r_2)}{\ln(r_1/r_2)}\)</td><td>\(T_{s,1}-\Delta T\,\dfrac{1-(r_1/r)}{1-(r_1/r_2)}\)</td></tr>
+      <tr><td>Isı akısı \(q''\)</td><td>\(k\,\dfrac{\Delta T}{L}\)</td><td>\(\dfrac{k\,\Delta T}{r\ln(r_2/r_1)}\)</td><td>\(\dfrac{k\,\Delta T}{r^2\left[(1/r_1)-(1/r_2)\right]}\)</td></tr>
+      <tr><td>Isı hızı \(q\)</td><td>\(kA\,\dfrac{\Delta T}{L}\)</td><td>\(\dfrac{2\pi Lk\,\Delta T}{\ln(r_2/r_1)}\)</td><td>\(\dfrac{4\pi k\,\Delta T}{(1/r_1)-(1/r_2)}\)</td></tr>
+      <tr><td>Isıl direnç \(R_{t,cond}\)</td><td>\(\dfrac{L}{kA}\)</td><td>\(\dfrac{\ln(r_2/r_1)}{2\pi Lk}\)</td><td>\(\dfrac{(1/r_1)-(1/r_2)}{4\pi k}\)</td></tr>
+    </table></div>
+    <p class="box dikkat"><span class="k">Tabloda tanımlanmamış sembol:</span> Hocanın tablosunda \(\Delta T\) tanımlı değil. Kitapta \(\boxed{\Delta T=T_{s,1}-T_{s,2}}\) (iç yüzey eksi dış yüzey). \(r_1\) iç, \(r_2\) dış yarıçap; \(L\) silindirin <b>boyu</b> (düzlem duvarda ise kalınlık, karıştırma!).</p>
+    <p class="hatir"><span class="k">Hatırlatma:</span> Tablonun her sütunu aynı mantıkla birbirinden çıkar: \(q=\Delta T/R\), \(q''=q/A\) (A: o geometride ısının geçtiği alan: \(A\), \(2\pi rL\), \(4\pi r^2\)). Sadece direnç satırını ezberlesen bile diğerlerini türetebilirsin.</p>
+    <p class="box ek"><span class="k">Kitaptan ek, radyal sistemlerde taşınım direnci ve kompozit silindir:</span> Yüzeydeki taşınım direnci yine \(1/hA\) ama alan o yüzeyin alanıdır: silindirde \(R_{conv}=\frac{1}{h\,2\pi rL}\), kürede \(\frac{1}{h\,4\pi r^2}\). Birkaç katmanlı bir boru için (iç akışkan → A → B → C → dış akışkan) devre yine seridir:
+      \[ q_r=\frac{T_{\infty,1}-T_{\infty,4}}{\dfrac{1}{2\pi r_1Lh_1}+\dfrac{\ln(r_2/r_1)}{2\pi k_AL}+\dfrac{\ln(r_3/r_2)}{2\pi k_BL}+\dfrac{\ln(r_4/r_3)}{2\pi k_CL}+\dfrac{1}{2\pi r_4Lh_4}} \]
+      Toplam ısı transfer katsayısı \(U\) burada <b>hangi alana göre tanımlandığına</b> bağlıdır, çünkü alan \(r\) ile değişir: \(U_1A_1=U_2A_2=U_3A_3=U_4A_4=(\sum R_t)^{-1}\). Soruda "iç yüzeye göre U" deniyorsa \(A_1=2\pi r_1L\) kullan.</p>
+
+    <h3>Kritik yalıtım yarıçapı</h3>
+    <p class="box ek"><span class="k">Kitaptan ek (Örnek 3.6 ve Tablo 3.3 dipnotu):</span> İnce bir boruya yalıtım sardığında iki zıt etki olur: yalıtım kalınlaştıkça <b>iletim direnci artar</b> ama dış yüzey alanı büyüdüğü için <b>taşınım direnci azalır</b>. Bu yüzden toplam direncin <b>minimum</b> olduğu, yani ısı kaybının <b>maksimum</b> olduğu bir yarıçap vardır. Silindir için \(r_{cr}=k/h\), küre için \(r_{cr}=2k/h\). Boru yarıçapı \(r_{cr}\)'den küçükse, yalıtım eklemek ilk başta ısı kaybını <b>artırır</b>! \(r_i>r_{cr}\) ise her ekleme kaybı azaltır.</p>
+    <div class="eq">\[ R'_{tot}=\frac{\ln(r/r_i)}{2\pi k}+\frac{1}{2\pi r h}\qquad\Longrightarrow\qquad \frac{dR'_{tot}}{dr}=0\;\Rightarrow\; r_{cr}=\frac{k}{h} \]</div>
+    <p class="terms"><span>\(R'\): birim boy başına direnç [m·K/W]</span><span>\(r_i\): boru dış yarıçapı (yalıtımın başladığı yer)</span><span>\(r\): yalıtımın dış yarıçapı</span><span>\(k\): yalıtımın ısı iletim katsayısı</span></p>
+    <div class="fig">
+      <svg viewBox="0 0 720 280" role="img" aria-label="Yalıtım yarıçapına göre toplam direnç grafiği ve kritik yarıçap">
+        <line x1="70" y1="230" x2="690" y2="230" stroke="#94a3b8"/><line x1="70" y1="20" x2="70" y2="230" stroke="#94a3b8"/>
+        <text x="690" y="272" fill="#94a3b8" font-size="14" text-anchor="end">yalıtım dış yarıçapı r [mm]</text>
+        <text x="20" y="24" fill="#94a3b8" font-size="14">R′tot</text>
+        <path id="rcC" fill="none" stroke="#f472b6" stroke-width="3"/>
+        <path id="rcCond" fill="none" stroke="#60a5fa" stroke-width="1.8" stroke-dasharray="6 5"/>
+        <path id="rcConv" fill="none" stroke="#34d399" stroke-width="1.8" stroke-dasharray="6 5"/>
+        <line id="rcLine" y1="20" y2="230" stroke="#fde047" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <circle id="rcDot" r="6" fill="#fde047"/>
+        <text id="rcTxt" fill="#fde047" font-size="14"></text>
+        <g font-size="13" fill="#94a3b8" id="rcTicks"></g>
+        <g font-size="14"><text x="480" y="40" fill="#f472b6">toplam</text><text x="480" y="60" fill="#60a5fa">iletim ln(r/rᵢ)/2πk</text><text x="480" y="80" fill="#34d399">taşınım 1/2πrh</text></g>
+      </svg>
+      <div class="controls">
+        <label for="rk">yalıtım k = <span id="vrk"></span> W/m·K<input id="rk" type="range" min="0.05" max="0.3" step="0.01" value="0.15"></label>
+        <label for="rh">h = <span id="vrh"></span> W/m²·K<input id="rh" type="range" min="4" max="40" step="1" value="6"></label>
+      </div>
+      <p class="cap">Boru yarıçapı rᵢ = 5 mm sabit. Pembe eğrinin dibi kritik yarıçap: orada direnç en küçük, ısı kaybı en büyük. h'yi artırınca r_cr = k/h küçülür ve rᵢ'nin altına inince eğri sürekli artan olur.</p>
+    </div>
+    <p class="box sinav"><span class="k">Sınavda:</span> "Bu boruya yalıtım eklemek ısı kaybını azaltır mı?" sorusunun cevabı \(r_{cr}=k/h\)'yi hesaplayıp boru yarıçapıyla karşılaştırmaktır. Elektrik kablolarında bu bir avantajdır: kablo ince olduğu için plastik kılıf ısı atımını artırır.</p>
+  </section>
+
+  <!-- ============ SAYFA 12–13 ============ -->
+  <hr class="cut">
+  <section id="isi-uretimi">
+    <span class="src">Hoca özeti s. 12–13 · Kitap 3.5 ve 3.5.1, s. 144–148</span>
+    <h2>3.5 Isı Üretimli İletim — Düzlem Duvar</h2>
+    <p>Şimdiye kadar sıcaklık dağılımını sadece sınırlardaki koşullar belirliyordu. Şimdi malzemenin <b>içinde</b> başka bir enerji türünün ısıl enerjiye dönüştüğü durumlara bakıyoruz. Hocanın verdiği en yaygın örnek <b>elektrik</b>: içinden \(I\) akımı geçen ve elektrik direnci \(R_e\) olan bir malzemede Joule ısınması olur. Bu güç hacim boyunca düzgün üretiliyorsa, birim hacimdeki ısı üretimi:</p>
+    <div class="eq big">\[ \dot q=\frac{\dot E_{g}}{V}=\frac{I^2R_e}{V} \]</div>
+    <p class="terms"><span>\(\dot q\): birim hacimde ısı üretim hızı [W/m³]</span><span>\(\dot E_g\): toplam üretilen güç [W]</span><span>\(I\): akım [A]</span><span>\(R_e\): elektrik direnci [Ω]</span><span>\(V\): hacim [m³]</span></p>
+    <p class="box ek"><span class="k">Kitaptan ek, diğer kaynaklar:</span> Nükleer reaktör yakıt çubuğunda nötronların yavaşlayıp soğurulması, ekzotermik kimyasal tepkimeler ve malzemenin içinde ışınımın soğurulması da ısı üretir. Endotermik tepkimeler ise tersine bir <b>ısı yutağı</b> gibi davranır (\(\dot q\lt 0\)). Kitabın uyarısı: <b>enerji üretimini enerji depolamayla karıştırma</b>; depolama \(\rho c_p\,\partial T/\partial t\) terimidir ve kararlı rejimde sıfırdır, üretim ise \(\dot q\)'dur.</p>
+
+    <h3>Geometri ve üç sınır koşulu durumu</h3>
+    <p class="box dikkat"><span class="k">Önemli:</span> Bu bölümde duvar \(x=-L\)'den \(x=+L\)'ye uzanır ve orijin duvarın ortasındadır. Yani duvar kalınlığı <b>\(2L\)</b>'dir, \(L\) değil! Soruda "kalınlık 50 mm" deniyorsa \(L=25\) mm al.</p>
+    <p>Hoca üç çizim yapmış. <b>Asimetrik sınır koşulları</b>: iki yüzey farklı sıcaklıkta, \(T(-L)=T_{s,1}\), \(T(L)=T_{s,2}\); profil bir paraboldür ve tepesi ortadan kayar. <b>Simetrik sınır koşulları</b>: iki yüzey aynı sıcaklıkta, \(T(-L)=T(L)=T_s\); parabol ortada tepe yapar ve tepe değeri \(T_0\)'dır. <b>Eşdeğer sınır koşulları</b>: simetrik durumda orta düzlemde eğim sıfır olduğu için oradan ısı geçmez; o düzlem yalıtılmış (adyabatik) bir duvar gibi düşünülebilir: \(T(L)=T_s\) ve \(\left.\frac{dT}{dx}\right|_{x=0}=0\).</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 300" role="img" aria-label="Isı üretimli düzlem duvarda parabolik sıcaklık profili">
+        <rect x="200" y="30" width="320" height="210" fill="#22304a" stroke="#cbd5e1" stroke-width="2"/>
+        <line x1="360" y1="22" x2="360" y2="250" stroke="#94a3b8" stroke-dasharray="6 5"/>
+        <g font-size="14" fill="#94a3b8" text-anchor="middle"><text x="200" y="265">x = −L</text><text x="360" y="265">0</text><text x="520" y="265">x = +L</text><text x="360" y="285">kalınlık 2L, içeride düzgün q̇</text></g>
+        <path id="gProf" fill="none" stroke="#fb7185" stroke-width="3.5"/>
+        <circle id="gMax" r="6" fill="#fde047"/>
+        <text id="gMaxT" fill="#fde047" font-size="14" text-anchor="middle"></text>
+        <text id="gT1" fill="#fde047" font-size="14" text-anchor="end"></text><text id="gT2" fill="#fde047" font-size="14"></text>
+        <g id="gArrL"><line class="flow" x1="190" y1="200" x2="80" y2="200" stroke="#34d399" stroke-width="3"/><polygon points="80,194 66,200 80,206" fill="#34d399"/></g>
+        <g id="gArrR"><line class="flow" x1="530" y1="200" x2="640" y2="200" stroke="#34d399" stroke-width="3"/><polygon points="640,194 654,200 640,206" fill="#34d399"/></g>
+        <text id="gqL" x="130" y="190" fill="#34d399" font-size="13" text-anchor="middle"></text><text id="gqR" x="590" y="190" fill="#34d399" font-size="13" text-anchor="middle"></text>
+      </svg>
+      <div class="controls">
+        <label for="gG">q̇L²/2k = <span id="vgG"></span> °C<input id="gG" type="range" min="0" max="100" value="50"></label>
+        <label for="gT1s">Ts,1 = <span id="vgT1"></span> °C<input id="gT1s" type="range" min="0" max="100" value="60"></label>
+        <label for="gT2s">Ts,2 = <span id="vgT2"></span> °C<input id="gT2s" type="range" min="0" max="100" value="30"></label>
+      </div>
+      <p class="cap">Ts,1 = Ts,2 yaparsan simetrik duruma geçersin, tepe tam ortada olur. q̇'yu sıfıra çekersen 3.1'deki doğrusal profile dönersin. Sarı nokta maksimum sıcaklık; tepe duvarın dışına kayarsa ısı sadece bir yöne akar.</p>
+    </div>
+
+    <h3>Çözüm (asimetrik genel durum)</h3>
+    <p>\(k\) sabit ve \(\dot q\) düzgünken ısı denklemi, \(\dot q\) terimi artık silinmeden şöyle kalır; iki kez integral alınca genel çözüm ikinci dereceden (parabol) olur:</p>
+    <div class="eq">\[ \frac{d^2T}{dx^2}+\frac{\dot q}{k}=0 \qquad\Longrightarrow\qquad T=-\frac{\dot q}{2k}\,x^2+C_1x+C_2 \]</div>
+    <p>Hoca "\(C_1, C_2\) bulunur" diye geçmiş; kitaptaki değerler \(T(-L)=T_{s,1}\), \(T(L)=T_{s,2}\) koşullarından:</p>
+    <div class="eq">\[ C_1=\frac{T_{s,2}-T_{s,1}}{2L} \qquad\qquad C_2=\frac{\dot q}{2k}L^2+\frac{T_{s,1}+T_{s,2}}{2} \]</div>
+    <p>Yerine koyunca sıcaklık dağılımı:</p>
+    <div class="eq big">\[ T(x)=\frac{\dot qL^2}{2k}\left(1-\frac{x^2}{L^2}\right)+\frac{T_{s,2}-T_{s,1}}{2}\,\frac{x}{L}+\frac{T_{s,1}+T_{s,2}}{2} \]</div>
+    <p class="box acik"><span class="k">Formülü okumak:</span> Üç parçanın her birinin anlamı var. İlk terim ısı üretiminin yarattığı <b>tümsek</b> (parabol, uçlarda sıfır). İkinci terim iki yüzey arasındaki sıcaklık farkından gelen <b>doğrusal eğim</b> (3.1'deki gibi). Üçüncü terim iki yüzeyin <b>ortalaması</b>. \(\dot q=0\) koyarsan 3.1'deki doğrusal profil çıkar.</p>
+    <p>Herhangi bir noktadaki ısı akısı yine Fourier yasasıyla hesaplanır: \(q_x=-kA\,\frac{dT}{dx}\). Hocanın yarım kalan "Note: It…" cümlesinin kitaptaki karşılığı şudur: <mark>ısı üretimi varken ısı akısı artık \(x\)'ten bağımsız değildir</mark>. Her dilim kendi ürettiği ısıyı da ekler, bu yüzden yüzeylere doğru akı büyür.</p>
+    <p class="box ek"><span class="k">Kitaptan ek, maksimumun yeri:</span> \(dT/dx=0\) koyarsan tepe noktası \(x_{max}=\frac{k\,(T_{s,2}-T_{s,1})}{2\dot qL}\) çıkar. \(|x_{max}|\lt L\) ise ısı her iki yüzeye doğru akar; değilse tepe duvarın dışındadır ve ısının tamamı soğuk yüzeye gider.</p>
+
+    <h3>Simetrik durum</h3>
+    <p>\(T_{s,1}=T_{s,2}\equiv T_s\) olunca ikinci terim yok olur ve profil orta düzleme göre simetriktir:</p>
+    <div class="eq">\[ T(x)=\frac{\dot qL^2}{2k}\left(1-\frac{x^2}{L^2}\right)+T_s \]</div>
+    <p>Maksimum sıcaklık orta düzlemdedir (\(x=0\)) ve buradan boyutsuz bir form elde edilir:</p>
+    <div class="eq">\[ T_0\equiv T(0)=\frac{\dot qL^2}{2k}+T_s \qquad\qquad \frac{T(x)-T_0}{T_s-T_0}=\left(\frac{x}{L}\right)^2 \]</div>
+    <p class="terms"><span>\(T_0\): orta düzlem (maksimum) sıcaklığı</span><span>\(T_s\): yüzey sıcaklığı</span></p>
+    <p class="box ek"><span class="k">Kitaptan ek, iki önemli sonuç:</span> Simetrik durumda orta düzlemde \((dT/dx)_{x=0}=0\), yani oradan ısı geçmez. Bu yüzden aynı formül <b>bir yüzü tamamen yalıtılmış, kalınlığı \(L\) olan</b> duvar için de geçerlidir (hocanın 3. çizimi). Ayrıca simetrik durumda akı \(q''_x=-k\frac{dT}{dx}=\dot q\,x\) olur: ortada sıfır, yüzeyde \(\dot qL\). Yani o yarıda üretilen ısının tamamı yüzeyden çıkar.</p>
+
+    <h3>Yüzey sıcaklığını akışkana bağlamak</h3>
+    <p class="box ek"><span class="k">Kitaptan ek:</span> Formüller \(T_s\)'yi bilmemizi istiyor ama genelde akışkan sıcaklığı \(T_\infty\) bilinir. Yüzeyde enerji dengesi kurulur (ışınım ihmal): iletimle yüzeye gelen ısı, taşınımla gider: \(-k\left.\frac{dT}{dx}\right|_{x=L}=h(T_s-T_\infty)\). Daha kolayı toplam enerji dengesi: birim yüzey alanı için yarım duvarda üretilen ısı = taşınımla atılan ısı, \(\dot qL=h(T_s-T_\infty)\). İkisi de aynı sonucu verir:
+      \[ T_s=T_\infty+\frac{\dot qL}{h} \]</p>
+    <p class="box dikkat"><span class="k">Kitaptan uyarı (3.5.4):</span> Isı üretimi olan bölgede \(q\) sabit olmadığı için <b>3.1 ve 3.3'teki iletim direnci formülleri o bölge için kullanılamaz</b>. Üretim olmayan katmanlarda ve yüzeydeki taşınımda direnç kavramı hâlâ geçerlidir; üretimli katmandan çıkan toplam ısıyı (\(\dot q\times\) hacim) bilinen bir \(q\) gibi o devreye sokarsın.</p>
+  </section>
+
+  <!-- ============ SAYFA 14 ============ -->
+  <hr class="cut">
+  <section id="radyal-uretim">
+    <span class="src">Hoca özeti s. 14 · Kitap 3.5.2, s. 149–150</span>
+    <h2>Isı Üretimli Radyal Sistem — Dolu Silindir</h2>
+    <p>Hocanın çizdiği sistem içinden akım geçen bir tel veya nükleer yakıt çubuğu gibi <b>uzun, dolu bir silindir</b>: yarıçapı \(r_0\), boyu \(L\), içinde düzgün ısı üretimi \(\dot q\) var ve yüzeyinden ısı hareketli soğuk bir akışkana (\(T_\infty, h\)) taşınımla atılıyor. Silindir uzun olduğu için problem sadece radyal koordinatla incelenebilir. Kararlı rejimde üretilen ısının tamamı yüzeyden taşınımla gitmelidir; bu sayede yüzey sıcaklığı sabit bir \(T_s\) değerinde kalır.</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 250" role="img" aria-label="Isı üretimli dolu silindir ve parabolik radyal sıcaklık profili">
+        <defs><radialGradient id="hotc"><stop offset="0" stop-color="#fb7185"/><stop offset="1" stop-color="#22304a"/></radialGradient></defs>
+        <circle cx="140" cy="125" r="90" fill="url(#hotc)" stroke="#cbd5e1" stroke-width="2"/>
+        <text x="140" y="130" fill="#fff" font-size="15" text-anchor="middle">q̇</text>
+        <line x1="140" y1="125" x2="230" y2="125" stroke="#fde047" stroke-width="1.5"/><text x="190" y="118" fill="#fde047" font-size="13">r₀</text>
+        <g stroke="#34d399" stroke-width="2.5" class="flow">
+          <line x1="140" y1="30" x2="140" y2="8"/><line x1="235" y1="125" x2="262" y2="125"/><line x1="140" y1="220" x2="140" y2="244"/><line x1="45" y1="125" x2="20" y2="125"/>
+          <line x1="207" y1="58" x2="226" y2="39"/><line x1="207" y1="192" x2="226" y2="211"/><line x1="73" y1="58" x2="54" y2="39"/><line x1="73" y1="192" x2="54" y2="211"/>
+        </g>
+        <text x="262" y="60" fill="#94a3b8" font-size="13">soğuk akışkan T∞, h</text>
+        <!-- profil -->
+        <line x1="330" y1="210" x2="700" y2="210" stroke="#94a3b8"/><line x1="515" y1="30" x2="515" y2="215" stroke="#94a3b8" stroke-dasharray="5 5"/>
+        <path d="M360,170 Q515,-10 670,170" fill="none" stroke="#fb7185" stroke-width="3.5"/>
+        <line x1="330" y1="200" x2="700" y2="200" stroke="#60a5fa" stroke-dasharray="4 5"/>
+        <g font-size="14"><text x="515" y="68" fill="#fde047" text-anchor="middle">T₀ (eksen, maksimum)</text><text x="352" y="166" fill="#fde047" text-anchor="end">Ts</text><text x="690" y="166" fill="#fde047">Ts</text><text x="700" y="196" fill="#60a5fa" text-anchor="end">T∞</text>
+          <text x="360" y="230" fill="#94a3b8" text-anchor="middle">−r₀</text><text x="515" y="230" fill="#94a3b8" text-anchor="middle">r = 0</text><text x="670" y="230" fill="#94a3b8" text-anchor="middle">r₀</text></g>
+      </svg>
+      <p class="cap">Kitap Şekil 3.11'e karşılık gelir. Merkez en sıcak, yüzeye doğru parabolik düşüş; yüzeyden akışkana taşınım.</p>
+    </div>
+
+    <p>Radyal koordinatta kararlı 1-B genel ısı denklemi (\(k\) sabit):</p>
+    <div class="eq">\[ \frac{1}{r}\frac{d}{dr}\left(r\,\frac{dT}{dr}\right)+\frac{\dot q}{k}=0 \]</div>
+    <p>Aynı prosedürü tekrarlıyoruz. İlk integral \(r\frac{dT}{dr}=-\frac{\dot q}{2k}r^2+C_1\) verir; \(r\)'ye bölüp tekrar integre edince genel çözüm:</p>
+    <div class="eq">\[ T(r)=-\frac{\dot q}{4k}\,r^2+C_1\ln r+C_2 \]</div>
+    <p>\(C_1, C_2\)'yi bulmak için sınır koşulları uygulanmalı. Hoca koşulları yazmamış; kitaptaki iki koşul:</p>
+    <p class="box ek"><span class="k">Sınır koşulları:</span> <b>(1)</b> Eksen bir simetri çizgisidir, orada eğim sıfırdır: \(\left.\frac{dT}{dr}\right|_{r=0}=0\). İlk integralde \(r=0\) koyunca bu \(C_1=0\) demektir. (Başka bir bakış: \(\ln 0\to-\infty\) olduğu için \(C_1\neq0\) olsaydı merkezde sonsuz sıcaklık çıkardı, fiziksel olarak imkânsız.) <b>(2)</b> Yüzeyde \(T(r_0)=T_s\), buradan \(C_2=T_s+\frac{\dot q}{4k}r_0^2\).</p>
+    <div class="eq big">\[ T(r)=\frac{\dot q\,r_0^2}{4k}\left(1-\frac{r^2}{r_0^2}\right)+T_s \]</div>
+    <p>Merkezde (\(r=0\)) sıcaklık \(T_0=\frac{\dot qr_0^2}{4k}+T_s\) olur; buradan boyutsuz form:</p>
+    <div class="eq">\[ \frac{T(r)-T_s}{T_0-T_s}=1-\left(\frac{r}{r_0}\right)^2 \]</div>
+    <p class="terms"><span>\(T_0\): merkez çizgisi (centerline) sıcaklığı, maksimum</span><span>\(r_0\): silindir yarıçapı</span><span>\(T_s\): yüzey sıcaklığı</span></p>
+    <p class="box acik"><span class="k">Kitapla fark yok, sadece yazım farkı:</span> Kitap aynı ifadeyi \(\frac{T(r)-T_0}{T_s-T_0}=\left(\frac{r}{r_0}\right)^2\) olarak yazar; düzlem duvardaki \(\left(\frac{x}{L}\right)^2\) formunun aynısı. Hocanın yazdığı \(1-(r/r_0)^2\) hali buna eşdeğerdir.</p>
+
+    <p>\(T_s\)'yi soğuk akışkanın sıcaklığına bağlamak için yüzey enerji dengesi veya toplam enerji dengesi kullanılabilir. Hoca toplam dengeyi kullanmış: silindirin hacminde üretilen ısı = yan yüzeyden taşınımla atılan ısı:</p>
+    <div class="eq">\[ \dot q\,(\pi r_0^2L)=h\,(2\pi r_0L)\,(T_s-T_\infty) \qquad\Longrightarrow\qquad T_s=T_\infty+\frac{\dot q\,r_0}{2h} \]</div>
+    <p class="terms"><span>\(\pi r_0^2L\): silindir hacmi</span><span>\(2\pi r_0L\): yan yüzey alanı</span></p>
+    <p class="box sinav"><span class="k">Ezber kolaylığı:</span> Düzlem duvar ile silindir arasındaki farklar hep aynı yerde: profilde paydada duvar için \(2k\), silindir için \(4k\); yüzey sıcaklığında duvar için \(\frac{\dot qL}{h}\), silindir için \(\frac{\dot qr_0}{2h}\). İkincisinin genel kuralı: \(T_s-T_\infty=\frac{\dot q\,V}{h\,A_s}\), yani hacim/yüzey alanı oranı. Bu oran duvarda \(L\), silindirde \(r_0/2\), kürede \(r_0/3\). Tipik soru: "telin merkez sıcaklığı izin verilen değeri aşar mı?" Önce \(T_s\), sonra \(T_0\) bulunur.</p>
+    <p class="box ek"><span class="k">Kitaptan ek (3.5.3):</span> Farklı sınır koşulu kombinasyonları (sabit yüzey akısı, taşınım vb.) için düzlem, silindir ve kürede ısı üretimli çözümler kitabın <b>Ek C</b>'sinde tablo halinde verilmiş. Kitap bu ekle tanışmanızı tavsiye ediyor; içi boş tüp gibi durumlarda (Örnek 3.8) işe yarar.</p>
+  </section>
+
+  <hr class="cut">
+  <p class="box dikkat" style="margin-top:14px"><span class="k">Ünite sonu:</span> Hocanın özeti 3.5'ten sonra doğrudan 4. üniteye geçiyor. Kitaptaki 3.6 Kanatçıklar ve 3.7–3.9 bu özette yok; sınav kapsamında olup olmadığını hocaya sor. Kanatçıklar genelde önemli bir konudur, istersen ayrıca çalışabiliriz.</p>
+</div>
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const X0=250,X1=470,YT=40,YB=225;
+  const yOf=T=>YB-(T/150)*(YB-YT);
+  function upd(){
+    const T1=+$('sT1').value,T2=+$('sT2').value,k=+$('sK').value,L=+$('sL').value;
+    $('vT1').textContent=T1;$('vT2').textContent=T2;$('vK').textContent=k.toFixed(1);$('vL').textContent=L.toFixed(2);
+    const y1=yOf(T1),y2=yOf(T2);
+    const l=$('profWall');l.setAttribute('x1',X0);l.setAttribute('y1',y1);l.setAttribute('x2',X1);l.setAttribute('y2',y2);
+    $('pt1').setAttribute('cx',X0);$('pt1').setAttribute('cy',y1);$('pt2').setAttribute('cx',X1);$('pt2').setAttribute('cy',y2);
+    const dir=Math.sign(T1-T2);
+    const yf1=yOf(Math.min(150,Math.max(0,T1+(T1-T2)*0.35))), yf2=yOf(Math.max(0,Math.min(150,T2-(T1-T2)*0.35)));
+    $('profFluid1').setAttribute('points',`40,${yf1} 200,${yf1} ${X0},${y1}`);
+    $('profFluid2').setAttribute('points',`${X1},${y2} 520,${yf2} 690,${yf2}`);
+    const lb1=$('lb1');lb1.setAttribute('x',X0-10);lb1.setAttribute('y',y1-8);lb1.textContent='Ts,1';
+    const lb2=$('lb2');lb2.setAttribute('x',X1+10);lb2.setAttribute('y',y2-8);lb2.textContent='Ts,2';
+    const slope=(T2-T1)/L, flux=k/L*(T1-T2);
+    $('oSlope').textContent=slope.toFixed(0);$('oFlux').textContent=flux.toFixed(0);
+    const q=$('qline'),mag=Math.abs(flux);
+    q.style.setProperty('--spd', Math.max(0.15,Math.min(3,300/Math.max(mag,1)))+'s');
+    q.style.animationDirection=dir<0?'reverse':'normal';
+    q.style.opacity=mag<1?0.25:1;
+    $('qhead').setAttribute('transform', dir<0?'translate(720,0) scale(-1,1)':'');
+    $('qhead').style.opacity=mag<1?0:1;
+  }
+  ['sT1','sT2','sK','sL'].forEach(id=>$(id).addEventListener('input',upd));
+  upd();
+})();
+</script>
+<script>
+(function(){
+  // direnç sembolü (zigzag) çizici: data-res="x1,y,x2"
+  document.querySelectorAll('path[data-res]').forEach(p=>{
+    const [x1,y,x2]=p.dataset.res.split(',').map(Number);
+    const w=x2-x1, a=x1+w*0.3, b=x1+w*0.7, n=6, st=(b-a)/n, h=9;
+    let d=`M${x1},${y} H${a}`;
+    for(let i=0;i<n;i++){ d+=` L${a+st*(i+0.5)},${y+(i%2?h:-h)}`; }
+    d+=` L${b},${y} H${x2}`;
+    p.setAttribute('d',d);
+  });
+  // etkileşimli ısıl devre
+  const $=id=>document.getElementById(id);
+  if(!$('ch1')) return;
+  const yT=T=>220-T*1.8;
+  function upd(){
+    const h1=+$('ch1').value,k=+$('ck').value,L=+$('cL').value,h2=+$('ch2').value;
+    $('vh1').textContent=h1;$('vck').textContent=k.toFixed(2);$('vcL').textContent=L.toFixed(2);$('vh2').textContent=h2;
+    const R1=1/h1,R2=L/k,R3=1/h2,R=R1+R2+R3,q=100/R;
+    const Ts1=100-q*R1,Ts2=Ts1-q*R2;
+    $('cProf').setAttribute('d',`M30,${yT(100)} L140,${yT(100)} Q244,${yT(100)} 250,${yT(Ts1)} L450,${yT(Ts2)} Q456,${yT(0)} 560,${yT(0)} L690,${yT(0)}`);
+    const a=$('cTs1');a.setAttribute('x',244);a.setAttribute('y',yT(Ts1)-8);a.textContent='Ts,1 = '+Ts1.toFixed(1)+' °C';
+    const b=$('cTs2');b.setAttribute('x',456);b.setAttribute('y',yT(Ts2)-8);b.textContent='Ts,2 = '+Ts2.toFixed(1)+' °C';
+    $('cD1').textContent='ΔT = '+(q*R1).toFixed(1)+' °C';$('cD2').textContent='ΔT = '+(q*R2).toFixed(1)+' °C';$('cD3').textContent='ΔT = '+(q*R3).toFixed(1)+' °C';
+    $('cR').textContent=R.toFixed(3);$('cq').textContent=q.toFixed(1);$('cU').textContent=(1/R).toFixed(2);
+    document.querySelector('#isil-direnc .flow').style.setProperty('--spd',Math.max(0.2,Math.min(3,60/q))+'s');
+  }
+  ['ch1','ck','cL','ch2'].forEach(id=>$(id).addEventListener('input',upd));
+  upd();
+})();
+</script>
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  // kritik yalıtım yarıçapı
+  if($('rk')){
+    const ri=0.005, rmax=0.08, X0=70, X1=690, Y0=230, Y1=30;
+    const xr=r=>X0+(r-ri)/(rmax-ri)*(X1-X0);
+    const tk=$('rcTicks'); let t='';
+    [5,20,40,60,80].forEach(mm=>{const x=xr(mm/1000);t+=`<text x="${x}" y="247" text-anchor="middle">${mm}</text>`;});
+    tk.innerHTML=t;
+    function upd(){
+      const k=+$('rk').value,h=+$('rh').value;
+      $('vrk').textContent=k.toFixed(2);$('vrh').textContent=h;
+      const N=160, pts=[];
+      for(let i=0;i<=N;i++){const r=ri+(rmax-ri)*i/N;const c=Math.log(r/ri)/(2*Math.PI*k),v=1/(2*Math.PI*r*h);pts.push([r,c,v,c+v]);}
+      const mx=Math.max(...pts.map(p=>p[3]))*1.05;
+      const y=v=>Y0-v/mx*(Y0-Y1);
+      const path=j=>'M'+pts.map(p=>xr(p[0]).toFixed(1)+','+y(p[j]).toFixed(1)).join(' L');
+      $('rcC').setAttribute('d',path(3));$('rcCond').setAttribute('d',path(1));$('rcConv').setAttribute('d',path(2));
+      const rcr=k/h;
+      if(rcr>ri && rcr<rmax){
+        const R=Math.log(rcr/ri)/(2*Math.PI*k)+1/(2*Math.PI*rcr*h);
+        $('rcLine').setAttribute('x1',xr(rcr));$('rcLine').setAttribute('x2',xr(rcr));$('rcLine').style.opacity=1;
+        $('rcDot').setAttribute('cx',xr(rcr));$('rcDot').setAttribute('cy',y(R));$('rcDot').style.opacity=1;
+        const tx=$('rcTxt');tx.setAttribute('x',Math.min(xr(rcr)+8,560));tx.setAttribute('y',y(R)+22);tx.textContent='r_cr = k/h = '+(rcr*1000).toFixed(1)+' mm';
+      } else {
+        $('rcLine').style.opacity=0;$('rcDot').style.opacity=0;
+        const tx=$('rcTxt');tx.setAttribute('x',90);tx.setAttribute('y',210);
+        tx.textContent= rcr<=ri ? 'r_cr = '+(rcr*1000).toFixed(1)+' mm < rᵢ → her yalıtım kaybı azaltır' : 'r_cr grafiğin dışında';
+      }
+    }
+    ['rk','rh'].forEach(id=>$(id).addEventListener('input',upd));upd();
+  }
+  // ısı üretimli duvar
+  if($('gG')){
+    const XL=200,XR=520,yT=T=>235-T*1.0;
+    function upd(){
+      const G=+$('gG').value,T1=+$('gT1s').value,T2=+$('gT2s').value;
+      $('vgG').textContent=G;$('vgT1').textContent=T1;$('vgT2').textContent=T2;
+      const f=s=>G*(1-s*s)+(T2-T1)/2*s+(T1+T2)/2;
+      let d='';for(let i=0;i<=80;i++){const s=-1+2*i/80;d+=(i?' L':'M')+(XL+(s+1)/2*(XR-XL)).toFixed(1)+','+yT(f(s)).toFixed(1);}
+      $('gProf').setAttribute('d',d);
+      const a=$('gT1');a.setAttribute('x',XL-8);a.setAttribute('y',yT(T1)+5);a.textContent='Ts,1 = '+T1;
+      const b=$('gT2');b.setAttribute('x',XR+8);b.setAttribute('y',yT(T2)+5);b.textContent='Ts,2 = '+T2;
+      const sm=G>0?(T2-T1)/(4*G):(T2>T1?9:-9);
+      const inside=Math.abs(sm)<1;
+      if(inside){const x=XL+(sm+1)/2*(XR-XL),Tm=f(sm);$('gMax').setAttribute('cx',x);$('gMax').setAttribute('cy',yT(Tm));$('gMax').style.opacity=1;
+        const t=$('gMaxT');t.setAttribute('x',x);t.setAttribute('y',yT(Tm)-12);t.textContent='Tmax = '+Tm.toFixed(1)+' °C';}
+      else{$('gMax').style.opacity=0;$('gMaxT').textContent='';}
+      // yüzey akıları (q″ ∝ -dT/dx): dT/ds = -2G s + (T2-T1)/2
+      const dl=2*G+(T2-T1)/2, dr=-2*G+(T2-T1)/2; // s=-1 ve s=+1'de eğim
+      $('gArrL').style.opacity= dl>0.01?1:0.12; $('gArrR').style.opacity= dr<-0.01?1:0.12;
+      $('gqL').textContent= dl>0.01?'sola ısı':''; $('gqR').textContent= dr<-0.01?'sağa ısı':'';
+    }
+    ['gG','gT1s','gT2s'].forEach(id=>$(id).addEventListener('input',upd));upd();
+  }
+})();
+</script>
+
+</body></html>
