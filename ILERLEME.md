@@ -132,4 +132,4 @@
 ## 2 Kasım 2026 — Cloudflare Git bağlantısı kontrolü
 
 - Kullanıcının ekran görüntüsünde Cloudflare Worker Settings → Builds sayfasında Git hesabı bağlantısının kesildiğine dair uyarı görüldü. Kullanıcı GitHub entegrasyonunu düzelttiğini bildirdi; diğer projeleri etkileyebilecek toplu kaldırma işlemi önerilmedi.
-- Yeni GitHub push sonrasında Cloudflare'ın otomatik build başlatması ve önceki giriş mesajı düzeltmesini canlıya alması kontrol edilmeli. Bu kayıt anında yeni dağıtım henüz doğrulanmadı.
+- `d846f24` GitHub push'u sonrasında canlı sayfada güncel `index-Ck98waSc.js` derlemesi doğrulandı; önceki giriş mesajı düzeltmesi yayınlandı ve otomatik dağıtım çalıştı.
