@@ -128,3 +128,8 @@
 - Gerçek alan adında yönetici ve misafir girişleri, Secure oturum çerezi, iki ders, misafir yazma yasağı (403), geçici ders/dosya yükleme ve okuma, defter erişimi ve yönetici ZIP yedeği doğrulandı. Geçici ders API üzerinden kalıcı silindi. Misafir tarayıcı görünümünde ders kartları ve Heat Transfer defteri açıldı; yönetici kontrolleri görünmedi. Gerçek depolamadaki fiziksel nesne silinmesi ayrıca bağımsız doğrulanmadı.
 - Gerçek Neon/R2 üzerinde yedek geri yükleme yalnızca boş ayrı hedefte yapılabileceğinden test edilmedi; önceki gidiş-dönüş kontrolü yerel SQLite/dosya depolamasındadır. Canlı Render yeniden başlatması sonrası çerez devamlılığı da ayrıca test edilmedi; yerel PostgreSQL denemesinde çalışmıştı. Kullanıcı verisi yokken başlangıç örnekleri canlı veritabanında oluşturuldu.
 - Ana kullanıcı akışları yayındadır. Sonraki aşamada kullanıcı gerçek ders içeriklerini ve isterse tasarım geri bildirimlerini verebilir. Dış kaynaklara kapalı sandbox içeriği, kullanıcıya verilen hesaplar, dosya başına 95 MB, ücretsiz servis uyuma/kota ve yedeklerin elle indirilmesi kısıtları korunur.
+
+## 2 Kasım 2026 — Cloudflare Git bağlantısı kontrolü
+
+- Kullanıcının ekran görüntüsünde Cloudflare Worker Settings → Builds sayfasında Git hesabı bağlantısının kesildiğine dair uyarı görüldü. Kullanıcı GitHub entegrasyonunu düzelttiğini bildirdi; diğer projeleri etkileyebilecek toplu kaldırma işlemi önerilmedi.
+- Yeni GitHub push sonrasında Cloudflare'ın otomatik build başlatması ve önceki giriş mesajı düzeltmesini canlıya alması kontrol edilmeli. Bu kayıt anında yeni dağıtım henüz doğrulanmadı.
