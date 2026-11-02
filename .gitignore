@@ -483,6 +483,7 @@ $RECYCLE.BIN/
 appsettings.Local.json
 client/node_modules/
 client/dist/
+client/.wrangler/
 .keys/
 *.local.db*
 server/NotVarMi.Api/.uploads/
