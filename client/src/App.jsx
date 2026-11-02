@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Notebook from "./Notebook";
+import { exportNotebook } from "./notebookExport";
 import "./App.css";
 
 async function api(path, options = {}) {
@@ -212,6 +213,7 @@ function Workspace({ user, onLogout }) {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
   const [previewFile, setPreviewFile] = useState(null);
+  const [downloadBook, setDownloadBook] = useState(null);
   const input = useRef(null);
   useEffect(() => {
     if (!previewFile) return;
@@ -239,6 +241,15 @@ function Workspace({ user, onLogout }) {
         body: JSON.stringify({ name }),
       });
       await refreshCourse(selected.id);
+    });
+  }
+  async function downloadNotebook(format) {
+    const book = downloadBook;
+    await perform(async () => {
+      const path = book.id === 0 ? `/courses/${selected.id}/notebook/` : `/courses/${selected.id}/notebooks/${book.id}`;
+      const content = await api(path);
+      await exportNotebook({ ...content, name: book.name }, format);
+      setDownloadBook(null);
     });
   }
   useEffect(() => {
@@ -447,6 +458,7 @@ function Workspace({ user, onLogout }) {
                 {(selected.notebooks ?? []).map((book, index) => (
                   <article className="glass-notebook" key={book.id}>
                     <div className="glass-book-top"><span>{book.name}</span><span className="book-index">{String(index + 1).padStart(2, "0")}</span></div>
+                    <button className="notebook-download" type="button" aria-label={`${book.name} defterini indir`} title="Defteri indir" disabled={busy} onClick={() => setDownloadBook(book)}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 19h14"/></svg></button>
                     {admin && <button className="notebook-delete" type="button" aria-label={`${book.name} defterini sil`} title="Defteri sil" disabled={busy} onClick={() => { if (window.confirm(`“${book.name}” defteri kalıcı olarak silinecek. Devam edilsin mi?`)) perform(async () => { await api(`/courses/${selected.id}/notebooks/${book.id}`, { method: "DELETE" }); await refreshCourse(selected.id) }) }}>×</button>}
                     <div className="paper-stack"><span></span><span></span><span></span></div>
                     <div className="glass-book-bottom"><button onClick={() => navigate(`/ders/${selected.id}/defter/${book.id}`)}>Defteri aç →</button></div>
@@ -596,6 +608,16 @@ function Workspace({ user, onLogout }) {
           </>
         )}
       </main>
+      {downloadBook && (
+        <div className="overlay" onMouseDown={(event) => { if (event.target === event.currentTarget && !busy) setDownloadBook(null); }}>
+          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="download-title">
+            <div className="modal-head"><h2 id="download-title">Defteri indir</h2><button type="button" onClick={() => setDownloadBook(null)} aria-label="Kapat" disabled={busy}>×</button></div>
+            <p>“{downloadBook.name}” için dosya biçimini seç.</p>
+            <p className="download-help">PDF için açılan yazdırma penceresinde “PDF olarak kaydet” seçeneğini kullan.</p>
+            <div className="modal-actions"><button className="outline" type="button" disabled={busy} onClick={() => downloadNotebook('html')}>HTML indir</button><button className="primary" type="button" disabled={busy} onClick={() => downloadNotebook('pdf')}>PDF olarak kaydet</button></div>
+          </div>
+        </div>
+      )}
       {previewFile && (
         <div className="file-viewer-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) setPreviewFile(null); }}>
           <section className={`file-viewer${previewFile.contentType === "text/plain" ? " file-viewer-text" : ""}`} role="dialog" aria-modal="true" aria-label={`${previewFile.name} önizlemesi`}>

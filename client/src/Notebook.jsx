@@ -22,8 +22,8 @@ function frameDocument(content, origin) {
 // Dış bağlantılar (Google Fonts, CDN'den MathJax) atılır; bunları uygulama kendisi sağlar.
 function splitHtmlFile(text) {
   const doc = new DOMParser().parseFromString(text, 'text/html')
-  const css = [...doc.querySelectorAll('style')].map(s => s.textContent.trim()).filter(Boolean).join('\n\n')
-  const javascript = [...doc.querySelectorAll('script:not([src])')]
+  const css = [...doc.querySelectorAll('style:not([data-nv-runtime])')].map(s => s.textContent.trim()).filter(Boolean).join('\n\n')
+  const javascript = [...doc.querySelectorAll('script:not([src]):not([data-nv-runtime])')]
     .map(s => s.textContent.trim())
     .filter(code => code && !/^window\.MathJax\s*=/.test(code))
     .join('\n\n')
