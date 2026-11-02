@@ -8,7 +8,7 @@ async function api(path, options = {}) {
   if (options.body && !(options.body instanceof FormData)) headers['Content-Type'] = 'application/json'
   const response = await fetch(`/api${path}`, { ...options, headers })
   if (!response.ok) {
-    let message = response.status === 401 ? 'Oturum süren dolmuş olabilir. Yeniden giriş yap.' : response.status === 403 ? 'Bu işlem için yetkin yok.' : 'İşlem tamamlanamadı. Tekrar dene.'
+    let message = response.status === 401 ? (path === '/auth/login' ? 'Kullanıcı adı veya şifre yanlış.' : 'Oturum süren dolmuş olabilir. Yeniden giriş yap.') : response.status === 403 ? 'Bu işlem için yetkin yok.' : [502, 503, 504].includes(response.status) ? 'Sunucu hazırlanıyor olabilir. Biraz bekleyip tekrar dene.' : 'İşlem tamamlanamadı. Tekrar dene.'
     try { message = (await response.json()).message || message } catch { /* Empty error response */ }
     throw new Error(message)
   }
@@ -20,7 +20,7 @@ function Login({ onLogin }) {
   async function submit(event) {
     event.preventDefault(); setError(''); setBusy(true)
     try { onLogin(await api('/auth/login', { method: 'POST', body: JSON.stringify({ username, password }) })) }
-    catch { setError('Giriş yapılamadı. Bilgilerini ve bağlantını kontrol et.') }
+    catch (error) { setError(error instanceof TypeError ? 'Sunucuya ulaşılamadı. Bağlantını kontrol edip tekrar dene.' : error.message) }
     finally { setBusy(false) }
   }
   return <main className="login-layout"><section className="intro"><span className="brand">notvarmı<span>.</span></span><div><p className="eyebrow">HER ŞEY BİR ARADA</p><h1>Notların için<br /><em>küçük bir yer.</em></h1><p>Derslerine, dosyalarına ve defterlerine istediğin yerden dön.</p></div><small>KENDİ HIZINDA ÖĞREN.</small></section><section className="form-area"><form onSubmit={submit}><div className="icon">✳</div><p className="eyebrow">TEKRAR HOŞ GELDİN</p><h2>Giriş yap</h2><p>Çalışma alanına devam etmek için bilgilerini gir.</p><label>Kullanıcı adı<input autoComplete="username" value={username} onChange={e => setUsername(e.target.value)} required /></label><label>Şifre<input type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>{error && <p className="error" role="alert">{error}</p>}<button disabled={busy} type="submit">{busy ? 'Giriş yapılıyor…' : 'Defterime git'} <span>→</span></button></form></section></main>

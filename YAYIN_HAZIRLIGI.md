@@ -1,6 +1,6 @@
 # NotVarMı — Yayın hazırlığı
 
-Durum: Render API'si yayınlandı ve Neon/R2 ile temel işlemler doğrulandı. Cloudflare Worker ve alan adı henüz yayınlanmadı; uçtan uca son kontrol bekliyor.
+Durum: Site `https://notvarmi.bid` adresinde yayınlandı. Cloudflare Worker, Render API, Neon ve R2 üzerinden temel kullanıcı akışları doğrulandı. Yedek geri yükleme gerçek Neon/R2 üzerinde ayrı boş bir hedefte henüz sınanmadı.
 
 ## Hedef mimari
 
@@ -28,7 +28,7 @@ Yönetici üst menüdeki **Yedek indir** düğmesiyle ZIP alabilir. ZIP içindek
 ## Yayın öncesi doğrulama
 
 1. Ayrılmış boş Neon veritabanı ve özel R2 bucket hazırlanır; test anahtarlarının kapsamı kontrol edilir.
-2. Render servisi gerçek sırlarla yapılandırılır, bağlantı ve yeniden başlatma sonrası oturum doğrulanır. (Temel giriş, rol ve R2 dosya akışı doğrulandı; yeniden başlatma ve Worker üzerinden çerez kontrolü bekliyor.)
+2. Render servisi gerçek sırlarla yapılandırılır, bağlantı ve yeniden başlatma sonrası oturum doğrulanır. (Canlı Worker üzerinden Secure oturum, roller ve R2 dosya akışı doğrulandı; gerçek servisin yeniden başlatılması sonrası oturum ayrıca sınanmadı.)
 3. Cloudflare Worker derlenir ve alan adı bağlanır; HTTPS, aynı kökenli oturum ve statik/API yönlendirmesi kontrol edilir.
 4. Yönetici/misafir girişleri; dosya yükleme, görüntüleme, indirme, çöp/geri getirme; defter yalıtımı; yedek arşivi ve gerçek depolama uçtan uca doğrulanır. Yerel veriler taşınacaksa önce boş hedefte aktarım ve geri yükleme kontrolü yapılır.
 5. Kullanım ve maliyet sınırları, yedekleme sıklığı ve kurtarma yolu doğrulanmadan Faz 4 tamamlandı sayılmaz.

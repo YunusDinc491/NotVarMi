@@ -1,6 +1,6 @@
 # NotVarMı — Proje ve Faz Planı
 
-Son güncelleme: 2 Kasım 2026. Durum: Faz 4 devam ediyor; gerçek hesap bağlantıları, kurtarma/taşıma ve canlı doğrulama henüz tamamlanmadı.
+Son güncelleme: 2 Kasım 2026. Durum: site notvarmi.bid adresinde yayında; Faz 4 ana akışları doğrulandı. Gerçek Neon/R2 üzerinde yedek geri yükleme ayrı bir boş hedefte henüz sınanmadı.
 
 ## Amaç ve kapsam
 
