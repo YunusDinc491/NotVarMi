@@ -38,7 +38,7 @@ public static class NotebookEndpoints
         {
             var notebook = await db.CourseNotebooks.FirstOrDefaultAsync(n => n.Id == notebookId && n.CourseId == courseId);
             if (notebook is null) return Results.NotFound();
-            if (!Valid(input)) return Results.BadRequest(new { message = "Her içerik alanı en fazla 200.000 karakter olabilir." });
+            if (!Valid(input)) return Results.BadRequest(new { message = "Her içerik alanı en fazla 1.000.000 karakter olabilir." });
             if (notebook.Version != input.Version) return Results.Conflict(new { message = "Bu defter başka bir yerde değişti. Son sürümü açıp tekrar dene." });
             notebook.Html = input.Html!; notebook.Css = input.Css!; notebook.Javascript = input.Javascript!; notebook.Version++;
             try { await db.SaveChangesAsync(); } catch (DbUpdateConcurrencyException) { return Results.Conflict(new { message = "Bu defter başka bir yerde değişti. Son sürümü açıp tekrar dene." }); }
@@ -63,7 +63,7 @@ public static class NotebookEndpoints
         {
             if (!await db.Courses.AnyAsync(c => c.Id == courseId && !c.IsDeleted)) return Results.NotFound();
             if (!Valid(input))
-                return Results.BadRequest(new { message = "Her içerik alanı en fazla 200.000 karakter olabilir." });
+                return Results.BadRequest(new { message = "Her içerik alanı en fazla 1.000.000 karakter olabilir." });
             var notebook = await db.Notebooks.FirstOrDefaultAsync(n => n.CourseId == courseId);
             if ((notebook?.Version ?? 0) != input.Version) return Results.Conflict(new { message = "Bu defter başka bir yerde değişti. Son sürümü açıp tekrar dene." });
             if (notebook is null) { notebook = new Notebook { CourseId = courseId }; db.Notebooks.Add(notebook); }
@@ -74,7 +74,7 @@ public static class NotebookEndpoints
             return Results.Ok(new { notebook.Version });
         }).RequireAuthorization("AdminOnly");
     }
-    private static bool Valid(NotebookInput input) => input.Html is not null && input.Css is not null && input.Javascript is not null && input.Html.Length <= 200_000 && input.Css.Length <= 200_000 && input.Javascript.Length <= 200_000;
+    private static bool Valid(NotebookInput input) => input.Html is not null && input.Css is not null && input.Javascript is not null && input.Html.Length <= 1_000_000 && input.Css.Length <= 1_000_000 && input.Javascript.Length <= 1_000_000;
     private record NotebookInput(string? Html, string? Css, string? Javascript, int Version);
     private record CourseNotebookInput(string? Name);
 }

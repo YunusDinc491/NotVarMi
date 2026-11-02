@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import './Notebook.css'
 
-const LIMIT = 200_000
+const LIMIT = 1_000_000
 const same = (a, b) => a.html === b.html && a.css === b.css && a.javascript === b.javascript
 const hasMath = content => /\\\(|\\\[|\$\$/.test(content.html)
 

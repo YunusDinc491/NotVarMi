@@ -31,6 +31,8 @@ html,body.nb-paged{height:100%;overflow:hidden}
 .nb-toc[hidden]{display:none}
 .nb-toc p{margin:4px 10px 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;font-weight:700}
 .nb-toc ol{list-style:none;margin:0;padding:0}
+.nb-toc li.nb-toc-chapter{margin:10px 10px 4px;padding-top:8px;border-top:1px solid rgba(148,163,184,.2);font-size:12px;font-weight:700;letter-spacing:.04em;color:#f9a8d4}
+.nb-toc li.nb-toc-chapter:first-child{border-top:0;margin-top:2px;padding-top:0}
 .nb-toc button{width:100%;display:flex;gap:12px;align-items:baseline;text-align:left;border:0;background:none;color:#e2e8f0;padding:9px 10px;border-radius:10px;font:inherit;font-size:14px;cursor:pointer}
 .nb-toc button span{flex:none;width:22px;color:#94a3b8;font-variant-numeric:tabular-nums;font-size:12px}
 .nb-toc button:hover{background:rgba(148,163,184,.12)}

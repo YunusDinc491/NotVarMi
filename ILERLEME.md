@@ -145,3 +145,12 @@ Güncel özet için önce `DEVIR_NOTU.md` dosyasına bak. Aşağıdaki kayıt kr
 - Sunucu: `Data/NotebookSeed.cs` eklendi; `Content/Notebooks/heat-unite-3.*` ve `heat-unite-4.*` Heat Transfer dersine "Ünite 3 Ders Notu" ve "Ünite 4 Ders Notu" olarak eklenir; sürümü 0 olan (hiç düzenlenmemiş) defter dosyadaki yeni içerikle güncellenir, düzenlenmiş deftere dokunulmaz. Eski `Content/Isi-Transferi-Unite-3.html` artık kullanılmıyor, silinebilir.
 - Doğrulama: `npm run build` başarılı; Vite önizlemesinde (preview=workspace, yerel test verisiyle) iki defter açıldı, 428 formül MathJax ile çizildi, yazı tipleri yüklendi, sayfa çevirme/içindekiler/mobil görünüm ve içe aktarma denendi. .NET derlemesi bu ortamda yapılamadı (SDK indirilemedi); `NotebookSeed` ve `Program.cs` değişikliği yerelde `dotnet build` ile kontrol edilmeli.
 
+## 2 Kasım 2026 — Üniteler tek defterde birleştirildi
+
+- Kullanıcı isteğiyle Isı Transferi Ünite 3 ve 4 tek bir "Isı Transferi Ders Notları" defterinde birleştirildi: ilk sayfa iki ünitenin içindekiler listesi (tıklanabilir), her ünite `data-chapter` taşıyan bölümle başlar. Yeni üniteler aynı defterin başına/sonuna eklenecek.
+- Sayfalayıcı: içindekiler menüsünde ünite başlıkları ayrı satır; defter içi `#id` bağlantıları ilgili sayfaya çevirir.
+- Defter alan sınırı 200.000'den 1.000.000 karaktere çıkarıldı (sunucu + arayüz); birleşik defter HTML'i yaklaşık 155.000 karakter.
+- Seed: `heat-defter.*` "Isı Transferi Ders Notları" olarak eklenir; düzenlenmemiş (sürüm 0) "Ünite 3 Ders Notu" ve "Ünite 4 Ders Notu" kayıtları kaldırılır, düzenlenmişlere dokunulmaz.
+- İçerik güncellemeleri commit gerektirmez: Düzenle → .html içe aktar → Kaydet. Commit yalnızca kod değişikliklerinde gerekir.
+- Doğrulama: Vite önizlemesinde 24 sayfa, 866 formül, içindekiler gruplaması, bağlantıyla sayfa geçişi ve etkileşimli çizimler (türbin kanadı T₁ = 1526.0 K) denendi. .NET derlemesi bu ortamda yapılamadı.
+

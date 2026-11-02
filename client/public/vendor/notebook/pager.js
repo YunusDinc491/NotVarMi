@@ -67,6 +67,14 @@
   toc.hidden = true
   toc.innerHTML = '<p>İçindekiler</p><ol></ol>'
   sheets.forEach(function (s, i) {
+    // data-chapter taşıyan bölüm yeni bir ünite başlatır: içindekilerde ayrı başlık olarak gösterilir
+    var chapterEl = s.querySelector('[data-chapter]')
+    if (chapterEl) {
+      var head = document.createElement('li')
+      head.className = 'nb-toc-chapter'
+      head.textContent = chapterEl.getAttribute('data-chapter')
+      toc.querySelector('ol').appendChild(head)
+    }
     var li = document.createElement('li')
     var b = document.createElement('button')
     b.type = 'button'
@@ -165,6 +173,24 @@
     var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy
     if (Math.abs(dx) > 70 && Math.abs(dx) > Math.abs(dy) * 1.6) go(dx < 0 ? index + 1 : index - 1)
   }, { passive: true })
+
+  // Defter içi bağlantılar (#bolum-id) ilgili sayfaya çevirir
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]')
+    if (!a) return
+    var id = decodeURIComponent(a.getAttribute('href').slice(1))
+    var target = id && document.getElementById(id)
+    if (!target) return
+    e.preventDefault()
+    for (var k = 0; k < sheets.length; k++) {
+      if (sheets[k].contains(target)) {
+        var sheet = sheets[k]
+        if (k === index) target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' })
+        else { go(k); setTimeout(function () { if (target !== sheet.querySelector('h1,h2,h3') && !target.matches('section')) target.scrollIntoView({ block: 'start' }) }, 780) }
+        break
+      }
+    }
+  })
 
   show(0)
   render()
