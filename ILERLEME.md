@@ -90,3 +90,8 @@
 - Çevrimdışı `--restore-backup <yedek.zip>` aracı eklendi. Yalnızca boş bir hedef veritabanına aktarır, hedefte ders/dosya/defter varsa reddeder; ders kimliklerini yeniden eşler, defter ve çöp durumlarını korur. Yedek biçimi, dosya anahtarları, boyutlar ve desteklenen türler doğrulanır; dosyalar yeni nesne anahtarlarıyla aktarılır. Hata durumunda veritabanı işlemi geri alınır; nesne deposunda kullanılmayan kopyalar kalabilir ve dikkatli temizlik gerekir.
 - Geçici yerel SQLite ve dosya deposuyla ZIP yedeğinden ders, değiştirilmiş defter ve çöpteki dosya geri yüklendi; dosya çöpten alınıp içeriği doğrulandı. Dolu hedefe geri yükleme reddedildi ve mevcut iki ders korundu. Gerçek Neon/R2'ye geri yükleme henüz test edilmedi.
 - Uygulamanın ilk üretim açılışı örnek dersleri oluşturduğu için yerel veriler taşınacaksa geri yükleme ayrı boş Neon veritabanına ilk yayın/başlatmadan önce, API kapalıyken yapılmalıdır. `YAYIN_HAZIRLIGI.md` buna göre güncellendi.
+
+## 2 Kasım 2026 — Hesap oturumları
+
+- Kullanıcı Neon hesabını oluşturduğunu ve gerekli hesap oturumlarını açtığını bildirdi. Açık Chrome penceresi Neon'u gösteriyor; ancak bilgisayar kullanımı aracı Chrome'a erişim için onay almadığını bildirdi. Uygulama içi tarayıcıda açılan yeni Neon sekmesi hâlâ giriş ekranına yönlendi. Kullanıcıdan hesapları yeniden oluşturmadan, erişilebilir uygulama içi tarayıcıda Neon, Cloudflare ve Render oturumlarını açması açılır soruyla istendi. Parolalar veya anahtarlar sohbette istenmedi.
+- Bu oturumlar erişilebilir olana kadar hesap panellerinde kaynak oluşturma, gerçek R2/Neon bağlantıları ve canlı yayın doğrulanmış değildir. Faz 4 devam ediyor; bekleyen kurulum ve veri taşıma adımları için `YAYIN_HAZIRLIGI.md` dosyasını oku.
