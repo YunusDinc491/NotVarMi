@@ -100,3 +100,9 @@
 
 - Kullanıcı, Neon/Cloudflare/Render hesap panellerinde gereken işlemleri kendisinin yapmak istediğini söyledi. Bundan sonra paneldeki adımları kısa ve sıralı biçimde tarif et; kullanıcının yaptığı işlemleri kendisinin bildirmesini bekle. Şifreleri, Neon bağlantı dizgesini ve R2 gizli anahtarını sohbete isteme. Kod, hazırlık ve mümkün olan doğrulamaları asistan üstlenir.
 - İlk sırada yeni/boş bir Neon projesi ve özel Cloudflare R2 bucket hazırlanacak. Render API'si, yerel verilerin ilk başlatmadan önce boş hedefe aktarılması gerekliliği çözülmeden dağıtılmamalı. R2 token'ı yalnız ilgili bucket için Object Read & Write ile sınırlandırılmalı; ödeme/abonelik ekranlarını kullanıcı inceler ve tamamlar.
+
+## 2 Kasım 2026 — Neon ve R2 hazır; yerel içerik kontrolü
+
+- Kullanıcı Neon projesini ve R2 bucket'ı oluşturduğunu bildirdi; hesap panelleri asistan tarafından görülemediği için gerçek bağlantı henüz doğrulanmadı.
+- Yerel veritabanı salt okunur olarak kontrol edildi: iki etkin başlangıç dersi (Heat Transfer ve Fluid Mechanics), sıfır dosya, sıfır düzenlenmiş defter ve sıfır silinmiş ders bulundu. Bu nedenle mevcut örnekler yeni üretim veritabanında uygulama tarafından yeniden oluşturulabilir; bu anki durum için yerel yedeği taşıma zorunluluğu yok. Bu karar ancak veri bu kontrolden sonra değişmemişse geçerli; kullanıcı içerik eklediğini belirtirse ilk yayın öncesi yeniden kontrol et ve gerekiyorsa taşı.
+- Sıradaki kullanıcı panel adımları: R2 bucket'ı ile sınırlı Object Read & Write S3 anahtarı oluşturmak; Render'da GitHub deposundan ücretsiz Docker servisi oluşturup gerekli ortam değişkenlerini kendi panelinde güvenli şekilde girmek. Bağlantı dizgesi, S3 Secret Access Key ve parola özetleri sohbete veya Git'e yazılmaz. Kod ve yerel hash ayarları hazır; üretim Neon/R2 ve Worker üzerinden uçtan uca kontrol halen yapılmadı.
