@@ -110,5 +110,9 @@ app.MapCourseEndpoints();
 app.MapNotebookEndpoints();
 app.MapBackupEndpoints();
 app.MapGet("/api/health", () => Results.Ok(new { status = "ok" }));
+app.MapGet("/api/warmup", async (NotesDbContext db, CancellationToken cancellation) =>
+    await db.Database.CanConnectAsync(cancellation)
+        ? Results.Ok(new { status = "ready" })
+        : Results.StatusCode(StatusCodes.Status503ServiceUnavailable));
 app.Run();
 record LoginRequest(string? Username, string? Password);

@@ -23,7 +23,7 @@ function Login({ onLogin }) {
     catch (error) { setError(error instanceof TypeError ? 'Sunucuya ulaşılamadı. Bağlantını kontrol edip tekrar dene.' : error.message) }
     finally { setBusy(false) }
   }
-  return <main className="login-layout"><section className="intro"><span className="brand">notvarmı<span>.</span></span><div><p className="eyebrow">HER ŞEY BİR ARADA</p><h1>Notların için<br /><em>küçük bir yer.</em></h1><p>Derslerine, dosyalarına ve defterlerine istediğin yerden dön.</p></div><small>KENDİ HIZINDA ÖĞREN.</small></section><section className="form-area"><form onSubmit={submit}><div className="icon">✳</div><p className="eyebrow">TEKRAR HOŞ GELDİN</p><h2>Giriş yap</h2><p>Çalışma alanına devam etmek için bilgilerini gir.</p><label>Kullanıcı adı<input autoComplete="username" value={username} onChange={e => setUsername(e.target.value)} required /></label><label>Şifre<input type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>{error && <p className="error" role="alert">{error}</p>}<button disabled={busy} type="submit">{busy ? 'Giriş yapılıyor…' : 'Defterime git'} <span>→</span></button></form></section></main>
+  return <main className="login-layout"><section className="intro"><span className="brand">notvarmı<span>.</span></span><div><h1>Yunus Dinç<br /><em>kişisel not defteridir.</em></h1><p>İzinsiz kullanıcı tespit edilebiliyor. Giriş izni istiyorsanız +905347300634 numarasına ulaşın ve izin alın.</p></div></section><section className="form-area"><form onSubmit={submit}><h2>Defterime hoş geldin, inşallah boş adam değilsindir.</h2><p>Çalışma alanına devam etmek için bilgilerini gir.</p><label>Kullanıcı adı<input autoComplete="username" value={username} onChange={e => setUsername(e.target.value)} required /></label><label>Şifre<input type="password" autoComplete="current-password" value={password} onChange={e => setPassword(e.target.value)} required /></label>{error && <p className="error" role="alert">{error}</p>}<button disabled={busy} type="submit">{busy ? 'Giriş yapılıyor…' : 'Gel Bakalım'} <span>→</span></button></form></section></main>
 }
 
 const formatSize = size => size < 1024 * 1024 ? `${Math.max(1, Math.round(size / 1024))} KB` : `${(size / 1024 / 1024).toFixed(1)} MB`
@@ -88,7 +88,10 @@ function Workspace({ user, onLogout }) {
 
 export default function App() {
   const [user, setUser] = useState(null), [loading, setLoading] = useState(true)
-  useEffect(() => { api('/auth/me').then(setUser).catch(() => {}).finally(() => setLoading(false)) }, [])
+  useEffect(() => {
+    api('/warmup').catch(() => {})
+    api('/auth/me').then(setUser).catch(() => {}).finally(() => setLoading(false))
+  }, [])
   if (loading) return <main className="center">Yükleniyor…</main>
   if (!user) return <Login onLogin={setUser} />
   return <Workspace user={user} onLogout={async () => { try { await api('/auth/logout', { method: 'POST' }); setUser(null) } catch { window.alert('Çıkış yapılamadı. Bağlantını kontrol et.') } }} />
