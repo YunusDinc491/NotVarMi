@@ -95,3 +95,8 @@
 
 - Kullanıcı Neon hesabını oluşturduğunu ve gerekli hesap oturumlarını açtığını bildirdi. Açık Chrome penceresi Neon'u gösteriyor; ancak bilgisayar kullanımı aracı Chrome'a erişim için onay almadığını bildirdi. Uygulama içi tarayıcıda açılan yeni Neon sekmesi hâlâ giriş ekranına yönlendi. Kullanıcıdan hesapları yeniden oluşturmadan, erişilebilir uygulama içi tarayıcıda Neon, Cloudflare ve Render oturumlarını açması açılır soruyla istendi. Parolalar veya anahtarlar sohbette istenmedi.
 - Bu oturumlar erişilebilir olana kadar hesap panellerinde kaynak oluşturma, gerçek R2/Neon bağlantıları ve canlı yayın doğrulanmış değildir. Faz 4 devam ediyor; bekleyen kurulum ve veri taşıma adımları için `YAYIN_HAZIRLIGI.md` dosyasını oku.
+
+## 2 Kasım 2026 — Hesap işlemleri için kullanıcı tercihi
+
+- Kullanıcı, Neon/Cloudflare/Render hesap panellerinde gereken işlemleri kendisinin yapmak istediğini söyledi. Bundan sonra paneldeki adımları kısa ve sıralı biçimde tarif et; kullanıcının yaptığı işlemleri kendisinin bildirmesini bekle. Şifreleri, Neon bağlantı dizgesini ve R2 gizli anahtarını sohbete isteme. Kod, hazırlık ve mümkün olan doğrulamaları asistan üstlenir.
+- İlk sırada yeni/boş bir Neon projesi ve özel Cloudflare R2 bucket hazırlanacak. Render API'si, yerel verilerin ilk başlatmadan önce boş hedefe aktarılması gerekliliği çözülmeden dağıtılmamalı. R2 token'ı yalnız ilgili bucket için Object Read & Write ile sınırlandırılmalı; ödeme/abonelik ekranlarını kullanıcı inceler ve tamamlar.
