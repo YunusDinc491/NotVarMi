@@ -38,6 +38,9 @@ async function api(path, options = {}) {
             createdAt: new Date().toISOString(),
           },
         ],
+        contents: [
+          { id: courseId * 10 + 2, name: "Ünite 3 — Isı Transferi.pdf", contentType: "application/pdf", size: 2457600, createdAt: new Date().toISOString(), isContent: true },
+        ],
       };
     if (/^\/courses\/\d+\/notebooks\/$/.test(path) && !options.method)
       return [
@@ -171,6 +174,7 @@ const fileIcon = (file) =>
 
 function Workspace({ user, onLogout }) {
   const admin = user.role === "Admin";
+  const previewMode = import.meta.env.DEV && new URLSearchParams(window.location.search).get("preview") === "workspace";
   const [courses, setCourses] = useState([]),
     [selected, setSelected] = useState(null),
     [trash, setTrash] = useState(null);
@@ -180,7 +184,8 @@ function Workspace({ user, onLogout }) {
     [dialog, setDialog] = useState(null);
   const [notebookOpen, setNotebookOpen] = useState(false),
     [activeNotebook, setActiveNotebook] = useState(null);
-  const input = useRef(null);
+  const [pdfPreview, setPdfPreview] = useState(null);
+  const input = useRef(null), contentInput = useRef(null);
   const refreshCourses = useCallback(
     async () => setCourses(await api("/courses/")),
     [],
@@ -274,10 +279,31 @@ function Workspace({ user, onLogout }) {
     await perform(async () => {
       const data = new FormData();
       data.append("file", file);
+      data.append("content", "false");
       await api(`/courses/${selected.id}/files`, {
         method: "POST",
         body: data,
       });
+      await refreshCourse(selected.id);
+    });
+  }
+  async function uploadContent(event) {
+    const file = event.target.files?.[0];
+    event.target.value = "";
+    if (!file) return;
+    if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+      setError("Ders içeriği yalnızca PDF olabilir.");
+      return;
+    }
+    if (file.size > 95 * 1024 * 1024) {
+      setError("PDF 95 MB sınırını aşıyor.");
+      return;
+    }
+    await perform(async () => {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("content", "true");
+      await api(`/courses/${selected.id}/files`, { method: "POST", body: data });
       await refreshCourse(selected.id);
     });
   }
@@ -486,6 +512,17 @@ function Workspace({ user, onLogout }) {
                 ))}
                 {!selected.notebooks?.length && <div className="empty">Henüz defter yok. “Yeni defter” ile bölüm bölüm oluşturabilirsin.</div>}
               </div>
+              <section className="pdf-content-section">
+                <div className="pdf-content-head">
+                  <div><p className="eyebrow">DERS İÇERİKLERİ</p><h2>PDF içerikler <span>{selected.contents?.length ?? 0}</span></h2></div>
+                  {admin && <><button className="outline" disabled={busy} onClick={() => contentInput.current?.click()}>＋ İçerik ekle</button><input ref={contentInput} type="file" hidden accept="application/pdf,.pdf" onChange={uploadContent} /></>}
+                </div>
+                <p className="helper">PDF’ler bu sayfada açılır pencerede görüntülenir.</p>
+                <div className="pdf-content-list">
+                  {(selected.contents ?? []).map(file => <button className="pdf-content-card" key={file.id} onClick={() => setPdfPreview(file)}><span className="file-symbol">▤</span><span><strong>{file.name}</strong><small>{formatSize(file.size)}</small></span><span className="pdf-open-mark">↗</span></button>)}
+                  {!selected.contents?.length && <div className="empty">Henüz PDF içerik eklenmemiş.</div>}
+                </div>
+              </section>
             </section>
             <section className="files-section">
               <div className="section-title">
@@ -629,6 +666,14 @@ function Workspace({ user, onLogout }) {
           request={api}
           onClose={() => setNotebookOpen(false)}
         />
+      )}
+      {pdfPreview && (
+        <div className="pdf-viewer-overlay" role="dialog" aria-modal="true" aria-label={pdfPreview.name} onMouseDown={e => { if (e.target === e.currentTarget) setPdfPreview(null); }}>
+          <section className="pdf-viewer">
+            <header><div><span>PDF İÇERİĞİ</span><strong>{pdfPreview.name}</strong></div><button onClick={() => setPdfPreview(null)} aria-label="PDF önizlemesini kapat">×</button></header>
+            {previewMode ? <div className="pdf-preview-placeholder"><div className="file-symbol">▤</div><h2>PDF önizlemesi</h2><p>Bu örnek arayüz önizlemesinde gerçek dosya bağlı değil. Yüklenen PDF burada aynı pencere içinde açılır.</p></div> : <iframe title={pdfPreview.name} src={`/api/files/${pdfPreview.id}?preview=true`} />}
+          </section>
+        </div>
       )}
       {dialog && (
         <div

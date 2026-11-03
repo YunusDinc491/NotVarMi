@@ -64,4 +64,5 @@ public sealed class CourseFile
     public long Size { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsDeleted { get; set; }
+    public bool IsContent { get; set; }
 }

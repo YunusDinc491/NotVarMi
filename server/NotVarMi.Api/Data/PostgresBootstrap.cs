@@ -46,6 +46,14 @@ public static class PostgresBootstrap
                 """);
             db.Database.ExecuteSqlRaw("CREATE INDEX \"IX_CourseNotebooks_CourseId\" ON notvarmi.\"CourseNotebooks\" (\"CourseId\")");
         }
+        var hasContentFlag = db.Database.SqlQueryRaw<bool>("""
+            SELECT EXISTS (
+                SELECT 1 FROM information_schema.columns
+                WHERE table_schema = 'notvarmi' AND table_name = 'Files' AND column_name = 'IsContent'
+            ) AS "Value"
+            """).Single();
+        if (!hasContentFlag)
+            db.Database.ExecuteSqlRaw("ALTER TABLE notvarmi.\"Files\" ADD COLUMN \"IsContent\" boolean NOT NULL DEFAULT FALSE");
         transaction.Commit();
     }
 }
