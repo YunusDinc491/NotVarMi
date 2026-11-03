@@ -28,7 +28,7 @@ public static partial class BackupRestore
         if (manifest.Courses.Count > 10000 || manifest.Files.Count > 10000 || manifest.Notebooks.Count > 10000) throw new InvalidDataException("Yedekte çok fazla kayıt var.");
         var ids = new HashSet<int>(); var names = new HashSet<string>(StringComparer.Ordinal);
         foreach (var course in manifest.Courses)
-            if (!ids.Add(course.Id) || string.IsNullOrWhiteSpace(course.Name) || course.Name.Length > 100 || !names.Add(course.Name)) throw new InvalidDataException("Ders bilgileri geçersiz veya yineleniyor.");
+            if (!ids.Add(course.Id) || string.IsNullOrWhiteSpace(course.Name) || course.Name.Length > 100 || !names.Add(course.Name) || (course.Instructor?.Length ?? 0) > 100 || (course.Instructor?.Any(char.IsControl) ?? false)) throw new InvalidDataException("Ders bilgileri geçersiz veya yineleniyor.");
         var notebookIds = new HashSet<int>();
         foreach (var notebook in manifest.Notebooks)
             if (!ids.Contains(notebook.CourseId) || !notebookIds.Add(notebook.CourseId) || notebook.Html is null || notebook.Css is null || notebook.Javascript is null || notebook.Html.Length > 200000 || notebook.Css.Length > 200000 || notebook.Javascript.Length > 200000 || notebook.Version < 0) throw new InvalidDataException("Defter bilgileri geçersiz.");
@@ -47,7 +47,7 @@ public static partial class BackupRestore
         var map = new Dictionary<int, int>();
         foreach (var source in manifest.Courses)
         {
-            var target = new Course { Name = source.Name, IsDeleted = source.IsDeleted };
+            var target = new Course { Name = source.Name, Instructor = source.Instructor ?? "", IsDeleted = source.IsDeleted };
             db.Courses.Add(target); await db.SaveChangesAsync(cancellation); map.Add(source.Id, target.Id);
         }
         foreach (var source in manifest.Notebooks)
@@ -74,7 +74,7 @@ public static partial class BackupRestore
                 await using (var from = File.OpenRead(temporary)) await store.PutAsync(targetKey, from, cancellation);
             }
             finally { File.Delete(temporary); }
-            db.Files.Add(new CourseFile { CourseId = map[source.CourseId], Name = source.Name, StorageName = targetKey, ContentType = source.ContentType, Size = source.Size, CreatedAt = DateTime.SpecifyKind(source.CreatedAt, DateTimeKind.Utc), IsDeleted = source.IsDeleted });
+            db.Files.Add(new CourseFile { CourseId = map[source.CourseId], Name = source.Name, StorageName = targetKey, ContentType = source.ContentType, Size = source.Size, CreatedAt = DateTime.SpecifyKind(source.CreatedAt, DateTimeKind.Utc), IsDeleted = source.IsDeleted, IsContent = source.IsContent });
         }
         await db.SaveChangesAsync(cancellation);
         // A lost connection during commit has an unknown outcome; never delete uploaded objects here.

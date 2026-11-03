@@ -9,12 +9,14 @@ public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options) : D
     public DbSet<CourseFile> Files => Set<CourseFile>();
     public DbSet<Notebook> Notebooks => Set<Notebook>();
     public DbSet<CourseNotebook> CourseNotebooks => Set<CourseNotebook>();
+    public DbSet<NotebookSeedSuppression> NotebookSeedSuppressions => Set<NotebookSeedSuppression>();
     public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         if (Database.IsNpgsql()) modelBuilder.HasDefaultSchema("notvarmi");
         modelBuilder.Entity<Course>().Property(c => c.Name).HasMaxLength(100).IsRequired();
+        modelBuilder.Entity<Course>().Property(c => c.Instructor).HasMaxLength(100).IsRequired();
         modelBuilder.Entity<Course>().HasIndex(c => c.Name).IsUnique();
         modelBuilder.Entity<CourseFile>().HasOne<Course>().WithMany().HasForeignKey(f => f.CourseId).OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<Notebook>().HasKey(n => n.CourseId);
@@ -24,6 +26,9 @@ public sealed class NotesDbContext(DbContextOptions<NotesDbContext> options) : D
         modelBuilder.Entity<CourseNotebook>().HasOne<Course>().WithMany().HasForeignKey(n => n.CourseId).OnDelete(DeleteBehavior.Cascade);
         modelBuilder.Entity<CourseNotebook>().Property(n => n.Name).HasMaxLength(150).IsRequired();
         modelBuilder.Entity<CourseNotebook>().Property(n => n.Version).IsConcurrencyToken();
+        modelBuilder.Entity<NotebookSeedSuppression>().HasKey(n => new { n.CourseId, n.Name });
+        modelBuilder.Entity<NotebookSeedSuppression>().Property(n => n.Name).HasMaxLength(150);
+        modelBuilder.Entity<NotebookSeedSuppression>().HasOne<Course>().WithMany().HasForeignKey(n => n.CourseId).OnDelete(DeleteBehavior.Cascade);
     }
 }
 
@@ -47,10 +52,17 @@ public sealed class CourseNotebook
     public int Version { get; set; }
 }
 
+public sealed class NotebookSeedSuppression
+{
+    public int CourseId { get; set; }
+    public string Name { get; set; } = "";
+}
+
 public sealed class Course
 {
     public int Id { get; set; }
     public string Name { get; set; } = "";
+    public string Instructor { get; set; } = "";
     public bool IsDeleted { get; set; }
 }
 

@@ -54,6 +54,8 @@ public static class PostgresBootstrap
             """).Single();
         if (!hasContentFlag)
             db.Database.ExecuteSqlRaw("ALTER TABLE notvarmi.\"Files\" ADD COLUMN \"IsContent\" boolean NOT NULL DEFAULT FALSE");
+        db.Database.ExecuteSqlRaw("ALTER TABLE notvarmi.\"Courses\" ADD COLUMN IF NOT EXISTS \"Instructor\" character varying(100) NOT NULL DEFAULT ''");
+        db.Database.ExecuteSqlRaw("CREATE TABLE IF NOT EXISTS notvarmi.\"NotebookSeedSuppressions\" (\"CourseId\" integer NOT NULL REFERENCES notvarmi.\"Courses\" (\"Id\") ON DELETE CASCADE, \"Name\" character varying(150) NOT NULL, PRIMARY KEY (\"CourseId\", \"Name\"))");
         transaction.Commit();
     }
 }

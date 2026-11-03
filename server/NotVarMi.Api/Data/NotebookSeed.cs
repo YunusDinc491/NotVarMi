@@ -31,6 +31,7 @@ public static class NotebookSeed
             if (!paths.All(File.Exists)) continue;
             var course = db.Courses.FirstOrDefault(c => !c.IsDeleted && item.CourseNames.Contains(c.Name));
             if (course is null) continue;
+            if (db.NotebookSeedSuppressions.Any(n => n.CourseId == course.Id && n.Name == item.Name)) continue;
             var (html, css, js) = (File.ReadAllText(paths[0]), File.ReadAllText(paths[1]), File.ReadAllText(paths[2]));
             var existing = db.CourseNotebooks.FirstOrDefault(n => n.CourseId == course.Id && n.Name == item.Name);
             if (existing is null)

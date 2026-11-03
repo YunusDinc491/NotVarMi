@@ -1,0 +1,37 @@
+<div class="page">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <p class="sub">Şablon · örnek içerik</p>
+    <h1>Örnek Ders Defteri</h1>
+    <div class="legend"><span style="border-color:var(--line);color:var(--text)">düz yazı: hocanın özeti</span><span class="ek">kitaptan ek</span><span class="dikkat">dikkat / düzeltme</span><span class="acik">açıklama, analoji</span><span class="sinav">sınav ipucu</span><span class="hatir">hatırlatma</span></div>
+  </header>
+  <section id="icindekiler">
+    <h2>İçindekiler</h2>
+    <h3 class="toc-unit"><a href="#ornek-hiz">Örnek — Ortalama hız</a></h3>
+    <div class="roadmap"><span class="n">1</span><span><a href="#ornek-hiz">Formül ve etkileşimli çizim</a></span><span class="st on">örnek</span></div>
+    <p class="sub">Bu sayfa yalnızca tasarımı gösteren örnektir; yeni ders içeriğiyle değiştirilir.</p>
+  </section>
+  <hr class="cut">
+  <section id="ornek-hiz" data-chapter="Örnek — Ortalama hız">
+    <div class="chapter" id="ornek-unite"><small>Şablon gösterimi</small><b>Örnek — Ortalama hız</b></div>
+    <span class="src">Örnek içerik · Kaynak sayfa numarası verilmedi</span>
+    <h2>Ortalama hız</h2>
+    <p>Ortalama hızı bulmak için <mark>alınan yolu geçen süreye böleriz.</mark> Bu gösterim, gerçek ders özeti değildir.</p>
+    <div class="eq big">\[ v_{\mathrm{ort}}=\frac{d}{t} \]</div>
+    <p class="terms"><span>\(v_{\mathrm{ort}}\): ortalama hız [m/s]</span><span>\(d\): yol [m]</span><span>\(t\): süre [s]</span></p>
+    <p class="box acik"><span class="k">Analoji:</span> Aynı yolu daha kısa sürede alırsak ortalama hız büyür.</p>
+    <div class="fig">
+      <svg viewBox="0 0 720 180" role="img" aria-label="Başlangıçtan bitişe hareketi gösteren yol">
+        <line x1="90" y1="100" x2="630" y2="100" stroke="#cbd5e1" stroke-width="3"/>
+        <line class="flow" x1="100" y1="100" x2="600" y2="100" stroke="#34d399" stroke-width="4"/>
+        <polygon points="600,90 620,100 600,110" fill="#34d399"/>
+        <circle id="orneknokta" cx="90" cy="100" r="12" fill="#f472b6"/>
+        <text x="90" y="145" fill="#94a3b8" font-size="16" text-anchor="middle">başlangıç</text>
+        <text x="630" y="145" fill="#94a3b8" font-size="16" text-anchor="middle">bitiş</text>
+      </svg>
+      <div class="controls"><label for="ornekmesafe">Yol: <span id="vornekmesafe"></span> m<input id="ornekmesafe" type="range" min="10" max="100" step="10" value="60"></label><label for="orneksure">Süre: <span id="vorneksure"></span> s<input id="orneksure" type="range" min="1" max="20" step="1" value="10"></label></div>
+      <div class="readout"><span>Ortalama hız: <b id="ornekhiz"></b> m/s</span></div>
+      <p class="cap">Kaydırıcıları değiştir; sonuç gerçek formülden hesaplanır. Nokta yol değerini gösterir.</p>
+    </div>
+    <p class="box sinav"><span class="k">Sınavda:</span> Yol ve süre birimlerini kontrol et, sonra bölme işlemini yap.</p>
+  </section>
+</div>

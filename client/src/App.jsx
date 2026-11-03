@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Notebook from "./Notebook";
+import { exportNotebook } from "./notebookExport";
 import "./App.css";
 
 async function api(path, options = {}) {
@@ -118,15 +119,11 @@ function Login({ onLogin }) {
             <br />
             <em>kişisel not defteridir.</em>
           </h1>
-          <p>
-            İzinsiz kullanıcı tespit edilebiliyor. Giriş izni istiyorsanız
-            +905347300634 numarasına ulaşın ve izin alın.
-          </p>
         </div>
       </section>
       <section className="form-area">
         <form onSubmit={submit}>
-          <h2>Defterime hoş geldin, inşallah boş adam değilsindir.</h2>
+          <h2>Hoş Geldiniz</h2>
           <p>Çalışma alanına devam etmek için bilgilerini gir.</p>
           <label>
             Kullanıcı adı
@@ -172,20 +169,62 @@ const fileIcon = (file) =>
       ? "▤"
       : "▱";
 
+function TextPreview({ file }) {
+  const [text, setText] = useState(null);
+  const [error, setError] = useState(false);
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch(`/api/files/${file.id}?preview=true`, { signal: controller.signal })
+      .then((response) => { if (!response.ok) throw new Error(); return response.text(); })
+      .then(setText)
+      .catch((err) => { if (err.name !== "AbortError") setError(true); });
+    return () => controller.abort();
+  }, [file.id]);
+  return <pre className="file-viewer-text-content">{error ? "Not açılamadı." : text === null ? "Yükleniyor…" : text}</pre>;
+}
+
 function Workspace({ user, onLogout }) {
   const admin = user.role === "Admin";
   const previewMode = import.meta.env.DEV && new URLSearchParams(window.location.search).get("preview") === "workspace";
   const [courses, setCourses] = useState([]),
-    [selected, setSelected] = useState(null),
-    [trash, setTrash] = useState(null);
-  const [loading, setLoading] = useState(true),
+    [selected, setSelected] = useState(null);
+  const [loading, setLoading] = useState(false),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [dialog, setDialog] = useState(null);
-  const [notebookOpen, setNotebookOpen] = useState(false),
-    [activeNotebook, setActiveNotebook] = useState(null);
-  const [pdfPreview, setPdfPreview] = useState(null);
+  const [route, setRoute] = useState(window.location.pathname);
+  const routeRef = useRef(route), dirtyNotebook = useRef(false), routeRequest = useRef(0);
+  const courseRoute = route.match(/^\/ders\/(\d+)(?:\/defter\/(\d+))?\/?$/);
+  const courseId = courseRoute ? Number(courseRoute[1]) : null;
+  const notebookId = courseRoute?.[2] === undefined ? null : Number(courseRoute[2]);
+  function navigate(path, skipGuard = false) {
+    if (path === routeRef.current) return;
+    if (!skipGuard && dirtyNotebook.current && !window.confirm("Kaydedilmemiş defter değişiklikleri var. Ayrılmak istiyor musun?")) return;
+    dirtyNotebook.current = false;
+    window.history.pushState(null, "", path + window.location.search);
+    routeRef.current = path; setRoute(path);
+  }
+  useEffect(() => {
+    function onPop() {
+      if (dirtyNotebook.current && !window.confirm("Kaydedilmemiş defter değişiklikleri var. Ayrılmak istiyor musun?")) {
+        window.history.pushState(null, "", routeRef.current + window.location.search);
+        return;
+      }
+      dirtyNotebook.current = false;
+      routeRef.current = window.location.pathname; setRoute(window.location.pathname);
+    }
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+  const [previewFile, setPreviewFile] = useState(null);
+  const [downloadBook, setDownloadBook] = useState(null);
   const input = useRef(null), contentInput = useRef(null);
+  useEffect(() => {
+    if (!previewFile) return;
+    const onKeyDown = (event) => { if (event.key === "Escape") setPreviewFile(null); };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [previewFile]);
   const refreshCourses = useCallback(
     async () => setCourses(await api("/courses/")),
     [],
@@ -208,14 +247,35 @@ function Workspace({ user, onLogout }) {
       await refreshCourse(selected.id);
     });
   }
-  const refreshTrash = useCallback(
-    async () => setTrash(await api("/trash/")),
-    [],
-  );
+  async function downloadNotebook(format) {
+    const book = downloadBook;
+    await perform(async () => {
+      const path = book.id === 0 ? `/courses/${selected.id}/notebook/` : `/courses/${selected.id}/notebooks/${book.id}`;
+      const content = await api(path);
+      await exportNotebook({ ...content, name: book.name }, format);
+      setDownloadBook(null);
+    });
+  }
   useEffect(() => {
-    refreshCourses()
-      .catch((e) => setError(e.message))
-      .finally(() => setLoading(false));
+    const requestId = ++routeRequest.current;
+    setError(""); setPreviewFile(null); setDialog(null);
+    if (courseId !== null) {
+      setSelected(null); setLoading(true);
+      Promise.all([api(`/courses/${courseId}`), api(`/courses/${courseId}/notebooks/`)])
+        .then(([course, notebooks]) => {
+          if (requestId !== routeRequest.current) return;
+          if (notebookId !== null && !notebooks.some((book) => book.id === notebookId)) throw new Error("Defter bulunamadı.");
+          setSelected({ ...course, notebooks });
+        })
+        .catch((e) => { if (requestId === routeRequest.current) setError(e.message); })
+        .finally(() => { if (requestId === routeRequest.current) setLoading(false); });
+    } else {
+      setSelected(null); setLoading(false);
+      if (route !== "/") setError("Sayfa bulunamadı.");
+    }
+  }, [route, courseId, notebookId, admin]);
+  useEffect(() => {
+    refreshCourses().catch((e) => setError(e.message));
   }, [refreshCourses]);
   async function perform(action) {
     setError("");
@@ -246,6 +306,12 @@ function Workspace({ user, onLogout }) {
         await refreshCourses();
         if (selected && current.course?.id === selected.id)
           await refreshCourse(selected.id);
+      } else if (current.kind === "instructor") {
+        await api(`/courses/${selected.id}/instructor`, {
+          method: "PUT",
+          body: JSON.stringify({ instructor: current.value }),
+        });
+        await refreshCourse(selected.id);
       } else if (current.file) {
         await api(`/files/${current.file.id}/text`, {
           method: "PUT",
@@ -259,6 +325,7 @@ function Workspace({ user, onLogout }) {
           new Blob([current.text], { type: "text/plain" }),
           `${current.value.trim().replace(/\.txt$/i, "")}.txt`,
         );
+        data.append("content", "false");
         await api(`/courses/${selected.id}/files`, {
           method: "POST",
           body: data,
@@ -279,6 +346,7 @@ function Workspace({ user, onLogout }) {
     await perform(async () => {
       const data = new FormData();
       data.append("file", file);
+      data.append("content", "false");
       data.append("content", "false");
       await api(`/courses/${selected.id}/files`, {
         method: "POST",
@@ -310,18 +378,18 @@ function Workspace({ user, onLogout }) {
   async function moveCourse(course) {
     if (
       !window.confirm(
-        `“${course.name}” dersi ve içindekiler geri dönüşüm kutusuna taşınsın mı?`,
+        `“${course.name}” dersi ve tüm içeriği kalıcı olarak silinecek. Emin misin? Bu işlem geri alınamaz.`,
       )
     )
       return;
     await perform(async () => {
       await api(`/courses/${course.id}`, { method: "DELETE" });
-      setSelected(null);
+      navigate("/");
       await refreshCourses();
     });
   }
   async function moveFile(file) {
-    if (!window.confirm(`“${file.name}” geri dönüşüm kutusuna taşınsın mı?`))
+    if (!window.confirm(`“${file.name}” kalıcı olarak silinecek. Emin misin? Bu işlem geri alınamaz.`))
       return;
     await perform(async () => {
       await api(`/files/${file.id}`, { method: "DELETE" });
@@ -336,26 +404,8 @@ function Workspace({ user, onLogout }) {
       setDialog({ kind: "note", file, value: file.name, text });
     });
   }
-  async function trashAction(kind, item, permanent) {
-    if (
-      permanent &&
-      !window.confirm(
-        `“${item.name}” kalıcı olarak silinsin mi? Bu işlem geri alınamaz.`,
-      )
-    )
-      return;
-    await perform(async () => {
-      await api(`/trash/${kind}/${item.id}${permanent ? "" : "/restore"}`, {
-        method: permanent ? "DELETE" : "POST",
-      });
-      await refreshTrash();
-      await refreshCourses();
-    });
-  }
   function home() {
-    setSelected(null);
-    setTrash(null);
-    setError("");
+    navigate("/");
   }
   return (
     <div className="workspace">
@@ -364,24 +414,6 @@ function Workspace({ user, onLogout }) {
           notvarmı<span>.</span>
         </button>
         <div className="top-actions">
-          {admin && (
-            <a className="text-button backup-link" href="/api/backup">
-              ↓ Yedek indir
-            </a>
-          )}
-          {admin && (
-            <button
-              className="text-button"
-              onClick={() =>
-                perform(async () => {
-                  setSelected(null);
-                  await refreshTrash();
-                })
-              }
-            >
-              ♲ <span>Geri dönüşüm kutusu</span>
-            </button>
-          )}
           <span className="user-chip">{admin ? "Yönetici" : "Misafir"}</span>
           <button className="text-button" onClick={onLogout}>
             Çıkış yap ↗
@@ -397,12 +429,6 @@ function Workspace({ user, onLogout }) {
               <span>/</span> {selected.name}
             </>
           )}
-          {trash && (
-            <>
-              {" "}
-              <span>/</span> Geri dönüşüm kutusu
-            </>
-          )}
         </div>
         {error && (
           <div className="notice" role="alert">
@@ -414,80 +440,33 @@ function Workspace({ user, onLogout }) {
         )}
         {loading ? (
           <p className="muted">Yükleniyor…</p>
-        ) : trash ? (
-          <>
-            <div className="heading">
-              <div>
-                <p className="eyebrow">SAKİN OL, BURADALAR</p>
-                <h1>
-                  Geri dönüşüm kutusu<span className="accent">.</span>
-                </h1>
-                <p>
-                  Silinen dersleri ve dosyaları buradan geri getirebilirsin.
-                </p>
-              </div>
-            </div>
-            <div className="trash-list">
-              {trash.courses.map((item) => (
-                <div className="trash-row" key={`c${item.id}`}>
-                  <span className="file-symbol">▥</span>
-                  <div className="row-title">
-                    <strong>{item.name}</strong>
-                    <small>Ders ve içeriği</small>
-                  </div>
-                  <button onClick={() => trashAction("courses", item, false)}>
-                    Geri getir
-                  </button>
-                  <button
-                    className="danger-link"
-                    onClick={() => trashAction("courses", item, true)}
-                  >
-                    Kalıcı sil
-                  </button>
-                </div>
-              ))}
-              {trash.files.map((item) => (
-                <div className="trash-row" key={`f${item.id}`}>
-                  <span className="file-symbol">▤</span>
-                  <div className="row-title">
-                    <strong>{item.name}</strong>
-                    <small>{item.courseName} · Dosya</small>
-                  </div>
-                  <button onClick={() => trashAction("files", item, false)}>
-                    Geri getir
-                  </button>
-                  <button
-                    className="danger-link"
-                    onClick={() => trashAction("files", item, true)}
-                  >
-                    Kalıcı sil
-                  </button>
-                </div>
-              ))}
-              {!trash.courses.length && !trash.files.length && (
-                <div className="empty">Geri dönüşüm kutusu boş.</div>
-              )}
-            </div>
-          </>
         ) : selected ? (
           <>
             <div className="heading">
               <div>
                 <p className="eyebrow">DERSİNİN ALANI</p>
-                <h1>
-                  {selected.name}
-                  <span className="accent">.</span>
-                </h1>
-                <p>Bu derse ait her şey bir arada.</p>
+                <div className="course-title">
+                  <h1>
+                    {selected.name}
+                    <span className="accent">.</span>
+                  </h1>
+                  {admin && (
+                    <button className="course-rename" onClick={() => askCourse(selected)} aria-label="Ders adını değiştir" title="Ders adını değiştir">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
+                    </button>
+                  )}
+                </div>
+                <div className="course-instructor">
+                  <p>{selected.instructor || "Hoca adı eklenmedi"}</p>
+                  {admin && (
+                    <button className="course-rename" onClick={() => setDialog({ kind: "instructor", value: selected.instructor || "" })} aria-label="Hoca adını değiştir" title="Hoca adını değiştir">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/></svg>
+                    </button>
+                  )}
+                </div>
               </div>
               {admin && (
                 <div className="heading-actions">
-                  <button
-                    className="outline"
-                    onClick={() => askCourse(selected)}
-                  >
-                    Düzenle
-                  </button>
                   <button
                     className="outline danger-link"
                     onClick={() => moveCourse(selected)}
@@ -506,8 +485,10 @@ function Workspace({ user, onLogout }) {
                 {(selected.notebooks ?? []).map((book, index) => (
                   <article className="glass-notebook" key={book.id}>
                     <div className="glass-book-top"><span>{book.name}</span><span className="book-index">{String(index + 1).padStart(2, "0")}</span></div>
+                    <button className="notebook-download" type="button" aria-label={`${book.name} defterini indir`} title="Defteri indir" disabled={busy} onClick={() => setDownloadBook(book)}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 19h14"/></svg></button>
+                    {admin && <button className="notebook-delete" type="button" aria-label={`${book.name} defterini sil`} title="Defteri sil" disabled={busy} onClick={() => { if (window.confirm(`“${book.name}” defteri kalıcı olarak silinecek. Devam edilsin mi?`)) perform(async () => { await api(`/courses/${selected.id}/notebooks/${book.id}`, { method: "DELETE" }); await refreshCourse(selected.id) }) }}>×</button>}
                     <div className="paper-stack"><span></span><span></span><span></span></div>
-                    <div className="glass-book-bottom"><button onClick={() => { setActiveNotebook(book); setNotebookOpen(true) }}>Defteri aç →</button>{admin && book.id !== 0 && <button className="danger-link" onClick={() => perform(async () => { await api(`/courses/${selected.id}/notebooks/${book.id}`, { method: "DELETE" }); await refreshCourse(selected.id) })}>Sil</button>}</div>
+                    <div className="glass-book-bottom"><button onClick={() => navigate(`/ders/${selected.id}/defter/${book.id}`)}>Defteri aç →</button></div>
                   </article>
                 ))}
                 {!selected.notebooks?.length && <div className="empty">Henüz defter yok. “Yeni defter” ile bölüm bölüm oluşturabilirsin.</div>}
@@ -519,7 +500,7 @@ function Workspace({ user, onLogout }) {
                 </div>
                 <p className="helper">PDF’ler bu sayfada açılır pencerede görüntülenir.</p>
                 <div className="pdf-content-list">
-                  {(selected.contents ?? []).map(file => <button className="pdf-content-card" key={file.id} onClick={() => setPdfPreview(file)}><span className="file-symbol">▤</span><span><strong>{file.name}</strong><small>{formatSize(file.size)}</small></span><span className="pdf-open-mark">↗</span></button>)}
+                  {(selected.contents ?? []).map(file => <button className="pdf-content-card" key={file.id} onClick={() => setPreviewFile(file)}><span className="file-symbol">▤</span><span><strong>{file.name}</strong><small>{formatSize(file.size)}</small></span><span className="pdf-open-mark">↗</span></button>)}
                   {!selected.contents?.length && <div className="empty">Henüz PDF içerik eklenmemiş.</div>}
                 </div>
               </section>
@@ -564,8 +545,15 @@ function Workspace({ user, onLogout }) {
                 PDF, resim, metin ve Office dosyaları · Dosya başına en fazla 95
                 MB
               </p>
-              <div className="file-list">
-                {selected.files.map((file) => (
+              {[
+                { title: "Notlar", files: selected.files.filter((file) => file.contentType === "text/plain") },
+                { title: "PDF dosyaları", files: selected.files.filter((file) => file.contentType === "application/pdf") },
+                { title: "Diğer dosyalar", files: selected.files.filter((file) => file.contentType !== "text/plain" && file.contentType !== "application/pdf") },
+              ].filter((group) => group.files.length > 0).map((group) => (
+              <div className="file-group" key={group.title}>
+                <h3>{group.title}</h3>
+                <div className="file-list">
+                {group.files.sort((a, b) => a.name.localeCompare(b.name, "tr", { numeric: true, sensitivity: "base" })).map((file) => (
                   <div className="file-row" key={file.id}>
                     <span className="file-symbol">{fileIcon(file)}</span>
                     <div className="row-title">
@@ -581,13 +569,9 @@ function Workspace({ user, onLogout }) {
                     {(file.contentType === "application/pdf" ||
                       file.contentType === "text/plain" ||
                       file.contentType.startsWith("image/")) && (
-                      <a
-                        href={`/api/files/${file.id}?preview=true`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
+                      <button type="button" onClick={() => setPreviewFile(file)}>
                         Görüntüle
-                      </a>
+                      </button>
                     )}
                     <a href={`/api/files/${file.id}`} download>
                       İndir
@@ -605,13 +589,17 @@ function Workspace({ user, onLogout }) {
                     )}
                   </div>
                 ))}
-                {!selected.files.length && (
+                </div>
+              </div>
+              ))}
+              {!selected.files.length && (
+                <div className="file-list">
                   <div className="empty">
                     Henüz bir dosya yok.{" "}
                     {admin && "İlk notunu veya dosyanı ekleyebilirsin."}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </section>
           </>
         ) : (
@@ -635,7 +623,7 @@ function Workspace({ user, onLogout }) {
                 <button
                   className={`course-card tone-${index % 4}`}
                   key={course.id}
-                  onClick={() => perform(() => refreshCourse(course.id))}
+                  onClick={() => navigate(`/ders/${course.id}`)}
                 >
                   <span className="card-top">
                     <span className="course-icon">▥</span>
@@ -658,22 +646,37 @@ function Workspace({ user, onLogout }) {
           </>
         )}
       </main>
-      {notebookOpen && selected && (
-        <Notebook
-          course={selected}
-          initialNotebook={activeNotebook}
-          admin={admin}
-          request={api}
-          onClose={() => setNotebookOpen(false)}
-        />
+      {downloadBook && (
+        <div className="overlay" onMouseDown={(event) => { if (event.target === event.currentTarget && !busy) setDownloadBook(null); }}>
+          <div className="modal" role="dialog" aria-modal="true" aria-labelledby="download-title">
+            <div className="modal-head"><h2 id="download-title">Defteri indir</h2><button type="button" onClick={() => setDownloadBook(null)} aria-label="Kapat" disabled={busy}>×</button></div>
+            <p>“{downloadBook.name}” için dosya biçimini seç.</p>
+            <p className="download-help">PDF için açılan yazdırma penceresinde “PDF olarak kaydet” seçeneğini kullan.</p>
+            <div className="modal-actions"><button className="outline" type="button" disabled={busy} onClick={() => downloadNotebook('html')}>HTML indir</button><button className="primary" type="button" disabled={busy} onClick={() => downloadNotebook('pdf')}>PDF olarak kaydet</button></div>
+          </div>
+        </div>
       )}
-      {pdfPreview && (
-        <div className="pdf-viewer-overlay" role="dialog" aria-modal="true" aria-label={pdfPreview.name} onMouseDown={e => { if (e.target === e.currentTarget) setPdfPreview(null); }}>
-          <section className="pdf-viewer">
-            <header><div><span>PDF İÇERİĞİ</span><strong>{pdfPreview.name}</strong></div><button onClick={() => setPdfPreview(null)} aria-label="PDF önizlemesini kapat">×</button></header>
-            {previewMode ? <div className="pdf-preview-placeholder"><div className="file-symbol">▤</div><h2>PDF önizlemesi</h2><p>Bu örnek arayüz önizlemesinde gerçek dosya bağlı değil. Yüklenen PDF burada aynı pencere içinde açılır.</p></div> : <iframe title={pdfPreview.name} src={`/api/files/${pdfPreview.id}?preview=true`} />}
+      {previewFile && (
+        <div className="file-viewer-overlay" onMouseDown={(event) => { if (event.target === event.currentTarget) setPreviewFile(null); }}>
+          <section className={`file-viewer${previewFile.contentType === "text/plain" ? " file-viewer-text" : ""}`} role="dialog" aria-modal="true" aria-label={`${previewFile.name} önizlemesi`}>
+            <header className="file-viewer-header">
+              <button type="button" autoFocus onClick={() => setPreviewFile(null)} aria-label="Önizlemeyi kapat" title="Kapat">×</button>
+              <strong title={previewFile.name}>{previewFile.name}</strong>
+            </header>
+            {previewMode ? <div className="pdf-preview-placeholder"><div className="file-symbol">▤</div><h2>PDF önizlemesi</h2><p>Örnek arayüz önizlemesinde gerçek dosya bağlı değil. Gerçek yüklenen PDF burada açılır.</p></div> : previewFile.contentType === "text/plain" ? <TextPreview key={previewFile.id} file={previewFile} /> : <iframe className="file-viewer-content" title={`${previewFile.name} içeriği`} src={`/api/files/${previewFile.id}?preview=true`} />}
           </section>
         </div>
+      )}
+      {notebookId !== null && selected && selected.id === courseId && (
+        <Notebook
+          course={selected}
+          initialNotebook={selected.notebooks.find((book) => book.id === notebookId)}
+          admin={admin}
+          request={api}
+          onDirtyChange={(dirty) => { dirtyNotebook.current = dirty; }}
+          onSelectBook={(book) => navigate(`/ders/${selected.id}/defter/${book.id}`, true)}
+          onClose={() => navigate(`/ders/${selected.id}`, true)}
+        />
       )}
       {dialog && (
         <div
@@ -685,7 +688,7 @@ function Workspace({ user, onLogout }) {
           <form className="modal" onSubmit={saveDialog}>
             <div className="modal-head">
               <h2>
-                {dialog.kind === "note"
+                {dialog.kind === "instructor" ? "Hoca adını düzenle" : dialog.kind === "note"
                   ? dialog.file
                     ? "Notu düzenle"
                     : "Yeni not"
@@ -702,7 +705,7 @@ function Workspace({ user, onLogout }) {
               </button>
             </div>
             <label>
-              {dialog.kind === "note" ? "Not başlığı" : "Ders adı"}
+              {dialog.kind === "instructor" ? "Hoca adı" : dialog.kind === "note" ? "Not başlığı" : "Ders adı"}
               <input
                 autoFocus
                 maxLength={dialog.kind === "note" ? 150 : 100}
@@ -711,7 +714,7 @@ function Workspace({ user, onLogout }) {
                 onChange={(e) =>
                   setDialog({ ...dialog, value: e.target.value })
                 }
-                required
+                required={dialog.kind !== "instructor"}
               />
             </label>
             {dialog.kind === "note" && (

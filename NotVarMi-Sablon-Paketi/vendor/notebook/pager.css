@@ -1,0 +1,43 @@
+/* NotVarMı defter sayfalayıcısı: tam ekran sayfalar ve sayfa çevirme animasyonu */
+html,body.nb-paged{height:100%;overflow:hidden}
+.nb-book{position:fixed;inset:0;perspective:2400px;perspective-origin:0 50%;overflow:hidden}
+.nb-sheet{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;visibility:hidden;transform-origin:left center;backface-visibility:hidden;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
+.nb-sheet.is-current,.nb-sheet.nb-turn-out,.nb-sheet.nb-under-keep{visibility:visible}
+.nb-sheet.is-current{z-index:2}
+.nb-sheet.nb-under,.nb-sheet.nb-under-keep{z-index:1}
+.nb-sheet.nb-turn-out,.nb-sheet.nb-turn-in{z-index:3;box-shadow:0 0 60px rgba(0,0,0,.45)}
+.nb-inner{min-height:100%;padding-bottom:96px!important}
+.nb-turn-out{animation:nb-out .74s cubic-bezier(.35,.1,.25,1) forwards}
+.nb-turn-in{animation:nb-in .74s cubic-bezier(.25,.1,.25,1) forwards}
+.nb-under{animation:nb-reveal .74s ease forwards}
+@keyframes nb-out{0%{transform:rotateY(0);filter:brightness(1)}100%{transform:rotateY(-92deg);filter:brightness(.55)}}
+@keyframes nb-in{0%{transform:rotateY(-92deg);filter:brightness(.55)}100%{transform:rotateY(0);filter:brightness(1)}}
+@keyframes nb-reveal{0%{filter:brightness(.7)}100%{filter:brightness(1)}}
+
+.nb-progress{position:fixed;left:0;right:0;top:0;height:3px;z-index:10;background:rgba(127,127,127,.18);pointer-events:none}
+.nb-progress span{display:block;height:100%;width:0;background:#f472b6;transition:width .5s ease}
+
+.nb-nav{position:fixed;left:50%;bottom:max(14px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:4px;padding:5px;border-radius:999px;background:rgba(15,23,42,.82);border:1px solid rgba(148,163,184,.28);box-shadow:0 10px 30px rgba(0,0,0,.35);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);max-width:calc(100vw - 24px);font-family:'Nunito',system-ui,sans-serif}
+.nb-btn{width:40px;height:40px;flex:none;border-radius:50%;border:0;background:rgba(148,163,184,.14);color:#f1f5f9;font-size:26px;line-height:1;cursor:pointer;display:grid;place-items:center;padding:0 0 3px}
+.nb-btn:hover:not(:disabled){background:rgba(244,114,182,.3)}
+.nb-btn:disabled{opacity:.3;cursor:default}
+.nb-where{display:flex;align-items:baseline;gap:10px;min-width:0;max-width:min(60vw,460px);border:0;background:none;color:#e2e8f0;padding:6px 12px;cursor:pointer;border-radius:999px;font:inherit}
+.nb-where:hover{background:rgba(148,163,184,.12)}
+.nb-num{font-weight:700;font-size:13px;color:#f9a8d4;white-space:nowrap;font-variant-numeric:tabular-nums}
+.nb-title{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nb-btn:focus-visible,.nb-where:focus-visible,.nb-toc button:focus-visible{outline:2px solid #f9a8d4;outline-offset:2px}
+
+.nb-toc{position:fixed;left:50%;bottom:calc(max(14px,env(safe-area-inset-bottom,0px)) + 60px);transform:translateX(-50%);z-index:11;width:min(440px,calc(100vw - 24px));max-height:60vh;overflow:auto;padding:10px;border-radius:16px;background:rgba(15,23,42,.96);border:1px solid rgba(148,163,184,.28);box-shadow:0 20px 40px rgba(0,0,0,.45);font-family:'Nunito',system-ui,sans-serif}
+.nb-toc[hidden]{display:none}
+.nb-toc p{margin:4px 10px 8px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8;font-weight:700}
+.nb-toc ol{list-style:none;margin:0;padding:0}
+.nb-toc li.nb-toc-chapter{margin:10px 10px 4px;padding-top:8px;border-top:1px solid rgba(148,163,184,.2);font-size:12px;font-weight:700;letter-spacing:.04em;color:#f9a8d4}
+.nb-toc li.nb-toc-chapter:first-child{border-top:0;margin-top:2px;padding-top:0}
+.nb-toc button{width:100%;display:flex;gap:12px;align-items:baseline;text-align:left;border:0;background:none;color:#e2e8f0;padding:9px 10px;border-radius:10px;font:inherit;font-size:14px;cursor:pointer}
+.nb-toc button span{flex:none;width:22px;color:#94a3b8;font-variant-numeric:tabular-nums;font-size:12px}
+.nb-toc button:hover{background:rgba(148,163,184,.12)}
+.nb-toc button.active{background:rgba(244,114,182,.18);color:#fbcfe8}
+
+@media (max-width:560px){.nb-title{display:none}.nb-where{padding:6px 10px}}
+@media (prefers-reduced-motion:reduce){.nb-turn-out,.nb-turn-in,.nb-under{animation:none}.nb-progress span{transition:none}}
+@media print{html,body.nb-paged{height:auto;overflow:visible}.nb-book{position:static;perspective:none}.nb-sheet{position:static;visibility:visible;overflow:visible;break-before:page}.nb-sheet:first-child{break-before:auto}.nb-nav,.nb-toc,.nb-progress{display:none}}
